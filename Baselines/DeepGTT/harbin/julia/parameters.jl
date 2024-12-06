@@ -1,3 +1,0 @@
-
-const MAX_GAP_SECONDS = 120
-const MIN_DURATION_MINUTES = 5
