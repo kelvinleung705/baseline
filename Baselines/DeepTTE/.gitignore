@@ -1,9 +1,0 @@
-# files
-*.pyc
-*.sw*
-*.pkl
-*.npy
-
-#foloders
-logs/*
-
