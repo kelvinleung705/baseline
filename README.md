@@ -61,7 +61,7 @@ Before training, trips must be map-matched using the [Barefoot](https://github.c
 Once the servers are running, execute the following command to match trips:
 
 ```bash
-cd ProbETA/julia
+cd SPTTE/julia
 julia -p 6 mapmatch.jl --inputpath ../data/h5path --outputpath ../data/jldpath
 ```
 
