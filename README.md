@@ -1,5 +1,6 @@
 # Implementation of SPTTE
 
+SPTTE is a joint probabilistic travel time estimation model that captures the underlying spatiotemporal stochastic process from multiple trajectory observations, which are random, unstructured, and exhibit discontinuities in both space and time.
 This repository contains the code used in our paper: [SPTTE: A Spatiotemporal Probabilistic Framework for Travel Time Estimation](https://arxiv.org/abs/2411.18484).
 
 ## Abstract
