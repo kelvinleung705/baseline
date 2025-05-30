@@ -2,6 +2,15 @@
 
 This repository contains the code used in our paper: [SPTTE: A Spatiotemporal Probabilistic Framework for Travel Time Estimation](https://arxiv.org/abs/2411.18484).
 
+## Abstract
+
+Accurate travel time estimation is essential for navigation and itinerary planning. Although existing studies have employed probabilistic models to quantify the uncertainty of travel times, modeling the evolving joint distribution of multi-trip travel times remains a significant challenge. Unlike conventional multivariate time series, trip data exhibits inherent fragmentation that severely impedes models from capturing systematic spatiotemporal dependencies. This challenge is further compounded by spatial heterogeneity in data coverage, which significantly degrades model learning efficacy across different network regions. To address this challenge, we propose SPTTE, a deep spatiotemporal probabilistic framework that models the evolving joint distribution of multi-trip travel times by formulating it as a spatiotemporal stochastic process regression problem with fragmented observations. SPTTE incorporates an RNN-based temporal Gaussian process parameterization to regularize sparse observations and capture temporal dependencies. Additionally, it employs a prior-based heterogeneity smoothing strategy to correct unreliable learning caused by unevenly distributed trips. Evaluations on real-world datasets demonstrate that SPTTE outperforms state-of-the-art deterministic and probabilistic methods by an average of 6.77%. Ablation studies and visual analytics further validate both the learned distribution evolution and the effectiveness of individual model components.
+
+## Model Overview
+
+![SPTTE Framework](SPTTE/Model/Result/Arc.pdf)
+
+
 ## Requirements
 
 To run the code, ensure your system meets the following requirements:
@@ -99,11 +108,11 @@ If you use this repository in your research, please cite our paper:
 The data preprocessing part is the same as in our previous work, [ProbETA](https://arxiv.org/abs/2407.05895), and can be referred to from [here](https://github.com/ChenXu02/ProbETA).
 
 ```bibtex
-@inproceedings{www19xc,
-  author    = {Xiucheng Li and Gao Cong and Aixin Sun and Yun Cheng},
-  title     = {Learning Travel Time Distributions with Deep Generative Model},
-  booktitle = {Proceedings of the 2019 World Wide Web Conference on World Wide Web, {WWW} 2019, San Francisco, California, May 13-17, 2019},
-  year      = {2019},
+@article{xu2024link,
+  title={Link representation learning for probabilistic travel time estimation},
+  author={Xu, Chen and Wang, Qiang and Sun, Lijun},
+  journal={arXiv preprint arXiv:2407.05895},
+  year={2024}
 }
 ```
 
