@@ -11,10 +11,3 @@ You can run the map matching process by executing the provided Julia scripts in 
 This folder contains the core code for **travel time prediction**. It implements the **SPTTE** model, which uses link representation learning for probabilistic travel time estimation. 
 
 You will find the `main.py` script to start the training and testing process.
-
-### 3. `Result/`
-This folder stores all the **result images** produced during the experiments. These images typically include:
-- Training and validation performance curves.
-- Inter and intra correlation visualization.
-- Hyperparameter ablation experiment results.
-
