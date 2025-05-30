@@ -105,7 +105,7 @@ If you use this repository in your research, please cite our paper:
 
 ---
 
-The data preprocessing part is the same as in our previous work, [ProbETA](https://arxiv.org/abs/2407.05895), and can be referred to from [here](https://github.com/ChenXu02/ProbETA).
+The data preprocessing part is the same as in our previous work, [ProbETA](https://arxiv.org/abs/2407.05895), which is a static hierarchical probabilistic model, and can be referred to from [here](https://github.com/ChenXu02/ProbETA).
 
 ```bibtex
 @article{xu2024link,
