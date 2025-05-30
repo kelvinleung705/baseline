@@ -96,7 +96,7 @@ If you use this repository in your research, please cite our paper:
 
 ---
 
-Our data preprocessing is partially based on the following work, and we sincerely appreciate their contribution:
+The data preprocessing part is the same as in our previous work, [ProbETA](https://arxiv.org/abs/2407.05895), and can be referred to from [here](https://github.com/ChenXu02/ProbETA).
 
 ```bibtex
 @inproceedings{www19xc,
