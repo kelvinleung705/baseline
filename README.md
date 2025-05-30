@@ -8,7 +8,7 @@ Accurate travel time estimation is essential for navigation and itinerary planni
 
 ## Model Overview
 
-![SPTTE Framework](Model/Result/Arc.pdf)
+![SPTTE Framework](Model/Result/Arc.png)
 
 
 ## Requirements
