@@ -14,6 +14,21 @@ from models.MulT_TTE import MulT_TTE
 
 highway = {'living_street':1, 'morotway':2, 'motorway_link':3, 'plannned':4, 'trunk':5, "secondary":6, "trunk_link":7, "tertiary_link":8, "primary":9, "residential":10, "primary_link":11, "unclassified":12, "tertiary":13, "secondary_link":14}
 node_type = {'turning_circle':1, 'traffic_signals':2, 'crossing':3, 'motorway_junction':4, "mini_roundabout":5}
+highway_code = {"1": 2, "2": 2, "3": 2, "4": 2, "5": 3, "6": 9, "7": 9, "8": 9, "9": 9}
+
+list_of_pins = [[43.660334, -79.570932, 416, 1], # list_of_pins_all_dense
+                [43.653276, -79.567456, 416, 1],
+                [43.6462028, -79.5641287, 416, 1],
+                [43.6389891, -79.5611320, 416, 1],
+                [43.6316240, -79.5592392, 416, 3],
+                [43.6288480, -79.555360, 230, 2],
+                [43.6303126, -79.5498273, 230, 2],
+                [43.6321097, -79.5446250, 230, 2],
+                [43.6350280, -79.5409790, 230, 2],
+                [43.6384573, -79.5379020, 230, 2]]
+
+road_distance = [None, 0.835, 0.830, 0.838, 0.835, 0.755, 0.470, 0.468, 0.443, 0.453]
+
 
 # mlm任务的输入link index中需要预测的值不能是本身，否则产生信息泄露，TTE_edge_new_data_end2end_pre更正为TTE_edge_new_data_end2end
 def MulT_TTE_collate_func(data, args, info_all):
@@ -23,38 +38,38 @@ def MulT_TTE_collate_func(data, args, info_all):
     linkids = []
     dateinfo = []
     inds = []
+    start_segs = []  # CHANGE 3: added
     for ind, l in enumerate(data):
-        linkids.append(np.asarray(l[1]))
-        dateinfo.append(l[2:5])
-        inds.append(l[0])
+        raw = l[9:55].astype(np.int16)  # CHANGE 4: was l[1]
+        linkids.append(raw[raw != -1])  # CHANGE 5: strip -1 padding
+        dateinfo.append(l[0:9])  # CHANGE 6: was l[2:5]
+        inds.append(ind)  # CHANGE 7: was l[0]
+        start_segs.append(int(l[55]))  # CHANGE 8: added
     lens = np.asarray([len(k) for k in linkids], dtype=np.int16)
 
     def info(xs, date):
         infos = []
         length = 0
-        for x in xs:
-            info = edgeinfo[x]
+        for x in xs:  # x is now segment number 1-9
             infot = []
-            infot.append(highway[info[0]] if info[0] in highway.keys() else 0)
-            infot.append(info[1])
+            infot.append(highway_code[str(x)])  # CHANGE B: was edgeinfo highway lookup
+            seg_len = road_distance[x]  # CHANGE C: was edgeinfo length
+            infot.append(seg_len)
             infot.append(length)
-            length += info[1]
+            length += seg_len
             infot += list(date)
-            try:
-                infot += [nodeinfo[info[2]][0],nodeinfo[info[2]][1],nodeinfo[info[3]][0],nodeinfo[info[3]][1]]
-            except:
-                print(info)
+            start_pin = list_of_pins[x - 1]  # CHANGE D: was nodeinfo[info[2]]
+            end_pin = list_of_pins[x]  # CHANGE E: was nodeinfo[info[3]]
+            infot += [start_pin[0], start_pin[1], end_pin[0], end_pin[1]]
             infos.append(np.asarray(infot))
-            # highway length sumoflength date3 gps4
-
         return infos
 
     con_links = np.concatenate([info(b, dateinfo[ind]) for ind, b in enumerate(linkids)], dtype='object')
     mask = np.arange(lens.max()) < lens[:, None]
 
-    padded = np.zeros((*mask.shape, 1+2+3+4), dtype=np.float32) #最后一个数是segment embedding维度，需要依据不同的维度更换
+    padded = np.zeros((*mask.shape, 1+2+9+4), dtype=np.float32) #最后一个数是segment embedding维度，需要依据不同的维度更换
     con_links[:, 1:3] = scaler.transform(con_links[:, 1:3])
-    con_links[:, 6:10] = scaler2.transform(con_links[:, 6:10])
+    con_links[:, 12:16] = scaler2.transform(con_links[:, 12:16])
     padded[mask] = con_links
     rawlinks = np.full(mask.shape, fill_value=args.data_config['edges'] + 1, dtype=np.int16)
     rawlinks[mask] = np.concatenate(linkids)
@@ -82,8 +97,11 @@ def MulT_TTE_collate_func(data, args, info_all):
     linkindex[mask] = np.concatenate(sub_input_tmp)
     mask_encoder = np.zeros(mask.shape, dtype=np.int16)
     mask_encoder[mask] = np.concatenate([[1]*k for k in lens])
-    return {'links':torch.FloatTensor(padded), 'lens':torch.LongTensor(lens), 'inds': inds, 'mask_label': torch.LongTensor(mask_label),
-            "linkindex":torch.LongTensor(linkindex), 'rawlinks': torch.LongTensor(rawlinks),'encoder_attention_mask': torch.LongTensor(mask_encoder)}, time
+    return {'links': torch.FloatTensor(padded), 'lens': torch.LongTensor(lens), 'inds': inds,
+            'start_segs': torch.LongTensor(start_segs),  # CHANGE 11: added
+            'mask_label': torch.LongTensor(mask_label),
+            "linkindex": torch.LongTensor(linkindex), 'rawlinks': torch.LongTensor(rawlinks),
+            'encoder_attention_mask': torch.LongTensor(mask_encoder)}, time
 
 class BatchSampler:
     def __init__(self, dataset, batch_size):
@@ -91,6 +109,8 @@ class BatchSampler:
         self.batch_size = batch_size
         if isinstance(dataset[0], dict):
             self.lengths = [len(d['lats']) for d in dataset]
+        elif isinstance(dataset[0], np.ndarray):  # CHANGE 12: added for CSV rows
+            self.lengths = [int(np.sum(d[9:55] != -1)) for d in dataset]  # count non-(-1) link IDs
         elif isinstance(dataset[0][1], list):
             self.lengths = [len(d[1]) for d in dataset]
         else:
@@ -134,7 +154,7 @@ def load_datadoct_pre(args):
         edgeinfo = pickle.load(f)
     with open(os.path.join(args.absPath,args.data_config['nodes_dir']), 'rb') as f:
         nodeinfo = pickle.load(f)
-
+    """
     if "porto" in args.dataset:
         scaler = StandardScaler()
         scaler.fit([[0, 0]])
@@ -155,6 +175,7 @@ def load_datadoct_pre(args):
         scaler2.scale_ = [0.03480474, 0.02717924, 0.03484908, 0.02719959]
     else:
         ValueError("Wrong Dataset Name")
+    """
 
     info_all = [edgeinfo, nodeinfo, scaler, scaler2]
 
@@ -178,8 +199,8 @@ def load_datadict(args):
         phases = ['train', 'val', 'test']
 
     for phase in phases:
-        tdata = np.load(os.path.join(args.absPath,args.data_config['data_dir'], phase + '.npy'), allow_pickle=True)
-        data[phase] = tdata
+        df = pd.read_csv(os.path.join(args.absPath, args.data_config['data_dir'], phase + '.csv'))
+        tdata = df.to_numpy(dtype=np.float32)
         print(data[phase].shape)
 
         loader[phase] = DataLoader(Datadict(data[phase]), batch_sampler=BatchSampler(data[phase], args.data_config['batch_size']),

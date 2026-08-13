@@ -1,207 +1,128 @@
 import os
-import json
-import utils
 import torch
 import numpy as np
-from random import shuffle
+import pandas as pd
 from torch.utils.data import Dataset, DataLoader
 
-def get_network(link_attr_path):
-    with open(link_attr_path, 'r') as f:
-        road_network = json.load(f)
-    return road_network
 
-road_network = get_network("data-info/segment_attrs.json")  # Each item stores information about one road segment
+class BusLineDataset(Dataset):
+    def __init__(self, data_dir, input_file, is_training=True):
+        """
+        Loads the pre-encoded CSV dataset.
+        """
+        self.is_training = is_training
+        file_path = os.path.join(data_dir, input_file)
 
-class MySet(Dataset):
-    def __init__(self, input_file, FLAGS):
-        self.FLAGS = FLAGS
-        self.root_dir = FLAGS.data_dir
-        self.is_training = FLAGS.is_training
-        self.content = open(os.path.join(self.root_dir, input_file), 'r').readlines()
-        if self.is_training:
-            shuffle(self.content)
-        self.route_num = len(self.content)
-        print("input_file: ", input_file, " route number: ", self.route_num)
+        # Load CSV using pandas for fast parsing (Assuming no header, if you have a header add header=0)
+        self.data = pd.read_csv(file_path, header=None).values.astype(np.float32)
+        self.route_num = len(self.data)
+        print(f"Loaded {input_file}: {self.route_num} trips.")
 
     def __getitem__(self, idx):
-        route = self.content[idx]
-        route = eval(route.strip("\n").replace('"', "'"))
+        row = self.data[idx]
 
-        gt_eta_time = int(route["gt_time"])
+        # --- 1. Global Context Features (Indices 0 to 6) ---
+        time_enc = row[0:2]
+        weekday = row[2:3]
+        weekend = row[3:4]
+        month = row[4:6]
+        holiday = row[6:7]
+        global_features = np.concatenate([time_enc, weekday, weekend, month, holiday])  # shape (7,)
 
-        timeID = route["timeID"]
-        weekID = route["weekID"] - 1
-        driverID = route["driverID"]
+        # --- 2. Trip Routing Info ---
+        # Assuming CSV says "1" for Segment 1. We subtract 1 for Python 0-indexing.
+        start_seg_idx = int(row[54]) - 1
+        trip_len = int(row[55])
 
-        segment_list = [item for sublist in route["segment_list_hier"] for item in sublist]  # list of all segments in a route
-        segID, times, time_gaps, roadStates = self.get_attr(segment_list)
-        lengths, segment_functional_levels, LaneNums, speedLimits, roadLevels, widths = self.get_segment_attr(segID)
+        # List of actual segment indices traversed in this trip (e.g., [2, 3, 4] if starting at seg 3 for 3 segs)
+        traversed_segments = list(range(start_seg_idx, start_seg_idx + trip_len))
 
-        cross_info_id = []
-        cross_info_time = []
-        for j, cross in enumerate(route["cross_list"]):
-            cross_info_id.append(cross[0])
-            cross_info_time.append(cross[1])
+        LINK_MAP = [[0, 1, 2, 3], [4], [5, 6, 7, 8]]
+        segment_list_hier = []
+        for link_segs in LINK_MAP:
+            # Keep only segments that are actually in this trip
+            valid_segs_in_link = [s for s in link_segs if s in traversed_segments]
+            if valid_segs_in_link:
+                segment_list_hier.append(valid_segs_in_link)
 
-        attr = {}
 
-        attr["gt_eta_time"] = gt_eta_time
+        # --- 3. Sequence Target (Travel Time per Segment) ---
+        # Slicing the exact segments traversed for this specific trip
+        time_slice_start = 9 + start_seg_idx
+        time_slice_end = time_slice_start + trip_len
 
-        attr["weekID"] = weekID
-        attr["timeID"] = timeID
-        attr["driverID"] = driverID
+        seg_times = row[time_slice_start: time_slice_end]
+        gt_eta_time = np.sum(seg_times)  # Total trip time
 
-        attr["segID"] = segID
-        attr["len"] = lengths
-        attr["segment_functional_level"] = segment_functional_levels
-        attr["laneNum"] = LaneNums
-        attr["speedLimit"] = speedLimits
-        attr["roadLevel"] = roadLevels
-        attr["wid"] = widths
-        attr["time_gap"] = time_gaps
-        attr["time"] = times
-        attr["roadState"] = roadStates
+        # --- 4. Sequence Features (Condition/Speed) ---
+        # Slicing the exact segment info features traversed for this specific trip
+        # Each segment has 4 features (N+0 to N+3)
+        info_slice_start = 18 + (start_seg_idx * 4)
+        info_slice_end = info_slice_start + (trip_len * 4)
 
-        attr["cross_info_id"] = cross_info_id
-        attr["cross_info_time"] = cross_info_time
+        # Shape: (trip_len, 4)
+        seg_info = row[info_slice_start: info_slice_end].reshape(trip_len, 4)
 
-        attr["segment_list_hier"] = route["segment_list_hier"]  # nested lists, route -> links -> segments
-        attr["cross_list"] = route["cross_list"]
-        return attr
+        return {
+            "global_features": global_features,
+            "seg_info": seg_info,
+            "seg_times": seg_times,
+            "gt_eta_time": gt_eta_time,
+            "trip_len": trip_len,
+            "segment_list_hier": segment_list_hier
+        }
 
     def __len__(self):
         return self.route_num
 
-    def get_attr(self, segment_list):
-        segments = []
-        index = []
-        for i, x in enumerate(segment_list):
-            segments.append(x[0])
-            index.append(i)
 
-        add_times = []
-        total_time = 0
-        add_times.append(total_time)
+def collate_fn(batch):
+    """
+    Pads the sequence data (seg_info) to the maximum length in the current batch.
+    Creates masks for the model to ignore padded steps.
+    """
+    batch_size = len(batch)
 
-        for i in index[:-1]:
-            total_time += segment_list[i][1]
-            add_times.append(total_time)
+    # 1. Extract non-sequence data
+    global_feats = [item["global_features"] for item in batch]
+    gt_eta = [item["gt_eta_time"] for item in batch]
+    trip_lens = [item["trip_len"] for item in batch]
 
-        time_gaps = add_times
-        times = [segment_list[i][1] for i in index]
-        states = [segment_list[i][2] for i in index]
-        return segments, times, time_gaps, states
+    # Max length in THIS batch (up to 9)
+    max_len = max(trip_lens)
 
-    def get_segment_attr(self, segments):
-        lengths = []
-        road_levels = []
-        speed_limits = []
-        LaneNums = []
-        segment_function_levels = []
-        widths = []
+    # 2. Initialize padded tensors
+    padded_seg_info = np.zeros((batch_size, max_len, 4), dtype=np.float32)
+    padded_seg_times = np.zeros((batch_size, max_len), dtype=np.float32)
+    mask = np.zeros((batch_size, max_len), dtype=np.float32)
 
-        for i in segments:
-            segment_attr = road_network[str(i)].strip("\n").split("\t")
-            lengths.append(float(segment_attr[0]))
-            segment_function_levels.append(int(segment_attr[1]) - 1)
-            LaneNums.append(int(segment_attr[2]) - 1)
-            speed_limits.append(float(segment_attr[3]))
-            road_levels.append(int(segment_attr[4]) - 1)
-            widths.append(int(segment_attr[5]))
+    # 3. Fill padded tensors
+    for i, item in enumerate(batch):
+        t_len = item["trip_len"]
+        padded_seg_info[i, :t_len, :] = item["seg_info"]
+        padded_seg_times[i, :t_len] = item["seg_times"]
+        mask[i, :t_len] = 1.0  # 1 means valid data, 0 means padded padding
 
-        return lengths, segment_function_levels, LaneNums, speed_limits, road_levels, widths
+    return {
+        "global_features": torch.FloatTensor(np.array(global_feats)),  # Shape: (Batch, 7)
+        "seg_info": torch.FloatTensor(padded_seg_info),  # Shape: (Batch, max_len, 4)
+        "seg_times": torch.FloatTensor(padded_seg_times),  # Shape: (Batch, max_len)
+        "gt_eta_time": torch.FloatTensor(np.array(gt_eta)).unsqueeze(-1),  # Shape: (Batch, 1)
+        "seq_lens": torch.LongTensor(np.array(trip_lens)),  # Shape: (Batch,)
+        "mask": torch.FloatTensor(mask)  # Shape: (Batch, max_len)
+    }
 
 
-def collate_fn(data, FLAGS):
-    route_infos = ['gt_eta_time']
-    ext_attrs = ['weekID', 'timeID', 'driverID']
-    seg_attrs = ['segID', "roadState", "time_gap", 'time', 'segment_functional_level', 'laneNum', 'roadLevel',
-                 'speedLimit',
-                 'len', 'wid']
+def get_loader(data_dir, input_file, batch_size, is_training=True):
+    dataset = BusLineDataset(data_dir=data_dir, input_file=input_file, is_training=is_training)
 
-    cross_info_id = [item["cross_info_id"] for item in data]
-    cross_info_time = [item["cross_info_time"] for item in data]
-    for i in range(FLAGS.batch_size):
-        while len(cross_info_id[i]) < FLAGS.link_num:
-            cross_info_id[i].append(0)
-            cross_info_time[i].append(0)
-    cross_info_id = np.asarray(cross_info_id).reshape(FLAGS.batch_size, FLAGS.link_num)
-    cross_info_time = np.asarray(cross_info_time).reshape(FLAGS.batch_size, FLAGS.link_num)
-
-    link_lens = np.asarray([len(item['segment_list_hier']) for item in data])
-    link_seg_lens = [[len(segment) for segment in item['segment_list_hier']] for item in data]
-    for i in range(FLAGS.batch_size):
-        while len(link_seg_lens[i]) < FLAGS.link_num:
-            link_seg_lens[i].append(0)
-    link_seg_lens = np.asarray(link_seg_lens).reshape(FLAGS.batch_size, FLAGS.link_num)
-
-    link_seg_mask = link_seg_lens > 0
-    link_seg_lens_cumsum = np.c_[np.zeros((FLAGS.batch_size, 1), dtype=np.int32), np.cumsum(link_seg_lens, axis=1)]
-
-    attrs = {}
-    lens = np.asarray([len(item['segID']) for item in data])
-    attrs['segment_lens'] = torch.LongTensor(lens)
-
-    for key in route_infos:
-        x = torch.FloatTensor([item[key] for item in data])
-        attrs[key] = utils.normalize(x, key, FLAGS.is_training)
-
-    for key in ext_attrs:
-        attrs[key] = torch.LongTensor([item[key] for item in data]) + 1
-        if key == "key":
-            x = torch.FloatTensor([item[key] for item in data])
-            attrs[key] = utils.normalize(x, key, FLAGS.is_training)
-
-    for key in seg_attrs:
-        element = np.zeros((FLAGS.batch_size, FLAGS.link_num * FLAGS.segment_num), dtype=np.float32)
-        seqs = [item[key] for item in data]
-        for i in range(FLAGS.batch_size):
-            seg_len = link_lens[i]
-            for j in range(seg_len):
-                ele = seqs[i][link_seg_lens_cumsum[i][j]:link_seg_lens_cumsum[i][j + 1]]
-                element[i, j * FLAGS.segment_num:j * FLAGS.segment_num + len(ele)] = np.array(ele) + 1
-
-        if key in ['time', 'len', 'wid', 'speed_lim', 'avg_speed']:
-            padded = utils.normalize(element, key, FLAGS.is_training)
-            padded = torch.from_numpy(padded).float()
-        elif key == "time_gap":
-            padded = torch.from_numpy(element).float()
-        else:
-            padded = torch.from_numpy(element).long()
-        attrs[key] = padded
-
-    segment_mask = element > 0
-    attrs["link_lens"] = torch.from_numpy(link_lens).long()
-    attrs["link_seg_lens"] = torch.from_numpy(link_seg_lens).long()
-
-    attrs["road_segment_mask"] = torch.from_numpy(segment_mask.astype(float)).float()
-    attrs["road_link_mask"] = torch.from_numpy(link_seg_mask.astype(float)).float()
-
-    attrs["crossID"] = torch.from_numpy(cross_info_id).long()
-    attrs["delayTime"] = torch.from_numpy(cross_info_time).float()
-    return attrs
-
-
-class BatchSampler:
-    def __init__(self, dataset, batch_size):
-        self.count = len(dataset)
-        self.batch_size = batch_size
-        self.indices = list([i for i in range(self.count)])
-
-    def __iter__(self):
-        np.random.shuffle(self.indices)
-        batches = (self.count - 1) // self.batch_size
-        for i in range(batches):
-            yield self.indices[i * self.batch_size: (i + 1) * self.batch_size]
-
-    def __len__(self):
-        return (self.count + self.batch_size - 1) // self.batch_size
-
-
-def get_loader(input_file, FLAGS):
-    dataset = MySet(input_file=input_file, FLAGS=FLAGS)
-    batch_sampler = BatchSampler(dataset, FLAGS.batch_size)
-    data_loader = DataLoader(dataset=dataset, collate_fn=lambda x: collate_fn(x, FLAGS),
-                             num_workers=0, batch_sampler=batch_sampler, pin_memory=True)
+    # Shuffling natively supported by DataLoader
+    data_loader = DataLoader(
+        dataset=dataset,
+        batch_size=batch_size,
+        shuffle=is_training,
+        collate_fn=collate_fn,
+        num_workers=2,
+        pin_memory=True
+    )
     return data_loader
