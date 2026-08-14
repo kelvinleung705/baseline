@@ -1,6 +1,7 @@
 import json
 import os
 import pickle
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -33,9 +34,6 @@ road_distance = [None, 0.835, 0.830, 0.838, 0.835, 0.755, 0.470, 0.468, 0.443, 0
 
 # mlm任务的输入link index中需要预测的值不能是本身，否则产生信息泄露，TTE_edge_new_data_end2end_pre更正为TTE_edge_new_data_end2end
 def MulT_TTE_collate_func(data, args, info_all):
-    """
-    Collate function merging static road network info directly with CSV dynamic features.
-    """
     linkids = []
     dateinfo = []
     inds = []
@@ -47,27 +45,24 @@ def MulT_TTE_collate_func(data, args, info_all):
         start_seg = int(l[55])  # Col 55: Start segment ID (1 to 9)
         start_segs.append(start_seg)
 
-        # Active segment IDs: from start_seg to 9 (trips end at segment 9)
         active_links = np.arange(start_seg, 10, dtype=np.int16)
         linkids.append(active_links)
 
-        # Global temporal context (Cols 0-6: 7 features)
-        g_context = l[0:7]
+        # Global temporal context (Cols 0-13: 14 pre-encoded features)
+        g_context = l[0:14]
         dateinfo.append(g_context)
 
-        # Compute Target Travel Time: Sum of times for active segments (Cols 9..17)
+        # Target Travel Time: Sum of valid segment times (Cols 9..17)
         valid_seg_times = l[9:18][start_seg - 1: 9]
         total_travel_time = np.sum(valid_seg_times)
         times.append(total_travel_time)
 
         inds.append(ind)
 
-        # Build 18-dim feature vector for each active segment
         seg_feats = []
-        cum_length = 0.0  # Cumulative distance counter
+        cum_length = 0.0
 
         for seg_id in active_links:
-            # --- 1. Static Road Features ---
             hw_type = highway_code[str(seg_id)]
             seg_len = road_distance[seg_id]
 
@@ -75,41 +70,35 @@ def MulT_TTE_collate_func(data, args, info_all):
             end_pin = list_of_pins[seg_id]
             gps_coords = [start_pin[0], start_pin[1], end_pin[0], end_pin[1]]
 
-            static_feats = [hw_type, seg_len, cum_length] + gps_coords
-            cum_length += seg_len  # Update cumulative length for next segment
-
-            # --- 2. Dynamic Features from CSV (Cols 19..54) ---
+            # Dynamic Features from CSV (Cols 19..54: 4 features per segment)
             start_col = 19 + 4 * (seg_id - 1)
             end_col = start_col + 4
             dynamic_feats = l[start_col:end_col].tolist()
 
-            # --- 3. Combine All Features: Static (7) + Global Context (7) + Dynamic (4) = 18 dims ---
-            combined_feat = static_feats + g_context.tolist() + dynamic_feats
+            # Construct 25-dim Feature Vector:
+            # hw_type (1) + seg_len (1) + cum_length (1) + gps_coords (4) + g_context (14) + dynamic_feats (4) = 25 dims
+            combined_feat = [hw_type, seg_len, cum_length] + gps_coords + g_context.tolist() + dynamic_feats
             seg_feats.append(combined_feat)
 
         seg_features_list.append(np.asarray(seg_feats, dtype=np.float32))
 
-    # Convert targets to Tensor
     time_tensor = torch.FloatTensor(times)
     lens = np.asarray([len(k) for k in linkids], dtype=np.int16)
 
-    # Padding mask for batching
     max_len = lens.max()
     mask = np.arange(max_len) < lens[:, None]
 
-    # Feature dimension per segment = 18
-    feat_dim = 18
+    # Set feat_dim = 25
+    feat_dim = 25
     padded = np.zeros((*mask.shape, feat_dim), dtype=np.float32)
 
     con_links = np.concatenate(seg_features_list)
     padded[mask] = con_links
 
-    # Raw link IDs for embeddings (padded with pad_token_id)
     pad_token_id = args.data_config['edges'] + 1
     rawlinks = np.full(mask.shape, fill_value=pad_token_id, dtype=np.int16)
     rawlinks[mask] = np.concatenate(linkids)
 
-    # Random Masking (MLM Pre-training Task for MulT-TTE)
     def random_mask(tokens: np.ndarray, rate: float):
         replaces = np.where(np.random.random(len(tokens)) <= rate)[0]
         labels = np.full(len(tokens), dtype=np.int16, fill_value=-100)
@@ -145,7 +134,6 @@ def MulT_TTE_collate_func(data, args, info_all):
         'rawlinks': torch.LongTensor(rawlinks),
         'encoder_attention_mask': torch.LongTensor(mask_encoder)
     }, time_tensor
-
 
 class BatchSampler:
     def __init__(self, dataset, batch_size):

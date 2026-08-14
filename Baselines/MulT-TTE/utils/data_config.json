@@ -20,6 +20,18 @@
     "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
     "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
     "gps_range": [41.12, -8.71690, 41.22, -8.56924]
+  },
+  "toronto_MulT_TTE": {
+    "data_dir": "data/toronto",
+    "batch_size": 256,
+    "collate_fn": "MulT_TTE_collate_func",
+    "time_mean": 309.59,
+    "time_std": 161.87,
+    "edges": 9,
+    "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
+    "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
+    "gps_range": [43.30, -79.90, 44.35, -78.50]
   }
 
 }
+

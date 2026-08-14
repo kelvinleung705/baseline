@@ -19,7 +19,7 @@ def train_model(model: nn.Module, data_loaders: Dict[str, DataLoader],
     num_epochs = args.epochs
     beta = args.beta
     phases = ['train', 'val', 'test']
-    since = time.clock()
+    since = time.perf_counter()
 
     with open(model_folder + "/output.txt", "a") as f:
         f.write(str(model))
@@ -28,7 +28,7 @@ def train_model(model: nn.Module, data_loaders: Dict[str, DataLoader],
     save_dict, best_mae = {'model_state_dict': copy.deepcopy(model.state_dict()), 'epoch': 0}, 10000
 
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=.2, patience=2,
-                                                     threshold=1e-2, threshold_mode='rel', min_lr=1e-7, verbose=True)
+                                                     threshold=1e-2, threshold_mode='rel', min_lr=1e-7)
 
     try:
         patiance = 0
@@ -103,7 +103,7 @@ def train_model(model: nn.Module, data_loaders: Dict[str, DataLoader],
             scheduler.step(running_loss['val'])
 
     finally:
-        time_elapsed = time.clock() - since
+        time_elapsed = time.perf_counter() - since
         print(f"cost {time_elapsed} seconds")
 
         save_model(f"{model_folder}/best_model.pkl", **save_dict)
