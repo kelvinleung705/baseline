@@ -16,12 +16,19 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--is_training', type=bool, default=True, help="training mode or not")
+
 parser.add_argument('--segment_num', type=int, default=50, help="segment number per link")
 parser.add_argument('--link_num', type=int, default=31, help="link number per route")
+
 parser.add_argument('--win_size', type=int, default=3, help="window scale of neighboring segments")
 parser.add_argument('--Lambda', type=float, default=0.4, help="weighting parameter in decoder")
 parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
-parser.add_argument('--data_dir', type=str, default="./samples/", help="directory for route data-info storage")
+
+# CHANGED: Specify dataset directory and CSV file names
+parser.add_argument('--data_dir', type=str, default="./samples/", help="directory for route data storage")
+parser.add_argument('--train_file', type=str, default="train_trips.csv", help="training csv filename")
+parser.add_argument('--eval_file', type=str, default="test_trips.csv", help="evaluation csv filename")
+
 parser.add_argument('--log_dir', type=str, default="logs")
 parser.add_argument('--step_per_eval', type=int, default=100, help="training steps per evaluation")
 parser.add_argument('--use_tb', type=bool, default=False, help='Use tensorboard to log training info')
@@ -31,9 +38,13 @@ parser.add_argument('--description', type=str, default="HierETA", help='descript
 FLAGS = parser.parse_args()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 FLAGS.device = device
-data_info = json.load(
-    open('data-info/data_info.json',
-         'r'))  # statistical information of different items, e.g., total distance of route, length and width of segment ...
+
+# Load or fallback data_info
+data_info_path = 'data-info/data_info.json'
+if os.path.exists(data_info_path):
+    data_info = json.load(open(data_info_path, 'r'))
+else:
+    data_info = {} # Fallback if json is not present
 
 # code backup and message logging
 logger = logger_tb(FLAGS.log_dir, FLAGS.description, FLAGS.code_backup, FLAGS.use_tb)
@@ -41,9 +52,9 @@ sys.stdout = message_logger(logger.log_dir)
 
 
 def train(model, optimizer):
-    train_set = utils.get_train_files(FLAGS.data_dir)
-    eval_set = utils.get_eval_files(FLAGS.data_dir)
-    shuffle(train_set)
+    train_set = [FLAGS.train_file]
+    eval_set = [FLAGS.eval_file]
+    #shuffle(train_set)
     print("train file nums: ", len(train_set))
     model.train()
     model.to(device)
@@ -59,6 +70,7 @@ def train(model, optimizer):
 
             data_iter = dataloading.get_loader(input_file, FLAGS)
             data_iter_len = len(data_iter)
+
             for idx, attr in enumerate(data_iter):
                 attr = utils.to_var(attr, device)
 
