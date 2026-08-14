@@ -3,6 +3,7 @@ import os
 import pickle
 
 import numpy as np
+import pandas as pd
 import torch
 from sklearn.preprocessing import StandardScaler
 from torch.nn import SmoothL1Loss, MSELoss
@@ -32,57 +33,91 @@ road_distance = [None, 0.835, 0.830, 0.838, 0.835, 0.755, 0.470, 0.468, 0.443, 0
 
 # mlm任务的输入link index中需要预测的值不能是本身，否则产生信息泄露，TTE_edge_new_data_end2end_pre更正为TTE_edge_new_data_end2end
 def MulT_TTE_collate_func(data, args, info_all):
-    edgeinfo, nodeinfo, scaler, scaler2 = info_all
-
-    time = torch.Tensor([d[-1] for d in data])
+    """
+    Collate function merging static road network info directly with CSV dynamic features.
+    """
     linkids = []
     dateinfo = []
     inds = []
-    start_segs = []  # CHANGE 3: added
+    start_segs = []
+    seg_features_list = []
+    times = []
+
     for ind, l in enumerate(data):
-        raw = l[9:55].astype(np.int16)  # CHANGE 4: was l[1]
-        linkids.append(raw[raw != -1])  # CHANGE 5: strip -1 padding
-        dateinfo.append(l[0:9])  # CHANGE 6: was l[2:5]
-        inds.append(ind)  # CHANGE 7: was l[0]
-        start_segs.append(int(l[55]))  # CHANGE 8: added
+        start_seg = int(l[55])  # Col 55: Start segment ID (1 to 9)
+        start_segs.append(start_seg)
+
+        # Active segment IDs: from start_seg to 9 (trips end at segment 9)
+        active_links = np.arange(start_seg, 10, dtype=np.int16)
+        linkids.append(active_links)
+
+        # Global temporal context (Cols 0-6: 7 features)
+        g_context = l[0:7]
+        dateinfo.append(g_context)
+
+        # Compute Target Travel Time: Sum of times for active segments (Cols 9..17)
+        valid_seg_times = l[9:18][start_seg - 1: 9]
+        total_travel_time = np.sum(valid_seg_times)
+        times.append(total_travel_time)
+
+        inds.append(ind)
+
+        # Build 18-dim feature vector for each active segment
+        seg_feats = []
+        cum_length = 0.0  # Cumulative distance counter
+
+        for seg_id in active_links:
+            # --- 1. Static Road Features ---
+            hw_type = highway_code[str(seg_id)]
+            seg_len = road_distance[seg_id]
+
+            start_pin = list_of_pins[seg_id - 1]
+            end_pin = list_of_pins[seg_id]
+            gps_coords = [start_pin[0], start_pin[1], end_pin[0], end_pin[1]]
+
+            static_feats = [hw_type, seg_len, cum_length] + gps_coords
+            cum_length += seg_len  # Update cumulative length for next segment
+
+            # --- 2. Dynamic Features from CSV (Cols 19..54) ---
+            start_col = 19 + 4 * (seg_id - 1)
+            end_col = start_col + 4
+            dynamic_feats = l[start_col:end_col].tolist()
+
+            # --- 3. Combine All Features: Static (7) + Global Context (7) + Dynamic (4) = 18 dims ---
+            combined_feat = static_feats + g_context.tolist() + dynamic_feats
+            seg_feats.append(combined_feat)
+
+        seg_features_list.append(np.asarray(seg_feats, dtype=np.float32))
+
+    # Convert targets to Tensor
+    time_tensor = torch.FloatTensor(times)
     lens = np.asarray([len(k) for k in linkids], dtype=np.int16)
 
-    def info(xs, date):
-        infos = []
-        length = 0
-        for x in xs:  # x is now segment number 1-9
-            infot = []
-            infot.append(highway_code[str(x)])  # CHANGE B: was edgeinfo highway lookup
-            seg_len = road_distance[x]  # CHANGE C: was edgeinfo length
-            infot.append(seg_len)
-            infot.append(length)
-            length += seg_len
-            infot += list(date)
-            start_pin = list_of_pins[x - 1]  # CHANGE D: was nodeinfo[info[2]]
-            end_pin = list_of_pins[x]  # CHANGE E: was nodeinfo[info[3]]
-            infot += [start_pin[0], start_pin[1], end_pin[0], end_pin[1]]
-            infos.append(np.asarray(infot))
-        return infos
+    # Padding mask for batching
+    max_len = lens.max()
+    mask = np.arange(max_len) < lens[:, None]
 
-    con_links = np.concatenate([info(b, dateinfo[ind]) for ind, b in enumerate(linkids)], dtype='object')
-    mask = np.arange(lens.max()) < lens[:, None]
+    # Feature dimension per segment = 18
+    feat_dim = 18
+    padded = np.zeros((*mask.shape, feat_dim), dtype=np.float32)
 
-    padded = np.zeros((*mask.shape, 1+2+9+4), dtype=np.float32) #最后一个数是segment embedding维度，需要依据不同的维度更换
-    con_links[:, 1:3] = scaler.transform(con_links[:, 1:3])
-    con_links[:, 12:16] = scaler2.transform(con_links[:, 12:16])
+    con_links = np.concatenate(seg_features_list)
     padded[mask] = con_links
-    rawlinks = np.full(mask.shape, fill_value=args.data_config['edges'] + 1, dtype=np.int16)
+
+    # Raw link IDs for embeddings (padded with pad_token_id)
+    pad_token_id = args.data_config['edges'] + 1
+    rawlinks = np.full(mask.shape, fill_value=pad_token_id, dtype=np.int16)
     rawlinks[mask] = np.concatenate(linkids)
 
-    def random_mask(tokens: np.array, rate: float):
+    # Random Masking (MLM Pre-training Task for MulT-TTE)
+    def random_mask(tokens: np.ndarray, rate: float):
         replaces = np.where(np.random.random(len(tokens)) <= rate)[0]
-        labels = np.full(len(tokens),dtype=np.int16, fill_value=-100)
-        tokens = tokens.copy()
+        labels = np.full(len(tokens), dtype=np.int16, fill_value=-100)
+        tokens_copy = tokens.copy()
 
-        labels[replaces] = tokens[replaces]
-        tokens[replaces] = np.asarray([args.data_config['edges'] + 1] * len(replaces))   # 此处直接赋值会改变dataset原始值，应该考虑采用深拷贝复制一份新数组再更改
-        return labels, tokens
-
+        labels[replaces] = tokens_copy[replaces]
+        tokens_copy[replaces] = pad_token_id
+        return labels, tokens_copy
 
     mask_label_tmp = []
     sub_input_tmp = []
@@ -90,94 +125,70 @@ def MulT_TTE_collate_func(data, args, info_all):
         tmp1, tmp2 = random_mask(k, rate=args.mask_rate)
         mask_label_tmp.append(tmp1)
         sub_input_tmp.append(tmp2)
+
     mask_label = np.full(mask.shape, dtype=np.int16, fill_value=-100)
     mask_label[mask] = np.concatenate(mask_label_tmp)
 
-    linkindex = np.full(mask.shape, fill_value=args.data_config['edges'] + 1, dtype=np.int16)
+    linkindex = np.full(mask.shape, fill_value=pad_token_id, dtype=np.int16)
     linkindex[mask] = np.concatenate(sub_input_tmp)
+
     mask_encoder = np.zeros(mask.shape, dtype=np.int16)
-    mask_encoder[mask] = np.concatenate([[1]*k for k in lens])
-    return {'links': torch.FloatTensor(padded), 'lens': torch.LongTensor(lens), 'inds': inds,
-            'start_segs': torch.LongTensor(start_segs),  # CHANGE 11: added
-            'mask_label': torch.LongTensor(mask_label),
-            "linkindex": torch.LongTensor(linkindex), 'rawlinks': torch.LongTensor(rawlinks),
-            'encoder_attention_mask': torch.LongTensor(mask_encoder)}, time
+    mask_encoder[mask] = np.concatenate([[1] * k for k in lens])
+
+    return {
+        'links': torch.FloatTensor(padded),
+        'lens': torch.LongTensor(lens),
+        'inds': inds,
+        'start_segs': torch.LongTensor(start_segs),
+        'mask_label': torch.LongTensor(mask_label),
+        'linkindex': torch.LongTensor(linkindex),
+        'rawlinks': torch.LongTensor(rawlinks),
+        'encoder_attention_mask': torch.LongTensor(mask_encoder)
+    }, time_tensor
+
 
 class BatchSampler:
     def __init__(self, dataset, batch_size):
         self.count = len(dataset)
         self.batch_size = batch_size
-        if isinstance(dataset[0], dict):
+
+        if isinstance(dataset[0], np.ndarray):
+            # Compute active trajectory length: (9 - start_seg + 1)
+            self.lengths = [int(10 - d[55]) for d in dataset]
+        elif isinstance(dataset[0], dict):
             self.lengths = [len(d['lats']) for d in dataset]
-        elif isinstance(dataset[0], np.ndarray):  # CHANGE 12: added for CSV rows
-            self.lengths = [int(np.sum(d[9:55] != -1)) for d in dataset]  # count non-(-1) link IDs
-        elif isinstance(dataset[0][1], list):
-            self.lengths = [len(d[1]) for d in dataset]
         else:
             self.lengths = [d[0]['lens'] for d in dataset]
+
         self.indices = list(range(self.count))
 
     def __iter__(self):
-        '''
-        Divide the data into chunks with size = batch_size * 100
-        sort by the length in one chunk
-        '''
         np.random.shuffle(self.indices)
-
         chunk_size = self.batch_size * 100
-
         chunks = (self.count + chunk_size - 1) // chunk_size
 
-        # re-arrange indices to minimize the padding
         for i in range(chunks):
             partial_indices = self.indices[i * chunk_size: (i + 1) * chunk_size]
-            partial_indices.sort(key = lambda x: self.lengths[x], reverse = True)
+            partial_indices.sort(key=lambda x: self.lengths[x], reverse=True)
             self.indices[i * chunk_size: (i + 1) * chunk_size] = partial_indices
 
-        # yield batch
         batches = (self.count - 1 + self.batch_size) // self.batch_size
-
         for i in range(batches):
             yield self.indices[i * self.batch_size: (i + 1) * self.batch_size]
 
     def __len__(self):
         return (self.count + self.batch_size - 1) // self.batch_size
 
+
 def load_datadoct_pre(args):
     global info_all
-    edgeinfo, nodeinfo, scaler, scaler2 = None, None, None, None
     abspath = os.path.join(os.path.dirname(__file__), "data_config.json")
     with open(abspath) as file:
         data_config = json.load(file)[args.dataset]
         args.data_config = data_config
-    with open(os.path.join(args.absPath,args.data_config['edges_dir']), 'rb') as f:
-        edgeinfo = pickle.load(f)
-    with open(os.path.join(args.absPath,args.data_config['nodes_dir']), 'rb') as f:
-        nodeinfo = pickle.load(f)
-    """
-    if "porto" in args.dataset:
-        scaler = StandardScaler()
-        scaler.fit([[0, 0]])
-        scaler.mean_ = [107.497195, 3010.37456]
-        scaler.scale_ = [131.102877, 2750.78118]
-        scaler2 = StandardScaler()
-        scaler2.fit([[0, 0, 0, 0]])
-        scaler2.mean_ = [-8.62247695, 41.15923239, -8.62256569, 41.15929004]
-        scaler2.scale_ = [0.02520552, 0.01236445, 0.02526226, 0.01242564]
-    elif "chengdu" in args.dataset:
-        scaler = StandardScaler()
-        scaler.fit([[0,0]])
-        scaler.mean_ = [188.285260, 3969.52982]
-        scaler.scale_ = [206.040346, 3658.76429]
-        scaler2 = StandardScaler()
-        scaler2.fit([[0,0,0,0]])
-        scaler2.mean_ = [104.06379941,  30.65844312, 104.06381633,  30.65845601]
-        scaler2.scale_ = [0.03480474, 0.02717924, 0.03484908, 0.02719959]
-    else:
-        ValueError("Wrong Dataset Name")
-    """
 
-    info_all = [edgeinfo, nodeinfo, scaler, scaler2]
+    # All static and dynamic features are handled directly in Python / CSV
+    info_all = [None, None, None, None]
 
 
 class Datadict(Dataset):
@@ -190,27 +201,37 @@ class Datadict(Dataset):
     def __len__(self):
         return len(self.content)
 
+
 def load_datadict(args):
     data = {}
     loader = {}
-    if args.mode == 'test':
-        phases = ['test']
-    else:
-        phases = ['train', 'val', 'test']
+    phases = ['test'] if args.mode == 'test' else ['train', 'val', 'test']
 
     for phase in phases:
-        df = pd.read_csv(os.path.join(args.absPath, args.data_config['data_dir'], phase + '.csv'))
-        tdata = df.to_numpy(dtype=np.float32)
-        print(data[phase].shape)
+        csv_path = Path(args.absPath) / args.data_config['data_dir'] / f"{phase}.csv"
+        df = pd.read_csv(csv_path)
+        data[phase] = df.to_numpy(dtype=np.float32)
+        print(f"Loaded {phase}.csv with shape: {data[phase].shape}")
 
-        loader[phase] = DataLoader(Datadict(data[phase]), batch_sampler=BatchSampler(data[phase], args.data_config['batch_size']),
-                                       collate_fn=lambda x: eval(args.data_config['collate_fn'])(x, args, info_all),
-                                       pin_memory=True)
+        loader[phase] = DataLoader(
+            Datadict(data[phase]),
+            batch_sampler=BatchSampler(data[phase], args.data_config['batch_size']),
+            collate_fn=lambda x: eval(args.data_config['collate_fn'])(x, args, info_all),
+            pin_memory=True
+        )
 
-    loader['test'] = DataLoader(Datadict(data['test']), batch_size=args.data_config['batch_size'],
-                                    collate_fn=lambda x: eval(args.data_config['collate_fn' ])(x, args, info_all),
-                                    shuffle=False, pin_memory=True)
-    return loader.copy(), StandardScaler2(mean=args.data_config['time_mean'], std=args.data_config['time_std'])
+    loader['test'] = DataLoader(
+        Datadict(data['test']),
+        batch_size=args.data_config['batch_size'],
+        collate_fn=lambda x: eval(args.data_config['collate_fn'])(x, args, info_all),
+        shuffle=False,
+        pin_memory=True
+    )
+
+    return loader.copy(), StandardScaler2(
+        mean=args.data_config['time_mean'],
+        std=args.data_config['time_std']
+    )
 
 
 def create_model(args):
@@ -222,42 +243,34 @@ def create_model(args):
     if "MulT_TTE" in args.model:
         return MulT_TTE(**model_config)
 
+
 def create_loss(args):
     if args.loss == 'rmse':
         def loss(**kwargs):
             preds = kwargs['predict']
             labels = kwargs['truth']
-            rmse = torch.sqrt(torch.mean(torch.pow(preds - labels, 2)))
-            return rmse
+            return torch.sqrt(torch.mean(torch.pow(preds - labels, 2)))
     elif args.loss == 'mse':
         def loss(**kwargs):
             preds = kwargs['predict']
             labels = kwargs['truth']
-            # mse = torch.mean(torch.pow(preds - labels, 2))
-            mse = MSELoss(reduction='mean').forward(preds.view(-1), labels)
-            return mse
+            return MSELoss(reduction='mean').forward(preds.view(-1), labels)
     elif args.loss == 'mape':
         def loss(**kwargs):
             preds = kwargs['predict']
             labels = kwargs['truth']
-            mape = torch.mean(torch.abs(preds - labels) / (labels + 0.1))
-            return mape
+            return torch.mean(torch.abs(preds - labels) / (labels + 0.1))
     elif args.loss == 'mae':
         def loss(**kwargs):
             preds = kwargs['predict']
             labels = kwargs['truth']
-            mape = torch.mean(torch.abs(preds - labels))
-            return mape
+            return torch.mean(torch.abs(preds - labels))
     elif args.loss == 'smoothL1':
         def loss(**kwargs):
             preds = kwargs['predict']
             labels = kwargs['truth']
             preds = torch.squeeze(preds, 1)
-            smoothL1 = SmoothL1Loss(reduction='mean', beta = args.loss_val).forward(preds, labels)
-            return smoothL1
-
+            return SmoothL1Loss(reduction='mean', beta=args.loss_val).forward(preds, labels)
     else:
         raise ValueError("Unknown loss function.")
     return loss
-
-
