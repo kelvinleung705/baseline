@@ -1,0 +1,5 @@
+train file nums:  1
+train files ['train_trips.csv']
+eval files ['test_trips.csv']
+--- Training epoch 0 ---
+--- Train on file train_trips.csv ---

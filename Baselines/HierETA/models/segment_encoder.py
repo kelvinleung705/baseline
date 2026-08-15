@@ -68,7 +68,15 @@ class Segment_Encoder(nn.Module):
         self.linear_hidden = nn.Linear(self.hidden_dim * 2, self.hidden_dim)
         self.linear_cell = nn.Linear(self.hidden_dim * 2, self.hidden_dim)
 
-        self.seg_self_att = Seg_Self_Att(d_s=256, seq_len=50, win_size=FLAGS.win_size, seg_tag=True)
+        # -------------------------------------------------------------
+        # FIX: Use FLAGS.segment_num (4) instead of hardcoded 50
+        # -------------------------------------------------------------
+        self.seg_self_att = Seg_Self_Att(
+            d_s=256,
+            seq_len=FLAGS.segment_num,
+            win_size=FLAGS.win_size,
+            seg_tag=True,
+        )
 
     def forward(self, route, ext, seg):
         ext = torch.unsqueeze(ext, dim=1)

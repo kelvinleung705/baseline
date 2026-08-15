@@ -1,0 +1,1109 @@
+train file nums:  1
+train files ['train_trips.csv']
+eval files ['test_trips.csv']
+--- Training epoch 0 ---
+--- Train on file train_trips.csv ---
+Loaded dataset 'train_trips.csv' with 65988 trips.
+--Progress: 0.0970 step:2 MAE_loss 52107.5547 MAPE_loss 0.9554 RMSE_loss 81634.9531
+--Progress: 0.1940 step:4 MAE_loss 70532.6562 MAPE_loss 0.9468 RMSE_loss 104294.7500
+--Progress: 0.2910 step:6 MAE_loss 60554.8008 MAPE_loss 0.9114 RMSE_loss 97330.1484
+--Progress: 0.3880 step:8 MAE_loss 50863.9688 MAPE_loss 0.8900 RMSE_loss 87035.6094
+--Progress: 0.4850 step:10 MAE_loss 53898.5625 MAPE_loss 0.8906 RMSE_loss 82082.9688
+--Progress: 0.5820 step:12 MAE_loss 47678.8828 MAPE_loss 0.8741 RMSE_loss 72892.6172
+--Progress: 0.6790 step:14 MAE_loss 42460.4375 MAPE_loss 0.8553 RMSE_loss 63809.0273
+--Progress: 0.7759 step:16 MAE_loss 64108.1680 MAPE_loss 0.8415 RMSE_loss 108260.3594
+--Progress: 0.8729 step:18 MAE_loss 62328.2109 MAPE_loss 0.8226 RMSE_loss 102534.8750
+--Progress: 0.9699 step:20 MAE_loss 69235.4297 MAPE_loss 0.8414 RMSE_loss 105255.0391
+--Progress: 1.0669 step:22 MAE_loss 67844.8594 MAPE_loss 0.8234 RMSE_loss 109835.2500
+--Progress: 1.1639 step:24 MAE_loss 60134.5352 MAPE_loss 0.8057 RMSE_loss 97678.6484
+--Progress: 1.2609 step:26 MAE_loss 51413.8477 MAPE_loss 0.8011 RMSE_loss 81483.5938
+--Progress: 1.3579 step:28 MAE_loss 71787.1875 MAPE_loss 0.7883 RMSE_loss 111444.1719
+--Progress: 1.4549 step:30 MAE_loss 69777.9531 MAPE_loss 0.7830 RMSE_loss 115705.8281
+--Progress: 1.5519 step:32 MAE_loss 67169.0625 MAPE_loss 0.7851 RMSE_loss 105739.2422
+--Progress: 1.6489 step:34 MAE_loss 60207.6133 MAPE_loss 0.7576 RMSE_loss 100709.7031
+--Progress: 1.7459 step:36 MAE_loss 51615.6016 MAPE_loss 0.7461 RMSE_loss 88321.7344
+--Progress: 1.8429 step:38 MAE_loss 50667.3828 MAPE_loss 0.7173 RMSE_loss 86957.2422
+--Progress: 1.9399 step:40 MAE_loss 68666.1875 MAPE_loss 0.7669 RMSE_loss 107738.7109
+--Progress: 2.0369 step:42 MAE_loss 58866.1406 MAPE_loss 0.7214 RMSE_loss 99977.2500
+--Progress: 2.1339 step:44 MAE_loss 29562.2402 MAPE_loss 0.6931 RMSE_loss 42759.6445
+--Progress: 2.2308 step:46 MAE_loss 35087.9531 MAPE_loss 0.6803 RMSE_loss 57898.1992
+--Progress: 2.3278 step:48 MAE_loss 47983.8555 MAPE_loss 0.7123 RMSE_loss 79126.9297
+--Progress: 2.4248 step:50 MAE_loss 46173.2734 MAPE_loss 0.7153 RMSE_loss 77935.9766
+--Progress: 2.5218 step:52 MAE_loss 45213.9688 MAPE_loss 0.7141 RMSE_loss 73468.4297
+--Progress: 2.6188 step:54 MAE_loss 82164.5859 MAPE_loss 0.7250 RMSE_loss 127926.2734
+--Progress: 2.7158 step:56 MAE_loss 45875.3359 MAPE_loss 0.6594 RMSE_loss 82743.1250
+--Progress: 2.8128 step:58 MAE_loss 59102.1484 MAPE_loss 0.6976 RMSE_loss 97513.1641
+--Progress: 2.9098 step:60 MAE_loss 47599.8203 MAPE_loss 0.6967 RMSE_loss 78682.7109
+--Progress: 3.0068 step:62 MAE_loss 57904.7773 MAPE_loss 0.6710 RMSE_loss 101934.6250
+--Progress: 3.1038 step:64 MAE_loss 50654.4219 MAPE_loss 0.6564 RMSE_loss 93274.9141
+--Progress: 3.2008 step:66 MAE_loss 43003.0469 MAPE_loss 0.6536 RMSE_loss 76507.6719
+--Progress: 3.2978 step:68 MAE_loss 41413.3477 MAPE_loss 0.6070 RMSE_loss 76849.3672
+--Progress: 3.3948 step:70 MAE_loss 46333.7734 MAPE_loss 0.6684 RMSE_loss 79624.8594
+--Progress: 3.4918 step:72 MAE_loss 52290.6484 MAPE_loss 0.6602 RMSE_loss 87637.9062
+--Progress: 3.5887 step:74 MAE_loss 34505.4062 MAPE_loss 0.6015 RMSE_loss 62363.0898
+--Progress: 3.6857 step:76 MAE_loss 59298.0391 MAPE_loss 0.6415 RMSE_loss 102117.6797
+--Progress: 3.7827 step:78 MAE_loss 53484.9766 MAPE_loss 0.6624 RMSE_loss 90346.6250
+--Progress: 3.8797 step:80 MAE_loss 46980.5938 MAPE_loss 0.6600 RMSE_loss 76163.7188
+--Progress: 3.9767 step:82 MAE_loss 46918.2617 MAPE_loss 0.6612 RMSE_loss 73312.6094
+--Progress: 4.0737 step:84 MAE_loss 81893.6719 MAPE_loss 0.7115 RMSE_loss 123948.1875
+--Progress: 4.1707 step:86 MAE_loss 35432.3672 MAPE_loss 0.5695 RMSE_loss 68655.5938
+--Progress: 4.2677 step:88 MAE_loss 49318.6562 MAPE_loss 0.6607 RMSE_loss 78173.4453
+--Progress: 4.3647 step:90 MAE_loss 44275.0586 MAPE_loss 0.6373 RMSE_loss 70159.8516
+--Progress: 4.4617 step:92 MAE_loss 38930.0938 MAPE_loss 0.6140 RMSE_loss 69842.0312
+--Progress: 4.5587 step:94 MAE_loss 34073.0547 MAPE_loss 0.6068 RMSE_loss 57922.5703
+--Progress: 4.6557 step:96 MAE_loss 61783.6836 MAPE_loss 0.6406 RMSE_loss 108704.7969
+--Progress: 4.7527 step:98 MAE_loss 61549.3633 MAPE_loss 0.6345 RMSE_loss 102188.9453
+--Progress: 4.8497 step:100 MAE_loss 54805.1445 MAPE_loss 0.5985 RMSE_loss 99996.4531
+Save weight file model_epoch-0_step-100.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-100.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 49393.77160
+step: 100, MAPE_loss 0.61954
+step: 100, RMSE_loss 84753.75599
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 49128.64784
+step: 200, MAPE_loss 0.61972
+step: 200, RMSE_loss 84108.47179
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 49337.75863
+step: 300, MAPE_loss 0.62009
+step: 300, RMSE_loss 84569.97903
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 49200.27320
+step: 400, MAPE_loss 0.61933
+step: 400, RMSE_loss 84533.85729
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 49012.12419
+step: 500, MAPE_loss 0.61936
+step: 500, RMSE_loss 84200.77419
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 49239.69128
+step: 600, MAPE_loss 0.62000
+step: 600, RMSE_loss 84500.41950
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 49318.16235
+step: 700, MAPE_loss 0.61998
+step: 700, RMSE_loss 84512.96373
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 49372.82995
+step: 800, MAPE_loss 0.61987
+step: 800, RMSE_loss 84575.34034
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 49682.12758
+step: 900, MAPE_loss 0.62047
+step: 900, RMSE_loss 85055.17459
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 49481.25754
+step: 1000, MAPE_loss 0.61999
+step: 1000, RMSE_loss 84793.13108
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 49401.66892
+step: 1100, MAPE_loss 0.62016
+step: 1100, RMSE_loss 84557.58740
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 49428.25148
+step: 1200, MAPE_loss 0.62016
+step: 1200, RMSE_loss 84618.01834
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 49535.17856
+step: 1300, MAPE_loss 0.62042
+step: 1300, RMSE_loss 84828.34986
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 49643.44604
+step: 1400, MAPE_loss 0.62067
+step: 1400, RMSE_loss 84978.31364
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 49646.48853
+step: 1500, MAPE_loss 0.62083
+step: 1500, RMSE_loss 84956.82102
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 49688.33698
+step: 1600, MAPE_loss 0.62106
+step: 1600, RMSE_loss 84997.19312
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 49673.55633
+step: 1700, MAPE_loss 0.62109
+step: 1700, RMSE_loss 85009.71618
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 49764.16795
+step: 1800, MAPE_loss 0.62131
+step: 1800, RMSE_loss 85130.28272
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 49682.06843
+step: 1900, MAPE_loss 0.62127
+step: 1900, RMSE_loss 84991.45922
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 49699.65523
+step: 2000, MAPE_loss 0.62127
+step: 2000, RMSE_loss 85025.61722
+***********************
+Evaluate on file test_trips.csv, MAE_loss 49708.90966
+Evaluate on file test_trips.csv, MAPE_loss 0.62144
+Evaluate on file test_trips.csv, RMSE_loss 85034.97791
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.62144 
+MAE:49708.90966 
+RMSE:85034.97791
+
+--Progress: 4.9467 step:102 MAE_loss 42110.4180 MAPE_loss 0.6008 RMSE_loss 76521.0938
+--Progress: 5.0436 step:104 MAE_loss 56103.4727 MAPE_loss 0.6075 RMSE_loss 97258.0625
+--Progress: 5.1406 step:106 MAE_loss 44548.4336 MAPE_loss 0.5754 RMSE_loss 85725.2734
+--Progress: 5.2376 step:108 MAE_loss 34577.0430 MAPE_loss 0.6142 RMSE_loss 54770.7773
+--Progress: 5.3346 step:110 MAE_loss 42087.5625 MAPE_loss 0.6128 RMSE_loss 68735.2656
+--Progress: 5.4316 step:112 MAE_loss 34646.5234 MAPE_loss 0.5608 RMSE_loss 65812.7031
+--Progress: 5.5286 step:114 MAE_loss 53334.7891 MAPE_loss 0.5767 RMSE_loss 92033.7734
+--Progress: 5.6256 step:116 MAE_loss 58687.4414 MAPE_loss 0.6476 RMSE_loss 98133.7266
+--Progress: 5.7226 step:118 MAE_loss 56249.5391 MAPE_loss 0.6158 RMSE_loss 93959.0391
+--Progress: 5.8196 step:120 MAE_loss 46245.9570 MAPE_loss 0.6154 RMSE_loss 78232.5703
+--Progress: 5.9166 step:122 MAE_loss 65865.6875 MAPE_loss 0.6462 RMSE_loss 100942.4375
+--Progress: 6.0136 step:124 MAE_loss 63624.5742 MAPE_loss 0.6013 RMSE_loss 106325.3125
+--Progress: 6.1106 step:126 MAE_loss 54579.2617 MAPE_loss 0.6081 RMSE_loss 91000.0312
+--Progress: 6.2076 step:128 MAE_loss 50792.7539 MAPE_loss 0.6074 RMSE_loss 83717.1250
+--Progress: 6.3046 step:130 MAE_loss 36011.5703 MAPE_loss 0.5804 RMSE_loss 59956.8164
+--Progress: 6.4016 step:132 MAE_loss 29389.1211 MAPE_loss 0.6113 RMSE_loss 46475.9531
+--Progress: 6.4985 step:134 MAE_loss 24274.3496 MAPE_loss 0.5184 RMSE_loss 44385.1289
+--Progress: 6.5955 step:136 MAE_loss 42178.1250 MAPE_loss 0.5940 RMSE_loss 70705.2344
+--Progress: 6.6925 step:138 MAE_loss 27577.1641 MAPE_loss 0.5178 RMSE_loss 54601.6602
+--Progress: 6.7895 step:140 MAE_loss 33871.0078 MAPE_loss 0.5444 RMSE_loss 65992.0391
+--Progress: 6.8865 step:142 MAE_loss 61040.3906 MAPE_loss 0.6729 RMSE_loss 93763.2891
+--Progress: 6.9835 step:144 MAE_loss 41093.1406 MAPE_loss 0.5841 RMSE_loss 76168.6484
+--Progress: 7.0805 step:146 MAE_loss 71384.1953 MAPE_loss 0.6754 RMSE_loss 105810.8438
+--Progress: 7.1775 step:148 MAE_loss 48293.6523 MAPE_loss 0.6224 RMSE_loss 78314.3281
+--Progress: 7.2745 step:150 MAE_loss 62672.2891 MAPE_loss 0.6459 RMSE_loss 95897.6328
+--Progress: 7.3715 step:152 MAE_loss 35305.8398 MAPE_loss 0.5164 RMSE_loss 67260.3281
+--Progress: 7.4685 step:154 MAE_loss 41621.5781 MAPE_loss 0.5863 RMSE_loss 75837.7344
+--Progress: 7.5655 step:156 MAE_loss 44734.6484 MAPE_loss 0.5426 RMSE_loss 82873.5859
+--Progress: 7.6625 step:158 MAE_loss 57229.0391 MAPE_loss 0.6210 RMSE_loss 96802.0859
+--Progress: 7.7595 step:160 MAE_loss 56052.6289 MAPE_loss 0.6199 RMSE_loss 92977.1641
+--Progress: 7.8565 step:162 MAE_loss 49073.0000 MAPE_loss 0.5847 RMSE_loss 88799.0859
+--Progress: 7.9534 step:164 MAE_loss 31522.7578 MAPE_loss 0.4747 RMSE_loss 68292.4297
+--Progress: 8.0504 step:166 MAE_loss 83441.5625 MAPE_loss 0.6660 RMSE_loss 125704.2500
+--Progress: 8.1474 step:168 MAE_loss 68539.6094 MAPE_loss 0.5890 RMSE_loss 113305.5391
+--Progress: 8.2444 step:170 MAE_loss 39751.0508 MAPE_loss 0.5580 RMSE_loss 73646.4609
+--Progress: 8.3414 step:172 MAE_loss 37978.0117 MAPE_loss 0.5290 RMSE_loss 72195.6797
+--Progress: 8.4384 step:174 MAE_loss 82634.3594 MAPE_loss 0.6557 RMSE_loss 123460.1406
+--Progress: 8.5354 step:176 MAE_loss 36387.7891 MAPE_loss 0.5588 RMSE_loss 69731.8516
+--Progress: 8.6324 step:178 MAE_loss 59216.9141 MAPE_loss 0.5787 RMSE_loss 98885.1875
+--Progress: 8.7294 step:180 MAE_loss 39385.4531 MAPE_loss 0.5575 RMSE_loss 71965.1953
+--Progress: 8.8264 step:182 MAE_loss 37592.9102 MAPE_loss 0.5350 RMSE_loss 68422.5547
+--Progress: 8.9234 step:184 MAE_loss 49563.5078 MAPE_loss 0.5636 RMSE_loss 95144.3672
+--Progress: 9.0204 step:186 MAE_loss 55498.5078 MAPE_loss 0.5675 RMSE_loss 96793.1328
+--Progress: 9.1174 step:188 MAE_loss 45931.4062 MAPE_loss 0.5732 RMSE_loss 83916.8281
+--Progress: 9.2144 step:190 MAE_loss 49260.6484 MAPE_loss 0.5491 RMSE_loss 85450.4375
+--Progress: 9.3113 step:192 MAE_loss 52616.2656 MAPE_loss 0.5443 RMSE_loss 94835.9453
+--Progress: 9.4083 step:194 MAE_loss 57670.4453 MAPE_loss 0.5683 RMSE_loss 104435.3906
+--Progress: 9.5053 step:196 MAE_loss 55196.1094 MAPE_loss 0.5736 RMSE_loss 95029.7969
+--Progress: 9.6023 step:198 MAE_loss 41142.4375 MAPE_loss 0.5399 RMSE_loss 78188.2500
+--Progress: 9.6993 step:200 MAE_loss 61199.6367 MAPE_loss 0.5561 RMSE_loss 110100.0234
+Save weight file model_epoch-0_step-200.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-200.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 47415.11535
+step: 100, MAPE_loss 0.54766
+step: 100, RMSE_loss 83493.45703
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 47236.06238
+step: 200, MAPE_loss 0.54908
+step: 200, RMSE_loss 83189.37864
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 47187.14873
+step: 300, MAPE_loss 0.54941
+step: 300, RMSE_loss 83134.95120
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 47618.81651
+step: 400, MAPE_loss 0.54939
+step: 400, RMSE_loss 83929.64465
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 47327.69491
+step: 500, MAPE_loss 0.54929
+step: 500, RMSE_loss 83615.49849
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 47294.38782
+step: 600, MAPE_loss 0.54973
+step: 600, RMSE_loss 83559.84800
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 47502.79756
+step: 700, MAPE_loss 0.55083
+step: 700, RMSE_loss 83775.91346
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 47602.75312
+step: 800, MAPE_loss 0.55112
+step: 800, RMSE_loss 83881.43110
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 47665.21781
+step: 900, MAPE_loss 0.55131
+step: 900, RMSE_loss 83959.17965
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 47580.36264
+step: 1000, MAPE_loss 0.55116
+step: 1000, RMSE_loss 83773.94575
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 47761.11332
+step: 1100, MAPE_loss 0.55189
+step: 1100, RMSE_loss 84026.93559
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 47722.03838
+step: 1200, MAPE_loss 0.55175
+step: 1200, RMSE_loss 83880.10402
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 47505.78825
+step: 1300, MAPE_loss 0.55089
+step: 1300, RMSE_loss 83655.28206
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 47470.45729
+step: 1400, MAPE_loss 0.55071
+step: 1400, RMSE_loss 83615.86481
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 47487.29039
+step: 1500, MAPE_loss 0.55067
+step: 1500, RMSE_loss 83614.01144
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 47556.48262
+step: 1600, MAPE_loss 0.55071
+step: 1600, RMSE_loss 83722.90181
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 47597.99517
+step: 1700, MAPE_loss 0.55092
+step: 1700, RMSE_loss 83758.99746
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 47633.44955
+step: 1800, MAPE_loss 0.55115
+step: 1800, RMSE_loss 83776.59587
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 47594.25868
+step: 1900, MAPE_loss 0.55100
+step: 1900, RMSE_loss 83735.10940
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 47537.91353
+step: 2000, MAPE_loss 0.55079
+step: 2000, RMSE_loss 83650.66019
+***********************
+Evaluate on file test_trips.csv, MAE_loss 47558.85767
+Evaluate on file test_trips.csv, MAPE_loss 0.55099
+Evaluate on file test_trips.csv, RMSE_loss 83680.33649
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.55099 
+MAE:47558.85767 
+RMSE:83680.33649
+
+--Progress: 9.7963 step:202 MAE_loss 30836.5293 MAPE_loss 0.4749 RMSE_loss 63238.7422
+--Progress: 9.8933 step:204 MAE_loss 54823.3359 MAPE_loss 0.5818 RMSE_loss 89625.4219
+--Progress: 9.9903 step:206 MAE_loss 32893.7617 MAPE_loss 0.5190 RMSE_loss 59634.9180
+--Progress: 10.0873 step:208 MAE_loss 45828.4766 MAPE_loss 0.5617 RMSE_loss 80769.4141
+--Progress: 10.1843 step:210 MAE_loss 44069.0078 MAPE_loss 0.5266 RMSE_loss 82733.0391
+--Progress: 10.2813 step:212 MAE_loss 46163.2500 MAPE_loss 0.5366 RMSE_loss 88895.5234
+--Progress: 10.3783 step:214 MAE_loss 49441.0547 MAPE_loss 0.5449 RMSE_loss 93833.3203
+--Progress: 10.4753 step:216 MAE_loss 60006.5820 MAPE_loss 0.5878 RMSE_loss 99863.1719
+--Progress: 10.5723 step:218 MAE_loss 46367.7422 MAPE_loss 0.5448 RMSE_loss 82594.7344
+--Progress: 10.6693 step:220 MAE_loss 38275.4609 MAPE_loss 0.5548 RMSE_loss 70341.4141
+--Progress: 10.7662 step:222 MAE_loss 58799.1094 MAPE_loss 0.5882 RMSE_loss 98708.1875
+--Progress: 10.8632 step:224 MAE_loss 50999.7461 MAPE_loss 0.5961 RMSE_loss 82607.2969
+--Progress: 10.9602 step:226 MAE_loss 53287.0078 MAPE_loss 0.5369 RMSE_loss 94504.1328
+--Progress: 11.0572 step:228 MAE_loss 58013.3906 MAPE_loss 0.5828 RMSE_loss 97554.1328
+--Progress: 11.1542 step:230 MAE_loss 71800.3516 MAPE_loss 0.5516 RMSE_loss 115352.9688
+--Progress: 11.2512 step:232 MAE_loss 34313.0703 MAPE_loss 0.4928 RMSE_loss 64033.0156
+--Progress: 11.3482 step:234 MAE_loss 53183.1562 MAPE_loss 0.5453 RMSE_loss 91404.0703
+--Progress: 11.4452 step:236 MAE_loss 67213.4531 MAPE_loss 0.6046 RMSE_loss 110286.2031
+--Progress: 11.5422 step:238 MAE_loss 37836.3789 MAPE_loss 0.5563 RMSE_loss 58681.0469
+--Progress: 11.6392 step:240 MAE_loss 49827.2109 MAPE_loss 0.5561 RMSE_loss 84028.5078
+--Progress: 11.7362 step:242 MAE_loss 39652.1953 MAPE_loss 0.5132 RMSE_loss 76898.3594
+--Progress: 11.8332 step:244 MAE_loss 43250.3750 MAPE_loss 0.5246 RMSE_loss 85840.6719
+--Progress: 11.9302 step:246 MAE_loss 61764.2578 MAPE_loss 0.5667 RMSE_loss 112673.3438
+--Progress: 12.0272 step:248 MAE_loss 59714.4922 MAPE_loss 0.5682 RMSE_loss 98412.5781
+--Progress: 12.1242 step:250 MAE_loss 20809.2676 MAPE_loss 0.4978 RMSE_loss 27102.1836
+--Progress: 12.2211 step:252 MAE_loss 31218.1211 MAPE_loss 0.5497 RMSE_loss 53568.2148
+--Progress: 12.3181 step:254 MAE_loss 68523.5781 MAPE_loss 0.6158 RMSE_loss 106837.3359
+--Progress: 12.4151 step:256 MAE_loss 44786.7539 MAPE_loss 0.5332 RMSE_loss 83214.5156
+--Progress: 12.5121 step:258 MAE_loss 43749.6172 MAPE_loss 0.5270 RMSE_loss 79452.4297
+--Progress: 12.6091 step:260 MAE_loss 38139.6797 MAPE_loss 0.4484 RMSE_loss 83151.3828
+--Progress: 12.7061 step:262 MAE_loss 27977.2812 MAPE_loss 0.4770 RMSE_loss 53588.2656
+--Progress: 12.8031 step:264 MAE_loss 46542.7227 MAPE_loss 0.4730 RMSE_loss 95628.1250
+--Progress: 12.9001 step:266 MAE_loss 52310.7656 MAPE_loss 0.5538 RMSE_loss 89037.2734
+--Progress: 12.9971 step:268 MAE_loss 31672.5566 MAPE_loss 0.4837 RMSE_loss 62279.9062
+--Progress: 13.0941 step:270 MAE_loss 26588.3223 MAPE_loss 0.4576 RMSE_loss 50546.5469
+--Progress: 13.1911 step:272 MAE_loss 68566.9219 MAPE_loss 0.5681 RMSE_loss 113798.4062
+--Progress: 13.2881 step:274 MAE_loss 41174.5547 MAPE_loss 0.5383 RMSE_loss 74430.6172
+--Progress: 13.3851 step:276 MAE_loss 29911.6758 MAPE_loss 0.4657 RMSE_loss 61527.1016
+--Progress: 13.4821 step:278 MAE_loss 37860.9219 MAPE_loss 0.5153 RMSE_loss 66614.2891
+--Progress: 13.5790 step:280 MAE_loss 35266.1680 MAPE_loss 0.5203 RMSE_loss 64541.4805
+--Progress: 13.6760 step:282 MAE_loss 22608.8750 MAPE_loss 0.4196 RMSE_loss 45940.7969
+--Progress: 13.7730 step:284 MAE_loss 45873.7031 MAPE_loss 0.5175 RMSE_loss 84293.7734
+--Progress: 13.8700 step:286 MAE_loss 41742.8594 MAPE_loss 0.5001 RMSE_loss 75727.8125
+--Progress: 13.9670 step:288 MAE_loss 31299.0820 MAPE_loss 0.4833 RMSE_loss 63321.8086
+--Progress: 14.0640 step:290 MAE_loss 47748.5391 MAPE_loss 0.4998 RMSE_loss 92416.1797
+--Progress: 14.1610 step:292 MAE_loss 39956.9336 MAPE_loss 0.4939 RMSE_loss 69292.8281
+--Progress: 14.2580 step:294 MAE_loss 37332.4453 MAPE_loss 0.4726 RMSE_loss 72810.7812
+--Progress: 14.3550 step:296 MAE_loss 44353.0859 MAPE_loss 0.5370 RMSE_loss 82315.6719
+--Progress: 14.4520 step:298 MAE_loss 44212.3945 MAPE_loss 0.4815 RMSE_loss 82819.0391
+--Progress: 14.5490 step:300 MAE_loss 40869.1523 MAPE_loss 0.5019 RMSE_loss 72684.7031
+Save weight file model_epoch-0_step-300.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-300.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 47134.47691
+step: 100, MAPE_loss 0.50636
+step: 100, RMSE_loss 84986.02104
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 45814.53752
+step: 200, MAPE_loss 0.50404
+step: 200, RMSE_loss 82773.42961
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 46496.06868
+step: 300, MAPE_loss 0.50585
+step: 300, RMSE_loss 83583.88405
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 45976.36180
+step: 400, MAPE_loss 0.50435
+step: 400, RMSE_loss 82831.23224
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 45953.07591
+step: 500, MAPE_loss 0.50459
+step: 500, RMSE_loss 82733.27374
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 46225.56636
+step: 600, MAPE_loss 0.50613
+step: 600, RMSE_loss 82987.88999
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 46016.99683
+step: 700, MAPE_loss 0.50516
+step: 700, RMSE_loss 82694.64006
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 45790.03225
+step: 800, MAPE_loss 0.50444
+step: 800, RMSE_loss 82298.96824
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 45853.98104
+step: 900, MAPE_loss 0.50453
+step: 900, RMSE_loss 82390.07866
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 45649.34143
+step: 1000, MAPE_loss 0.50423
+step: 1000, RMSE_loss 82037.66824
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 45719.85138
+step: 1100, MAPE_loss 0.50435
+step: 1100, RMSE_loss 82171.64737
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 45785.13384
+step: 1200, MAPE_loss 0.50475
+step: 1200, RMSE_loss 82234.56315
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 45728.49399
+step: 1300, MAPE_loss 0.50406
+step: 1300, RMSE_loss 82243.14827
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 45895.66431
+step: 1400, MAPE_loss 0.50428
+step: 1400, RMSE_loss 82500.52205
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 45961.97861
+step: 1500, MAPE_loss 0.50413
+step: 1500, RMSE_loss 82626.57683
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 45945.50797
+step: 1600, MAPE_loss 0.50386
+step: 1600, RMSE_loss 82650.90434
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 45912.11968
+step: 1700, MAPE_loss 0.50413
+step: 1700, RMSE_loss 82585.37386
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 45940.79682
+step: 1800, MAPE_loss 0.50448
+step: 1800, RMSE_loss 82609.87148
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 45972.42462
+step: 1900, MAPE_loss 0.50462
+step: 1900, RMSE_loss 82650.65727
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 46080.00391
+step: 2000, MAPE_loss 0.50501
+step: 2000, RMSE_loss 82807.24029
+***********************
+Evaluate on file test_trips.csv, MAE_loss 46076.79450
+Evaluate on file test_trips.csv, MAPE_loss 0.50493
+Evaluate on file test_trips.csv, RMSE_loss 82803.77155
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.50493 
+MAE:46076.79450 
+RMSE:82803.77155
+
+--Progress: 14.6460 step:302 MAE_loss 44733.3125 MAPE_loss 0.4952 RMSE_loss 82127.9297
+--Progress: 14.7430 step:304 MAE_loss 34460.1172 MAPE_loss 0.4923 RMSE_loss 66508.5625
+--Progress: 14.8400 step:306 MAE_loss 38856.5156 MAPE_loss 0.4439 RMSE_loss 75256.8125
+--Progress: 14.9370 step:308 MAE_loss 42821.0391 MAPE_loss 0.4879 RMSE_loss 79629.0312
+--Progress: 15.0339 step:310 MAE_loss 34014.6523 MAPE_loss 0.4933 RMSE_loss 64803.4727
+--Progress: 15.1309 step:312 MAE_loss 33282.0039 MAPE_loss 0.4732 RMSE_loss 64192.9297
+--Progress: 15.2279 step:314 MAE_loss 35553.6953 MAPE_loss 0.4188 RMSE_loss 75684.8281
+--Progress: 15.3249 step:316 MAE_loss 34582.6016 MAPE_loss 0.4473 RMSE_loss 72091.5781
+--Progress: 15.4219 step:318 MAE_loss 48788.3398 MAPE_loss 0.5242 RMSE_loss 85986.7422
+--Progress: 15.5189 step:320 MAE_loss 33371.3242 MAPE_loss 0.4829 RMSE_loss 61329.1445
+--Progress: 15.6159 step:322 MAE_loss 51383.6719 MAPE_loss 0.5039 RMSE_loss 93819.0859
+--Progress: 15.7129 step:324 MAE_loss 42982.8516 MAPE_loss 0.4804 RMSE_loss 77001.2656
+--Progress: 15.8099 step:326 MAE_loss 20758.4668 MAPE_loss 0.4307 RMSE_loss 39250.6758
+--Progress: 15.9069 step:328 MAE_loss 34630.4297 MAPE_loss 0.5101 RMSE_loss 60135.7383
+--Progress: 16.0039 step:330 MAE_loss 26989.3027 MAPE_loss 0.3976 RMSE_loss 61161.2930
+--Progress: 16.1009 step:332 MAE_loss 21101.1484 MAPE_loss 0.4153 RMSE_loss 42266.9922
+--Progress: 16.1979 step:334 MAE_loss 49837.5430 MAPE_loss 0.4721 RMSE_loss 107076.3359
+--Progress: 16.2949 step:336 MAE_loss 31286.1953 MAPE_loss 0.5035 RMSE_loss 55768.3516
+--Progress: 16.3919 step:338 MAE_loss 57409.7148 MAPE_loss 0.5694 RMSE_loss 91391.6797
+--Progress: 16.4888 step:340 MAE_loss 41136.0859 MAPE_loss 0.5263 RMSE_loss 74053.5391
+--Progress: 16.5858 step:342 MAE_loss 36077.3828 MAPE_loss 0.4168 RMSE_loss 76477.0781
+--Progress: 16.6828 step:344 MAE_loss 32168.3125 MAPE_loss 0.4499 RMSE_loss 65627.2422
+--Progress: 16.7798 step:346 MAE_loss 47434.9648 MAPE_loss 0.5036 RMSE_loss 83882.6484
+--Progress: 16.8768 step:348 MAE_loss 29949.4141 MAPE_loss 0.4816 RMSE_loss 52970.3750
+--Progress: 16.9738 step:350 MAE_loss 49387.7773 MAPE_loss 0.5442 RMSE_loss 82397.5234
+--Progress: 17.0708 step:352 MAE_loss 32484.7617 MAPE_loss 0.4143 RMSE_loss 62713.5469
+--Progress: 17.1678 step:354 MAE_loss 47631.5273 MAPE_loss 0.4960 RMSE_loss 86747.2656
+--Progress: 17.2648 step:356 MAE_loss 48199.9922 MAPE_loss 0.4915 RMSE_loss 94912.4297
+--Progress: 17.3618 step:358 MAE_loss 27743.5254 MAPE_loss 0.4383 RMSE_loss 56001.0938
+--Progress: 17.4588 step:360 MAE_loss 38614.5938 MAPE_loss 0.4472 RMSE_loss 74086.1172
+--Progress: 17.5558 step:362 MAE_loss 46068.5156 MAPE_loss 0.4959 RMSE_loss 96642.2500
+--Progress: 17.6528 step:364 MAE_loss 37441.6797 MAPE_loss 0.4604 RMSE_loss 71650.9375
+--Progress: 17.7498 step:366 MAE_loss 39022.6719 MAPE_loss 0.4404 RMSE_loss 80466.8828
+--Progress: 17.8468 step:368 MAE_loss 51928.3047 MAPE_loss 0.4909 RMSE_loss 93427.1250
+--Progress: 17.9437 step:370 MAE_loss 30428.3770 MAPE_loss 0.4169 RMSE_loss 60093.5664
+--Progress: 18.0407 step:372 MAE_loss 25286.4824 MAPE_loss 0.4558 RMSE_loss 48221.5938
+--Progress: 18.1377 step:374 MAE_loss 38249.1016 MAPE_loss 0.4274 RMSE_loss 76188.1875
+--Progress: 18.2347 step:376 MAE_loss 36226.0781 MAPE_loss 0.4724 RMSE_loss 68590.4688
+--Progress: 18.3317 step:378 MAE_loss 41074.6797 MAPE_loss 0.4839 RMSE_loss 72131.8828
+--Progress: 18.4287 step:380 MAE_loss 26461.2305 MAPE_loss 0.4125 RMSE_loss 53302.3906
+--Progress: 18.5257 step:382 MAE_loss 61946.0273 MAPE_loss 0.5556 RMSE_loss 97672.7422
+--Progress: 18.6227 step:384 MAE_loss 68633.5781 MAPE_loss 0.5356 RMSE_loss 111867.0547
+--Progress: 18.7197 step:386 MAE_loss 69430.3984 MAPE_loss 0.5487 RMSE_loss 114234.1953
+--Progress: 18.8167 step:388 MAE_loss 14445.0811 MAPE_loss 0.4022 RMSE_loss 18673.6602
+--Progress: 18.9137 step:390 MAE_loss 37970.1406 MAPE_loss 0.4005 RMSE_loss 74670.7578
+--Progress: 19.0107 step:392 MAE_loss 66760.1797 MAPE_loss 0.5776 RMSE_loss 108483.5000
+--Progress: 19.1077 step:394 MAE_loss 45250.3633 MAPE_loss 0.4308 RMSE_loss 87079.6406
+--Progress: 19.2047 step:396 MAE_loss 42157.7188 MAPE_loss 0.4194 RMSE_loss 85554.3828
+--Progress: 19.3016 step:398 MAE_loss 46721.1719 MAPE_loss 0.5020 RMSE_loss 82853.7109
+--Progress: 19.3986 step:400 MAE_loss 51161.4844 MAPE_loss 0.4999 RMSE_loss 88782.3438
+Save weight file model_epoch-0_step-400.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-400.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 46627.56468
+step: 100, MAPE_loss 0.46925
+step: 100, RMSE_loss 84502.74045
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 45616.95855
+step: 200, MAPE_loss 0.46484
+step: 200, RMSE_loss 83733.83930
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 44770.12498
+step: 300, MAPE_loss 0.46364
+step: 300, RMSE_loss 82334.46096
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 44698.45238
+step: 400, MAPE_loss 0.46442
+step: 400, RMSE_loss 82130.95153
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 44763.20270
+step: 500, MAPE_loss 0.46504
+step: 500, RMSE_loss 82114.67364
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 44597.20913
+step: 600, MAPE_loss 0.46498
+step: 600, RMSE_loss 81928.56526
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 44643.20012
+step: 700, MAPE_loss 0.46483
+step: 700, RMSE_loss 81975.96927
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 44725.74337
+step: 800, MAPE_loss 0.46549
+step: 800, RMSE_loss 82057.96636
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 44697.21454
+step: 900, MAPE_loss 0.46566
+step: 900, RMSE_loss 81975.38747
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 44720.17338
+step: 1000, MAPE_loss 0.46623
+step: 1000, RMSE_loss 82025.41731
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 44803.91515
+step: 1100, MAPE_loss 0.46611
+step: 1100, RMSE_loss 82227.36236
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 44752.14648
+step: 1200, MAPE_loss 0.46607
+step: 1200, RMSE_loss 82111.90812
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 44654.23417
+step: 1300, MAPE_loss 0.46591
+step: 1300, RMSE_loss 81931.16413
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 44570.78982
+step: 1400, MAPE_loss 0.46568
+step: 1400, RMSE_loss 81805.51148
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 44656.96290
+step: 1500, MAPE_loss 0.46598
+step: 1500, RMSE_loss 81930.83193
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 44642.42568
+step: 1600, MAPE_loss 0.46586
+step: 1600, RMSE_loss 81919.31833
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 44711.12399
+step: 1700, MAPE_loss 0.46642
+step: 1700, RMSE_loss 81947.02376
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 44745.25129
+step: 1800, MAPE_loss 0.46657
+step: 1800, RMSE_loss 82031.71282
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 44816.16918
+step: 1900, MAPE_loss 0.46673
+step: 1900, RMSE_loss 82142.83558
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 44746.49131
+step: 2000, MAPE_loss 0.46650
+step: 2000, RMSE_loss 82031.19068
+***********************
+Evaluate on file test_trips.csv, MAE_loss 44745.60948
+Evaluate on file test_trips.csv, MAPE_loss 0.46657
+Evaluate on file test_trips.csv, RMSE_loss 82016.75523
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.46657 
+MAE:44745.60948 
+RMSE:82016.75523
+
+--Progress: 19.4956 step:402 MAE_loss 37322.4023 MAPE_loss 0.4721 RMSE_loss 72613.5156
+--Progress: 19.5926 step:404 MAE_loss 38730.7031 MAPE_loss 0.3992 RMSE_loss 77474.6797
+--Progress: 19.6896 step:406 MAE_loss 19395.6777 MAPE_loss 0.3841 RMSE_loss 37734.2930
+--Progress: 19.7866 step:408 MAE_loss 50072.8594 MAPE_loss 0.4808 RMSE_loss 88914.2188
+--Progress: 19.8836 step:410 MAE_loss 40179.8945 MAPE_loss 0.4740 RMSE_loss 74853.3359
+--Progress: 19.9806 step:412 MAE_loss 34666.8320 MAPE_loss 0.3828 RMSE_loss 73693.4688
+--Progress: 20.0776 step:414 MAE_loss 15511.4199 MAPE_loss 0.3097 RMSE_loss 41010.6953
+--Progress: 20.1746 step:416 MAE_loss 34014.0898 MAPE_loss 0.4691 RMSE_loss 61810.6289
+--Progress: 20.2716 step:418 MAE_loss 51873.5625 MAPE_loss 0.4834 RMSE_loss 90205.1484
+--Progress: 20.3686 step:420 MAE_loss 52737.1445 MAPE_loss 0.5012 RMSE_loss 95728.0703
+--Progress: 20.4656 step:422 MAE_loss 45334.2422 MAPE_loss 0.4542 RMSE_loss 89014.2266
+--Progress: 20.5626 step:424 MAE_loss 44973.4180 MAPE_loss 0.4859 RMSE_loss 81216.4609
+--Progress: 20.6596 step:426 MAE_loss 33569.4297 MAPE_loss 0.3909 RMSE_loss 69016.4453
+--Progress: 20.7565 step:428 MAE_loss 59977.7266 MAPE_loss 0.5430 RMSE_loss 98940.5312
+--Progress: 20.8535 step:430 MAE_loss 56299.1719 MAPE_loss 0.5460 RMSE_loss 95664.8516
+--Progress: 20.9505 step:432 MAE_loss 31566.7695 MAPE_loss 0.3798 RMSE_loss 69636.5781
+--Progress: 21.0475 step:434 MAE_loss 28435.1758 MAPE_loss 0.4169 RMSE_loss 56020.1875
+--Progress: 21.1445 step:436 MAE_loss 36642.3203 MAPE_loss 0.4197 RMSE_loss 65995.8672
+--Progress: 21.2415 step:438 MAE_loss 33041.4336 MAPE_loss 0.3386 RMSE_loss 80785.2578
+--Progress: 21.3385 step:440 MAE_loss 62304.0078 MAPE_loss 0.5110 RMSE_loss 104481.1406
+--Progress: 21.4355 step:442 MAE_loss 33069.3125 MAPE_loss 0.3686 RMSE_loss 80316.7891
+--Progress: 21.5325 step:444 MAE_loss 51622.8125 MAPE_loss 0.4757 RMSE_loss 92669.3750
+--Progress: 21.6295 step:446 MAE_loss 37667.6328 MAPE_loss 0.4156 RMSE_loss 78461.0078
+--Progress: 21.7265 step:448 MAE_loss 48464.5078 MAPE_loss 0.4446 RMSE_loss 93457.4375
+--Progress: 21.8235 step:450 MAE_loss 37319.3047 MAPE_loss 0.4191 RMSE_loss 74652.6875
+--Progress: 21.9205 step:452 MAE_loss 41404.3555 MAPE_loss 0.4466 RMSE_loss 76207.6406
+--Progress: 22.0175 step:454 MAE_loss 37547.5078 MAPE_loss 0.4782 RMSE_loss 67556.7109
+--Progress: 22.1145 step:456 MAE_loss 41788.3672 MAPE_loss 0.4880 RMSE_loss 78445.4688
+--Progress: 22.2114 step:458 MAE_loss 38082.2344 MAPE_loss 0.3894 RMSE_loss 78292.4609
+--Progress: 22.3084 step:460 MAE_loss 47229.3594 MAPE_loss 0.4093 RMSE_loss 93676.2734
+--Progress: 22.4054 step:462 MAE_loss 44265.0430 MAPE_loss 0.4342 RMSE_loss 89233.0000
+--Progress: 22.5024 step:464 MAE_loss 36176.6016 MAPE_loss 0.4489 RMSE_loss 64769.7695
+--Progress: 22.5994 step:466 MAE_loss 68588.7578 MAPE_loss 0.5122 RMSE_loss 113778.0781
+--Progress: 22.6964 step:468 MAE_loss 54615.8555 MAPE_loss 0.4466 RMSE_loss 97830.4297
+--Progress: 22.7934 step:470 MAE_loss 33237.7188 MAPE_loss 0.4544 RMSE_loss 61758.3672
+--Progress: 22.8904 step:472 MAE_loss 64455.1953 MAPE_loss 0.5383 RMSE_loss 108369.0781
+--Progress: 22.9874 step:474 MAE_loss 49767.1016 MAPE_loss 0.5102 RMSE_loss 89158.4531
+--Progress: 23.0844 step:476 MAE_loss 41191.1719 MAPE_loss 0.4347 RMSE_loss 79224.8047
+--Progress: 23.1814 step:478 MAE_loss 75206.1719 MAPE_loss 0.5561 RMSE_loss 119627.6328
+--Progress: 23.2784 step:480 MAE_loss 52136.9727 MAPE_loss 0.4279 RMSE_loss 98671.2500
+--Progress: 23.3754 step:482 MAE_loss 35578.5586 MAPE_loss 0.4159 RMSE_loss 70509.3516
+--Progress: 23.4724 step:484 MAE_loss 28340.2578 MAPE_loss 0.3958 RMSE_loss 57072.9805
+--Progress: 23.5694 step:486 MAE_loss 25533.7656 MAPE_loss 0.3752 RMSE_loss 57192.3594
+--Progress: 23.6663 step:488 MAE_loss 63562.4180 MAPE_loss 0.5246 RMSE_loss 105112.4844
+--Progress: 23.7633 step:490 MAE_loss 39269.9609 MAPE_loss 0.4798 RMSE_loss 71930.4219
+--Progress: 23.8603 step:492 MAE_loss 66201.6953 MAPE_loss 0.5072 RMSE_loss 111006.4375
+--Progress: 23.9573 step:494 MAE_loss 53539.6953 MAPE_loss 0.5005 RMSE_loss 94026.2656
+--Progress: 24.0543 step:496 MAE_loss 46595.7617 MAPE_loss 0.4683 RMSE_loss 82749.6406
+--Progress: 24.1513 step:498 MAE_loss 54156.4531 MAPE_loss 0.4642 RMSE_loss 93807.8984
+--Progress: 24.2483 step:500 MAE_loss 53562.8594 MAPE_loss 0.4364 RMSE_loss 100526.7500
+Save weight file model_epoch-0_step-500.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-500.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 42525.88645
+step: 100, MAPE_loss 0.42868
+step: 100, RMSE_loss 79962.92907
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 43013.81890
+step: 200, MAPE_loss 0.43274
+step: 200, RMSE_loss 80607.49441
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 42983.39318
+step: 300, MAPE_loss 0.43183
+step: 300, RMSE_loss 80671.89384
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 43110.03357
+step: 400, MAPE_loss 0.43365
+step: 400, RMSE_loss 80810.79328
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 42931.79808
+step: 500, MAPE_loss 0.43393
+step: 500, RMSE_loss 80484.68255
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 42806.30448
+step: 600, MAPE_loss 0.43389
+step: 600, RMSE_loss 80126.90023
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 42893.80930
+step: 700, MAPE_loss 0.43452
+step: 700, RMSE_loss 80200.44834
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 43185.06022
+step: 800, MAPE_loss 0.43529
+step: 800, RMSE_loss 80582.73835
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 43213.53013
+step: 900, MAPE_loss 0.43548
+step: 900, RMSE_loss 80631.98406
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 43362.03981
+step: 1000, MAPE_loss 0.43627
+step: 1000, RMSE_loss 80794.95937
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 43483.93844
+step: 1100, MAPE_loss 0.43667
+step: 1100, RMSE_loss 80968.93061
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 43417.10897
+step: 1200, MAPE_loss 0.43624
+step: 1200, RMSE_loss 80935.67144
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 43346.62815
+step: 1300, MAPE_loss 0.43588
+step: 1300, RMSE_loss 80879.48479
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 43423.85464
+step: 1400, MAPE_loss 0.43603
+step: 1400, RMSE_loss 80986.95149
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 43541.28440
+step: 1500, MAPE_loss 0.43636
+step: 1500, RMSE_loss 81158.97119
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 43512.39186
+step: 1600, MAPE_loss 0.43613
+step: 1600, RMSE_loss 81145.22734
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 43575.68729
+step: 1700, MAPE_loss 0.43621
+step: 1700, RMSE_loss 81236.77858
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 43577.09630
+step: 1800, MAPE_loss 0.43604
+step: 1800, RMSE_loss 81257.79250
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 43576.42758
+step: 1900, MAPE_loss 0.43593
+step: 1900, RMSE_loss 81256.65007
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 43541.83167
+step: 2000, MAPE_loss 0.43581
+step: 2000, RMSE_loss 81212.98709
+***********************
+Evaluate on file test_trips.csv, MAE_loss 43542.51446
+Evaluate on file test_trips.csv, MAPE_loss 0.43575
+Evaluate on file test_trips.csv, RMSE_loss 81226.38333
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.43575 
+MAE:43542.51446 
+RMSE:81226.38333
+
+--Progress: 24.3453 step:502 MAE_loss 55586.8906 MAPE_loss 0.4077 RMSE_loss 102255.6484
+--Progress: 24.4423 step:504 MAE_loss 20341.2695 MAPE_loss 0.3607 RMSE_loss 46270.6328
+--Progress: 24.5393 step:506 MAE_loss 26166.8047 MAPE_loss 0.3448 RMSE_loss 61070.8164
+--Progress: 24.6363 step:508 MAE_loss 38213.2969 MAPE_loss 0.4257 RMSE_loss 74137.6484
+--Progress: 24.7333 step:510 MAE_loss 47924.4258 MAPE_loss 0.4741 RMSE_loss 96385.2891
+--Progress: 24.8303 step:512 MAE_loss 50664.4922 MAPE_loss 0.5175 RMSE_loss 84522.2188
+--Progress: 24.9273 step:514 MAE_loss 70583.7031 MAPE_loss 0.5037 RMSE_loss 110649.4297
+--Progress: 25.0242 step:516 MAE_loss 27358.3418 MAPE_loss 0.4089 RMSE_loss 53146.9727
+--Progress: 25.1212 step:518 MAE_loss 30583.5430 MAPE_loss 0.3802 RMSE_loss 66269.0000
+--Progress: 25.2182 step:520 MAE_loss 23306.1875 MAPE_loss 0.3326 RMSE_loss 55350.3594
+--Progress: 25.3152 step:522 MAE_loss 20515.5762 MAPE_loss 0.3286 RMSE_loss 47272.8398
+--Progress: 25.4122 step:524 MAE_loss 53070.8828 MAPE_loss 0.4627 RMSE_loss 96181.8516
+--Progress: 25.5092 step:526 MAE_loss 45810.3164 MAPE_loss 0.4792 RMSE_loss 85494.3281
+--Progress: 25.6062 step:528 MAE_loss 36333.9062 MAPE_loss 0.4520 RMSE_loss 67833.6484
+--Progress: 25.7032 step:530 MAE_loss 56101.5977 MAPE_loss 0.4563 RMSE_loss 97690.7500
+--Progress: 25.8002 step:532 MAE_loss 44423.4297 MAPE_loss 0.5091 RMSE_loss 75204.8594
+--Progress: 25.8972 step:534 MAE_loss 40287.0508 MAPE_loss 0.4351 RMSE_loss 79713.4531
+--Progress: 25.9942 step:536 MAE_loss 43270.2656 MAPE_loss 0.4121 RMSE_loss 84894.3672
+--Progress: 26.0912 step:538 MAE_loss 46236.3516 MAPE_loss 0.4050 RMSE_loss 92870.4062
+--Progress: 26.1882 step:540 MAE_loss 51062.1289 MAPE_loss 0.4958 RMSE_loss 89922.1016
+--Progress: 26.2852 step:542 MAE_loss 52730.7422 MAPE_loss 0.4574 RMSE_loss 88146.1719
+--Progress: 26.3822 step:544 MAE_loss 28351.4023 MAPE_loss 0.4074 RMSE_loss 59868.2461
+--Progress: 26.4791 step:546 MAE_loss 66193.4922 MAPE_loss 0.5307 RMSE_loss 105904.4609
+--Progress: 26.5761 step:548 MAE_loss 38517.8828 MAPE_loss 0.3921 RMSE_loss 82879.1406
+--Progress: 26.6731 step:550 MAE_loss 40441.3750 MAPE_loss 0.4027 RMSE_loss 79605.8828
+--Progress: 26.7701 step:552 MAE_loss 51020.3750 MAPE_loss 0.3715 RMSE_loss 98162.4688
+--Progress: 26.8671 step:554 MAE_loss 45051.8281 MAPE_loss 0.4271 RMSE_loss 82897.5000
+--Progress: 26.9641 step:556 MAE_loss 51414.4375 MAPE_loss 0.4642 RMSE_loss 91497.9375
+--Progress: 27.0611 step:558 MAE_loss 34697.0078 MAPE_loss 0.3645 RMSE_loss 72614.3672
+--Progress: 27.1581 step:560 MAE_loss 59408.2500 MAPE_loss 0.4994 RMSE_loss 97331.6719
+--Progress: 27.2551 step:562 MAE_loss 64715.8320 MAPE_loss 0.5028 RMSE_loss 107531.4297
+--Progress: 27.3521 step:564 MAE_loss 30140.9746 MAPE_loss 0.3254 RMSE_loss 73768.4844
+--Progress: 27.4491 step:566 MAE_loss 35343.6445 MAPE_loss 0.3822 RMSE_loss 69576.2812
+--Progress: 27.5461 step:568 MAE_loss 26319.1465 MAPE_loss 0.3202 RMSE_loss 68926.8203
+--Progress: 27.6431 step:570 MAE_loss 43729.3125 MAPE_loss 0.3741 RMSE_loss 92381.3359
+--Progress: 27.7401 step:572 MAE_loss 44890.7500 MAPE_loss 0.4094 RMSE_loss 91998.9766
+--Progress: 27.8371 step:574 MAE_loss 55535.1875 MAPE_loss 0.4637 RMSE_loss 103755.3359
+--Progress: 27.9340 step:576 MAE_loss 40257.5039 MAPE_loss 0.3850 RMSE_loss 82839.4609
+--Progress: 28.0310 step:578 MAE_loss 45979.2969 MAPE_loss 0.4492 RMSE_loss 93261.2109
+--Progress: 28.1280 step:580 MAE_loss 56456.6445 MAPE_loss 0.4667 RMSE_loss 101542.7656
+--Progress: 28.2250 step:582 MAE_loss 61713.3867 MAPE_loss 0.4827 RMSE_loss 110261.5312
+--Progress: 28.3220 step:584 MAE_loss 35634.9531 MAPE_loss 0.3997 RMSE_loss 72811.4844
+--Progress: 28.4190 step:586 MAE_loss 24892.1172 MAPE_loss 0.3575 RMSE_loss 57609.1719
+--Progress: 28.5160 step:588 MAE_loss 31541.0820 MAPE_loss 0.4072 RMSE_loss 65581.4844
+--Progress: 28.6130 step:590 MAE_loss 37909.0312 MAPE_loss 0.3893 RMSE_loss 76617.7031
+--Progress: 28.7100 step:592 MAE_loss 62040.6719 MAPE_loss 0.4331 RMSE_loss 108437.5547
+--Progress: 28.8070 step:594 MAE_loss 42964.4766 MAPE_loss 0.4146 RMSE_loss 83353.3203
+--Progress: 28.9040 step:596 MAE_loss 71118.3594 MAPE_loss 0.4895 RMSE_loss 120717.5156
+--Progress: 29.0010 step:598 MAE_loss 27251.2891 MAPE_loss 0.3459 RMSE_loss 64429.3516
+--Progress: 29.0980 step:600 MAE_loss 37370.3281 MAPE_loss 0.3790 RMSE_loss 73808.1406
+Save weight file model_epoch-0_step-600.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-600.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 42529.40195
+step: 100, MAPE_loss 0.41821
+step: 100, RMSE_loss 80327.21672
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 41592.10669
+step: 200, MAPE_loss 0.41579
+step: 200, RMSE_loss 78957.64769
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 41613.61921
+step: 300, MAPE_loss 0.41509
+step: 300, RMSE_loss 79287.43050
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 41926.04781
+step: 400, MAPE_loss 0.41579
+step: 400, RMSE_loss 79695.64826
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 42051.11086
+step: 500, MAPE_loss 0.41604
+step: 500, RMSE_loss 79945.48924
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 41836.77787
+step: 600, MAPE_loss 0.41514
+step: 600, RMSE_loss 79575.11229
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 42044.01884
+step: 700, MAPE_loss 0.41641
+step: 700, RMSE_loss 79824.76429
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 42346.76269
+step: 800, MAPE_loss 0.41760
+step: 800, RMSE_loss 80222.21784
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 42315.57536
+step: 900, MAPE_loss 0.41730
+step: 900, RMSE_loss 80177.75563
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 42334.62493
+step: 1000, MAPE_loss 0.41672
+step: 1000, RMSE_loss 80207.74584
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 42318.25279
+step: 1100, MAPE_loss 0.41693
+step: 1100, RMSE_loss 80165.46591
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 42490.77279
+step: 1200, MAPE_loss 0.41743
+step: 1200, RMSE_loss 80413.10186
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 42417.73689
+step: 1300, MAPE_loss 0.41741
+step: 1300, RMSE_loss 80212.78950
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 42568.58459
+step: 1400, MAPE_loss 0.41824
+step: 1400, RMSE_loss 80429.47187
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 42642.45949
+step: 1500, MAPE_loss 0.41855
+step: 1500, RMSE_loss 80514.48907
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 42555.20120
+step: 1600, MAPE_loss 0.41823
+step: 1600, RMSE_loss 80403.26214
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 42537.96104
+step: 1700, MAPE_loss 0.41830
+step: 1700, RMSE_loss 80386.70139
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 42659.21405
+step: 1800, MAPE_loss 0.41904
+step: 1800, RMSE_loss 80546.78168
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 42677.48088
+step: 1900, MAPE_loss 0.41922
+step: 1900, RMSE_loss 80576.26700
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 42627.41641
+step: 2000, MAPE_loss 0.41898
+step: 2000, RMSE_loss 80509.79538
+***********************
+Evaluate on file test_trips.csv, MAE_loss 42659.93155
+Evaluate on file test_trips.csv, MAPE_loss 0.41897
+Evaluate on file test_trips.csv, RMSE_loss 80557.60271
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.41897 
+MAE:42659.93155 
+RMSE:80557.60271
+
+--Progress: 29.1950 step:602 MAE_loss 37844.3125 MAPE_loss 0.4205 RMSE_loss 72873.5000
+--Progress: 29.2919 step:604 MAE_loss 51879.6953 MAPE_loss 0.5138 RMSE_loss 84118.4062
+--Progress: 29.3889 step:606 MAE_loss 55421.0078 MAPE_loss 0.4739 RMSE_loss 96784.5078
+--Progress: 29.4859 step:608 MAE_loss 47337.4922 MAPE_loss 0.4012 RMSE_loss 95644.2734
+--Progress: 29.5829 step:610 MAE_loss 30784.9785 MAPE_loss 0.4332 RMSE_loss 57264.8750
+--Progress: 29.6799 step:612 MAE_loss 36650.1484 MAPE_loss 0.3688 RMSE_loss 78395.1797
+--Progress: 29.7769 step:614 MAE_loss 56250.3594 MAPE_loss 0.5187 RMSE_loss 94234.9062
+--Progress: 29.8739 step:616 MAE_loss 38099.8438 MAPE_loss 0.3882 RMSE_loss 78381.0391
+--Progress: 29.9709 step:618 MAE_loss 59264.8555 MAPE_loss 0.4138 RMSE_loss 103467.5234
+--Progress: 30.0679 step:620 MAE_loss 39593.8984 MAPE_loss 0.4590 RMSE_loss 75432.5625
+--Progress: 30.1649 step:622 MAE_loss 47442.1562 MAPE_loss 0.4034 RMSE_loss 88872.7891
+--Progress: 30.2619 step:624 MAE_loss 31694.7207 MAPE_loss 0.3546 RMSE_loss 74250.5703
+--Progress: 30.3589 step:626 MAE_loss 53281.5703 MAPE_loss 0.4390 RMSE_loss 95494.9688
+--Progress: 30.4559 step:628 MAE_loss 39116.9766 MAPE_loss 0.4135 RMSE_loss 74098.3047
+--Progress: 30.5529 step:630 MAE_loss 31832.3164 MAPE_loss 0.3675 RMSE_loss 67339.9531
+--Progress: 30.6499 step:632 MAE_loss 32884.8438 MAPE_loss 0.3827 RMSE_loss 67092.2031
+--Progress: 30.7468 step:634 MAE_loss 54670.3867 MAPE_loss 0.4368 RMSE_loss 100631.4219
+--Progress: 30.8438 step:636 MAE_loss 61950.1250 MAPE_loss 0.4887 RMSE_loss 103097.5078
+--Progress: 30.9408 step:638 MAE_loss 44955.8047 MAPE_loss 0.4002 RMSE_loss 92636.9062
+--Progress: 31.0378 step:640 MAE_loss 49463.3047 MAPE_loss 0.4368 RMSE_loss 91670.5469
+--Progress: 31.1348 step:642 MAE_loss 52007.4141 MAPE_loss 0.4575 RMSE_loss 96634.5547
+--Progress: 31.2318 step:644 MAE_loss 43162.9336 MAPE_loss 0.4446 RMSE_loss 80709.7188
+--Progress: 31.3288 step:646 MAE_loss 33585.3281 MAPE_loss 0.3260 RMSE_loss 75207.1094
+--Progress: 31.4258 step:648 MAE_loss 51922.2734 MAPE_loss 0.4717 RMSE_loss 90061.7812
+--Progress: 31.5228 step:650 MAE_loss 50184.2031 MAPE_loss 0.4177 RMSE_loss 98357.4453
+--Progress: 31.6198 step:652 MAE_loss 46432.9766 MAPE_loss 0.4164 RMSE_loss 83733.9297
+--Progress: 31.7168 step:654 MAE_loss 51200.6992 MAPE_loss 0.4296 RMSE_loss 97582.0000
+--Progress: 31.8138 step:656 MAE_loss 36179.8750 MAPE_loss 0.4151 RMSE_loss 65507.7031
+--Progress: 31.9108 step:658 MAE_loss 23741.8750 MAPE_loss 0.3693 RMSE_loss 51188.8086
+--Progress: 32.0078 step:660 MAE_loss 77324.1406 MAPE_loss 0.5094 RMSE_loss 119870.2422
+--Progress: 32.1048 step:662 MAE_loss 36719.0312 MAPE_loss 0.4254 RMSE_loss 64459.3281
+--Progress: 32.2017 step:664 MAE_loss 32378.3164 MAPE_loss 0.4166 RMSE_loss 67602.2422
+--Progress: 32.2987 step:666 MAE_loss 32517.4922 MAPE_loss 0.3900 RMSE_loss 67918.5703
+--Progress: 32.3957 step:668 MAE_loss 31194.8477 MAPE_loss 0.3421 RMSE_loss 71126.1484
+--Progress: 32.4927 step:670 MAE_loss 37989.1758 MAPE_loss 0.4478 RMSE_loss 69014.2031
+--Progress: 32.5897 step:672 MAE_loss 52337.5156 MAPE_loss 0.5202 RMSE_loss 84693.5781
+--Progress: 32.6867 step:674 MAE_loss 66936.8203 MAPE_loss 0.4914 RMSE_loss 111315.1250
+--Progress: 32.7837 step:676 MAE_loss 60259.8125 MAPE_loss 0.4513 RMSE_loss 109956.4766
+--Progress: 32.8807 step:678 MAE_loss 24948.1602 MAPE_loss 0.3085 RMSE_loss 58617.9141
+--Progress: 32.9777 step:680 MAE_loss 47238.3672 MAPE_loss 0.4322 RMSE_loss 91471.5156
+--Progress: 33.0747 step:682 MAE_loss 36921.6719 MAPE_loss 0.3502 RMSE_loss 77303.0156
+--Progress: 33.1717 step:684 MAE_loss 47671.0039 MAPE_loss 0.4277 RMSE_loss 87241.0234
+--Progress: 33.2687 step:686 MAE_loss 26830.9043 MAPE_loss 0.3755 RMSE_loss 54731.5664
+--Progress: 33.3657 step:688 MAE_loss 36343.5898 MAPE_loss 0.3724 RMSE_loss 72866.5078
+--Progress: 33.4627 step:690 MAE_loss 38200.7031 MAPE_loss 0.4136 RMSE_loss 73628.1016
+--Progress: 33.5597 step:692 MAE_loss 22345.1719 MAPE_loss 0.3226 RMSE_loss 50586.4141
+--Progress: 33.6566 step:694 MAE_loss 38980.5859 MAPE_loss 0.4687 RMSE_loss 71605.7109
+--Progress: 33.7536 step:696 MAE_loss 32676.0039 MAPE_loss 0.3885 RMSE_loss 60878.9141
+--Progress: 33.8506 step:698 MAE_loss 36364.2578 MAPE_loss 0.3751 RMSE_loss 77179.2109
+--Progress: 33.9476 step:700 MAE_loss 33452.8047 MAPE_loss 0.3694 RMSE_loss 69417.1406
+Save weight file model_epoch-0_step-700.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-700.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 41870.01169
+step: 100, MAPE_loss 0.40748
+step: 100, RMSE_loss 79954.90165
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 41986.83406
+step: 200, MAPE_loss 0.40877
+step: 200, RMSE_loss 80252.09023
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 41478.37740
+step: 300, MAPE_loss 0.40594
+step: 300, RMSE_loss 79456.11431
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 41884.87424
+step: 400, MAPE_loss 0.40937
+step: 400, RMSE_loss 79686.89985
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 41836.81005
+step: 500, MAPE_loss 0.40941
+step: 500, RMSE_loss 79646.84704
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 41645.03015
+step: 600, MAPE_loss 0.40926
+step: 600, RMSE_loss 79361.94773
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 41956.58510
+step: 700, MAPE_loss 0.40987
+step: 700, RMSE_loss 79742.43178
+Evaluate Progress: 38.84578
+step: 800, MAE_loss 41763.73693
+step: 800, MAPE_loss 0.40926
+step: 800, RMSE_loss 79532.83213
+Evaluate Progress: 43.69544
+step: 900, MAE_loss 41843.16400
+step: 900, MAPE_loss 0.40953
+step: 900, RMSE_loss 79650.98600
+Evaluate Progress: 48.54510
+step: 1000, MAE_loss 41799.30671
+step: 1000, MAPE_loss 0.40919
+step: 1000, RMSE_loss 79641.78882
+Evaluate Progress: 53.39476
+step: 1100, MAE_loss 41765.80551
+step: 1100, MAPE_loss 0.40942
+step: 1100, RMSE_loss 79552.41841
+Evaluate Progress: 58.24442
+step: 1200, MAE_loss 41903.35854
+step: 1200, MAPE_loss 0.40939
+step: 1200, RMSE_loss 79805.72756
+Evaluate Progress: 63.09408
+step: 1300, MAE_loss 41804.18906
+step: 1300, MAPE_loss 0.40870
+step: 1300, RMSE_loss 79770.33585
+Evaluate Progress: 67.94374
+step: 1400, MAE_loss 41686.41863
+step: 1400, MAPE_loss 0.40834
+step: 1400, RMSE_loss 79597.08712
+Evaluate Progress: 72.79340
+step: 1500, MAE_loss 41741.03220
+step: 1500, MAPE_loss 0.40852
+step: 1500, RMSE_loss 79735.83002
+Evaluate Progress: 77.64306
+step: 1600, MAE_loss 41808.31870
+step: 1600, MAPE_loss 0.40875
+step: 1600, RMSE_loss 79842.82388
+Evaluate Progress: 82.49273
+step: 1700, MAE_loss 41785.34271
+step: 1700, MAPE_loss 0.40888
+step: 1700, RMSE_loss 79796.73992
+Evaluate Progress: 87.34239
+step: 1800, MAE_loss 41907.74912
+step: 1800, MAPE_loss 0.40919
+step: 1800, RMSE_loss 79983.56798
+Evaluate Progress: 92.19205
+step: 1900, MAE_loss 41848.52468
+step: 1900, MAPE_loss 0.40921
+step: 1900, RMSE_loss 79882.35609
+Evaluate Progress: 97.04171
+step: 2000, MAE_loss 41943.46951
+step: 2000, MAPE_loss 0.40940
+step: 2000, RMSE_loss 79999.01573
+***********************
+Evaluate on file test_trips.csv, MAE_loss 41937.15952
+Evaluate on file test_trips.csv, MAPE_loss 0.40914
+Evaluate on file test_trips.csv, RMSE_loss 80009.94324
+***********************
+
+
+
+--------final----------- 
+MAPE: 0.40914 
+MAE:41937.15952 
+RMSE:80009.94324
+
+--Progress: 34.0446 step:702 MAE_loss 32176.9609 MAPE_loss 0.3961 RMSE_loss 62217.5352
+--Progress: 34.1416 step:704 MAE_loss 39577.6680 MAPE_loss 0.4056 RMSE_loss 75279.8594
+--Progress: 34.2386 step:706 MAE_loss 34854.2344 MAPE_loss 0.3845 RMSE_loss 69502.6953
+--Progress: 34.3356 step:708 MAE_loss 55041.2500 MAPE_loss 0.4235 RMSE_loss 97991.1250
+--Progress: 34.4326 step:710 MAE_loss 21272.6484 MAPE_loss 0.2889 RMSE_loss 56214.7734
+--Progress: 34.5296 step:712 MAE_loss 31484.8770 MAPE_loss 0.4316 RMSE_loss 54969.5078
+--Progress: 34.6266 step:714 MAE_loss 23016.9648 MAPE_loss 0.3415 RMSE_loss 49950.6523
+--Progress: 34.7236 step:716 MAE_loss 67482.4375 MAPE_loss 0.5180 RMSE_loss 109249.3750
+--Progress: 34.8206 step:718 MAE_loss 49752.1992 MAPE_loss 0.3908 RMSE_loss 96539.4609
+--Progress: 34.9176 step:720 MAE_loss 38423.0000 MAPE_loss 0.3926 RMSE_loss 80045.5312
+--Progress: 35.0145 step:722 MAE_loss 39306.7031 MAPE_loss 0.4155 RMSE_loss 70832.3906
+--Progress: 35.1115 step:724 MAE_loss 59765.8594 MAPE_loss 0.4671 RMSE_loss 101781.9375
+--Progress: 35.2085 step:726 MAE_loss 34951.0781 MAPE_loss 0.3832 RMSE_loss 69405.4453
+--Progress: 35.3055 step:728 MAE_loss 55445.1484 MAPE_loss 0.3941 RMSE_loss 100823.2031
+--Progress: 35.4025 step:730 MAE_loss 35377.8750 MAPE_loss 0.3951 RMSE_loss 71803.6719
+--Progress: 35.4995 step:732 MAE_loss 39233.0781 MAPE_loss 0.4516 RMSE_loss 72949.6797
+--Progress: 35.5965 step:734 MAE_loss 32427.4961 MAPE_loss 0.3922 RMSE_loss 66167.5938
+--Progress: 35.6935 step:736 MAE_loss 46108.2031 MAPE_loss 0.4125 RMSE_loss 85113.0625
+--Progress: 35.7905 step:738 MAE_loss 24684.0078 MAPE_loss 0.3505 RMSE_loss 53543.5898
+--Progress: 35.8875 step:740 MAE_loss 47942.9375 MAPE_loss 0.4413 RMSE_loss 83021.3203
+--Progress: 35.9845 step:742 MAE_loss 37599.5000 MAPE_loss 0.4171 RMSE_loss 70580.1875
+--Progress: 36.0815 step:744 MAE_loss 34847.5977 MAPE_loss 0.3914 RMSE_loss 67858.1406
+--Progress: 36.1785 step:746 MAE_loss 29556.5195 MAPE_loss 0.3597 RMSE_loss 61971.0781
+--Progress: 36.2755 step:748 MAE_loss 49961.5000 MAPE_loss 0.4723 RMSE_loss 85508.6094
+--Progress: 36.3725 step:750 MAE_loss 56516.3281 MAPE_loss 0.4453 RMSE_loss 101043.5781
+--Progress: 36.4694 step:752 MAE_loss 27902.6914 MAPE_loss 0.3189 RMSE_loss 69338.4688
+--Progress: 36.5664 step:754 MAE_loss 28291.2188 MAPE_loss 0.3931 RMSE_loss 58977.9492
+--Progress: 36.6634 step:756 MAE_loss 18276.6230 MAPE_loss 0.3282 RMSE_loss 43441.5781
+--Progress: 36.7604 step:758 MAE_loss 35512.3984 MAPE_loss 0.4081 RMSE_loss 70710.2812
+--Progress: 36.8574 step:760 MAE_loss 18179.0957 MAPE_loss 0.3410 RMSE_loss 39046.5977
+--Progress: 36.9544 step:762 MAE_loss 29952.4180 MAPE_loss 0.3340 RMSE_loss 61903.7266
+--Progress: 37.0514 step:764 MAE_loss 39585.8086 MAPE_loss 0.4299 RMSE_loss 84257.3906
+--Progress: 37.1484 step:766 MAE_loss 23381.2637 MAPE_loss 0.3367 RMSE_loss 58993.2305
+--Progress: 37.2454 step:768 MAE_loss 31070.3945 MAPE_loss 0.3522 RMSE_loss 70552.6406
+--Progress: 37.3424 step:770 MAE_loss 53874.3594 MAPE_loss 0.3732 RMSE_loss 103682.6094
+--Progress: 37.4394 step:772 MAE_loss 35645.3789 MAPE_loss 0.3765 RMSE_loss 71696.8359
+--Progress: 37.5364 step:774 MAE_loss 39853.4258 MAPE_loss 0.3478 RMSE_loss 82337.7266
+--Progress: 37.6334 step:776 MAE_loss 37280.9297 MAPE_loss 0.3723 RMSE_loss 77255.3672
+--Progress: 37.7304 step:778 MAE_loss 45159.0508 MAPE_loss 0.3674 RMSE_loss 95535.8984
+--Progress: 37.8274 step:780 MAE_loss 40168.7734 MAPE_loss 0.4082 RMSE_loss 84761.0938
+--Progress: 37.9243 step:782 MAE_loss 37678.9961 MAPE_loss 0.3841 RMSE_loss 74080.9688
+--Progress: 38.0213 step:784 MAE_loss 47402.6719 MAPE_loss 0.4315 RMSE_loss 82510.3281
+--Progress: 38.1183 step:786 MAE_loss 46000.2109 MAPE_loss 0.4271 RMSE_loss 87636.7500
+--Progress: 38.2153 step:788 MAE_loss 50517.8984 MAPE_loss 0.4372 RMSE_loss 95254.4688
+--Progress: 38.3123 step:790 MAE_loss 32342.3301 MAPE_loss 0.3703 RMSE_loss 67733.0703
+--Progress: 38.4093 step:792 MAE_loss 44757.1523 MAPE_loss 0.4178 RMSE_loss 87089.8125
+--Progress: 38.5063 step:794 MAE_loss 35907.7383 MAPE_loss 0.3440 RMSE_loss 75331.5703
+--Progress: 38.6033 step:796 MAE_loss 50320.8750 MAPE_loss 0.4321 RMSE_loss 95971.1562
+--Progress: 38.7003 step:798 MAE_loss 41884.7148 MAPE_loss 0.4222 RMSE_loss 75416.7578
+--Progress: 38.7973 step:800 MAE_loss 55018.0508 MAPE_loss 0.4216 RMSE_loss 98961.0156
+Save weight file model_epoch-0_step-800.pth
+C:\Users\kelvi\PycharmProjects\GhostBusTest\Baselines\HierETA\logs\2026-08-15-00-36-29_HierETA/model_epoch-0_step-800.pth
+Loaded dataset 'test_trips.csv' with 65988 trips.
+Evaluate Progress: 4.89816
+step: 100, MAE_loss 41589.86887
+step: 100, MAPE_loss 0.40857
+step: 100, RMSE_loss 78470.51052
+Evaluate Progress: 9.74782
+step: 200, MAE_loss 41325.81595
+step: 200, MAPE_loss 0.40742
+step: 200, RMSE_loss 78826.14644
+Evaluate Progress: 14.59748
+step: 300, MAE_loss 42301.93838
+step: 300, MAPE_loss 0.40722
+step: 300, RMSE_loss 80794.81168
+Evaluate Progress: 19.44714
+step: 400, MAE_loss 42062.04954
+step: 400, MAPE_loss 0.40584
+step: 400, RMSE_loss 80620.81380
+Evaluate Progress: 24.29680
+step: 500, MAE_loss 41558.06676
+step: 500, MAPE_loss 0.40450
+step: 500, RMSE_loss 79908.95823
+Evaluate Progress: 29.14646
+step: 600, MAE_loss 41743.90766
+step: 600, MAPE_loss 0.40520
+step: 600, RMSE_loss 80092.45579
+Evaluate Progress: 33.99612
+step: 700, MAE_loss 41677.43735
+step: 700, MAPE_loss 0.40487
+step: 700, RMSE_loss 80071.98116

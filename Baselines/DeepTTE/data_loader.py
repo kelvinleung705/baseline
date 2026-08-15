@@ -43,8 +43,10 @@ def collate_fn(data):
         padded = np.zeros(mask.shape, dtype = np.float32)
         padded[mask] = np.concatenate(seqs)
 
+        """
         if key in ['lngs', 'lats', 'time_gap', 'dist_gap']:
             padded = utils.normalize(padded, key)
+        """
 
         padded = torch.from_numpy(padded).float()
         traj[key] = padded

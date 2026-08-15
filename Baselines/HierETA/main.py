@@ -6,6 +6,11 @@ import torch
 import torch.optim as optim
 from random import shuffle
 
+# -------------------------------------------------------------------
+# ADD THIS LINE TO FIX CUDNN_STATUS_BAD_PARAM:
+torch.backends.cudnn.enabled = False
+# -------------------------------------------------------------------
+
 import utils
 import dataloading
 from models import HierETA
@@ -17,8 +22,8 @@ parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--is_training', type=bool, default=True, help="training mode or not")
 
-parser.add_argument('--segment_num', type=int, default=50, help="segment number per link")
-parser.add_argument('--link_num', type=int, default=31, help="link number per route")
+parser.add_argument('--segment_num', type=int, default=4, help="segment number per link")
+parser.add_argument('--link_num', type=int, default=3, help="link number per route")
 
 parser.add_argument('--win_size', type=int, default=3, help="window scale of neighboring segments")
 parser.add_argument('--Lambda', type=float, default=0.4, help="weighting parameter in decoder")
@@ -40,7 +45,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 FLAGS.device = device
 
 # Load or fallback data_info
-data_info_path = 'data-info/data_info.json'
+data_info_path = 'data-info/data_info_old.json'
 if os.path.exists(data_info_path):
     data_info = json.load(open(data_info_path, 'r'))
 else:
@@ -161,6 +166,7 @@ def test(restore_epoch=0, restore_step=0, model_path=""):
 if __name__ == '__main__':
 
     model = HierETA.HierETA_Net(FLAGS, data_info)
+    model.to(device)
     optimizer = optim.Adam(model.parameters(), lr=FLAGS.lr, weight_decay=1e-5)
 
     if FLAGS.is_training:
