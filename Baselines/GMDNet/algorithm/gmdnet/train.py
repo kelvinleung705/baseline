@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
 from my_utils.utils import *
 import numpy as np
 from torch.utils.data import Dataset
