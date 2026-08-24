@@ -132,8 +132,8 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
 
 if __name__ == "__main__":
-    TRAIN_CSV = "train_dataset.csv"  # File to be split into train.npy and val.npy
-    TEST_CSV = "test_dataset.csv"  # File to become test.npy directly
-    JSON_PATH = "segments.json"
+    TRAIN_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_new.csv"  # File to be split into train.npy and val.npy
+    TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_June.csv"  # File to become test.npy directly
+    JSON_PATH = "segments_toronto.json"
 
     process_two_csvs(TRAIN_CSV, TEST_CSV, JSON_PATH)
