@@ -4,7 +4,6 @@ __pycache__/
 
 # Ignore generated datasets files
 *.npy
-
 # Ignore GMDNet data and output folders
 
 # Do NOT ignore the topology JSON configuration file
