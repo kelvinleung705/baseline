@@ -25,8 +25,11 @@ def parse_csv(csv_path, segment_map, num_nodes):
     seg_travel_times = data_mat[:, 9:18]
     seg_conditions = data_mat[:, 19:55].reshape(num_samples, 9, 4)
 
-    start_segs = data_mat[:, 55].astype(int)
-    trip_lens = data_mat[:, 56].astype(int)
+    # ==================== CHANGED HERE ====================
+    # Force every sample to be the whole 9-segment corridor trip:
+    start_segs = np.ones(num_samples, dtype=int)    # Segment 1
+    trip_lens  = np.full(num_samples, 9, dtype=int) # All 9 segments
+    # =======================================================
 
     # 2. Initialize arrays
     routes = np.zeros((num_samples, max_seq_len, 2), dtype=np.int64)
@@ -44,6 +47,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
         t_len = min(trip_lens[i], 9 - start_seg_id + 1)
         s_idx = start_seg_id - 1
 
+        # Sum of all 9 segments = Total Trip Time (~500s)
         labels[i, 0] = np.sum(seg_travel_times[i, s_idx: s_idx + t_len])
 
         for step in range(t_len):
@@ -115,7 +119,7 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
         for key in train_val_data.keys():
             data_dict[key] = train_val_data[key][split_idx].copy()
 
-        # VERY IMPORTANT: Reset f[:, 0] to local batch index (0 to N-1) for GMDNet lookups
+        # Reset f[:, 0] to local batch index (0 to N-1) for GMDNet lookups
         data_dict['f'][:, 0] = np.arange(split_size)
 
         save_path = os.path.join(output_dir, f"{mode}.npy")
@@ -124,7 +128,7 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
     # Save Test directly from test_data
     test_size = len(test_data['label'])
-    test_data['f'][:, 0] = np.arange(test_size)  # Reset index for test data too
+    test_data['f'][:, 0] = np.arange(test_size)
 
     test_save_path = os.path.join(output_dir, "test.npy")
     np.save(test_save_path, test_data)
@@ -132,8 +136,8 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
 
 if __name__ == "__main__":
-    TRAIN_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_new.csv"  # File to be split into train.npy and val.npy
-    TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_June.csv"  # File to become test.npy directly
+    TRAIN_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_Jul_Dec.csv"
+    TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2026_Jan_Jun.csv"
     JSON_PATH = "segments_toronto.json"
 
     process_two_csvs(TRAIN_CSV, TEST_CSV, JSON_PATH)

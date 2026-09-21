@@ -43,7 +43,8 @@ class HierETA_Net(nn.Module):
 
         time_mean = self.data_info['train_gt_eta_time_mean']
         time_std = self.data_info['train_gt_eta_time_std']
-        label = route['gt_eta_time'].view(self.batch_size, 1)
-        label = label * time_std + time_mean
+        label = route['gt_eta_time'].view(-1, 1).float()
+        
+        # pred was in normalized z-score space from the decoder, so transform pred back to seconds:
         pred = pred * time_std + time_mean
         return pred, label
