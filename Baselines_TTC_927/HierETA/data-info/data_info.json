@@ -1,0 +1,18 @@
+{
+  "train_len_mean": 658.5556,
+  "train_len_std": 180.66,
+  "train_speed_lim_mean": 77.7778,
+  "train_speed_lim_std": 24.8452,
+  "train_wid_mean": 2.6667,
+  "train_wid_std": 0.4714,
+  "train_gt_eta_time_mean": 537.9489,
+  "train_gt_eta_time_std": 113.969,
+  "test_len_mean": 658.5556,
+  "test_len_std": 180.66,
+  "test_speed_lim_mean": 77.7778,
+  "test_speed_lim_std": 24.8452,
+  "test_wid_mean": 2.6667,
+  "test_wid_std": 0.4714,
+  "test_gt_eta_time_mean": 529.3359,
+  "test_gt_eta_time_std": 102.2114
+}
