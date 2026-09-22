@@ -45,7 +45,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 FLAGS.device = device
 
 # Load or fallback data_info
-data_info_path = 'data-info/data_info_old.json'
+data_info_path = 'data-info/data_info.json'
 if os.path.exists(data_info_path):
     data_info = json.load(open(data_info_path, 'r'))
 else:

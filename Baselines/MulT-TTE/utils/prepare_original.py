@@ -33,7 +33,7 @@ road_distance = [None, 0.835, 0.830, 0.838, 0.835, 0.755, 0.470, 0.468, 0.443, 0
 
 
 # mlm任务的输入link index中需要预测的值不能是本身，否则产生信息泄露，TTE_edge_new_data_end2end_pre更正为TTE_edge_new_data_end2end
-def MulT_TTE_collate_func(data, args, info_all, is_test=False):
+def MulT_TTE_collate_func(data, args, info_all):
     linkids = []
     dateinfo = []
     inds = []
@@ -108,13 +108,11 @@ def MulT_TTE_collate_func(data, args, info_all, is_test=False):
         labels[replaces] = tokens_copy[replaces]
         tokens_copy[replaces] = pad_token_id
         return labels, tokens_copy
-
-    current_mask_rate = 0.0 if is_test else args.mask_rate
     
     mask_label_tmp = []
     sub_input_tmp = []
     for k in linkids:
-        tmp1, tmp2 = random_mask(k, current_mask_rate)
+        tmp1, tmp2 = random_mask(k, rate=args.mask_rate)
         mask_label_tmp.append(tmp1)
         sub_input_tmp.append(tmp2)
 
@@ -223,7 +221,7 @@ def load_datadict(args):
     loader['test'] = DataLoader(
         Datadict(data['test']),
         batch_size=args.data_config['batch_size'],
-        collate_fn=lambda x: MulT_TTE_collate_func(x, args, info_all, is_test=True),
+        collate_fn=lambda x: MulT_TTE_collate_func(x, args, info_all),
         shuffle=False,
         pin_memory=True
     )

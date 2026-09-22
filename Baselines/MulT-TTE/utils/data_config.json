@@ -21,6 +21,17 @@
     "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
     "gps_range": [41.12, -8.71690, 41.22, -8.56924]
   },
+  "toronto_927_2025_Jan_Jun_MulT_TTE": {
+    "data_dir": "data/toronto_927_2025_Jan_Jun",
+    "batch_size": 256,
+    "collate_fn": "MulT_TTE_collate_func",
+    "time_mean": 533.8585,
+    "time_std": 102.6436,
+    "edges": 9,
+    "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
+    "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
+    "gps_range": [43.30, -79.90, 44.35, -78.50]
+  },
   "toronto_927_2025_Jul_Dec_MulT_TTE": {
     "data_dir": "data/toronto_927_2025_Jul_Dec",
     "batch_size": 256,
@@ -36,13 +47,12 @@
     "data_dir": "data/toronto_927_2026_Jan_Jun",
     "batch_size": 256,
     "collate_fn": "MulT_TTE_collate_func",
-    "time_mean": 537.9589,
+    "time_mean": 537.9489,
     "time_std": 113.969,
     "edges": 9,
     "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
     "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
     "gps_range": [43.30, -79.90, 44.35, -78.50]
   }
-
 }
 

@@ -27,11 +27,11 @@ class MulT_TTE(nn.Module):
         self.highwayembed = nn.Embedding(15, 5, padding_idx=0)
         self.gpsrep = nn.Linear(4, 16)
 
-        # Process 14-dim pre-encoded global context:
-        # Time(2) + DayOfWeek(7) + Month(2) + Holiday(1) + Visibility(1) + SnowDepth(1) = 14 dims
+        # Process 9-dim pre-encoded global context:
+        # Time(2) + DayOfWeek(7) = 9 dims
         self.context_dim = 32
         self.context_mlp = nn.Sequential(
-            nn.Linear(14, self.context_dim),
+            nn.Linear(9, self.context_dim),
             nn.LeakyReLU(),
             nn.Linear(self.context_dim, self.context_dim)
         )
@@ -83,11 +83,11 @@ class MulT_TTE(nn.Module):
         lens = inputs['lens']
 
         # 1. Feature Slicing
-        highwayrep = self.highwayembed(feature[:, :, 0].long())  # Col 0: Highway ID
-        # Cols 1..2: seg_len, cum_length
-        gpsrep = self.gpsrep(feature[:, :, 3:7])  # Cols 3..6: GPS coords (4)
-        context_rep = self.context_mlp(feature[:, :, 7:21])  # Cols 7..20: 14 Global Context features
-        dynamic_feats = feature[:, :, 21:25]  # Cols 21..24: 4 Dynamic segment features
+        highwayrep = self.highwayembed(feature[:, :, 0].long())  # Col 0: Highway ID (1)
+        # Cols 1..2: seg_len, cum_length (2)
+        gpsrep = self.gpsrep(feature[:, :, 3:7])                 # Cols 3..6: GPS coords (4)
+        context_rep = self.context_mlp(feature[:, :, 7:16])      # Cols 7..15: 9 Global Context features (9)
+        dynamic_feats = feature[:, :, 16:20]                     # Cols 16..19: 4 Dynamic features (4)
 
         # 2. Masked LM Segment Embeddings
         loss_1, hidden_states, prediction_scores = self.seg_embedding([

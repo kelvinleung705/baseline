@@ -5,5 +5,11 @@ __pycache__/
 # Ignore generated datasets files
 # Ignore GMDNet data and output folders
 
+# Ignore large datasets, weights, and logs
+*.csv
+*.pth
+*.zip
+logs/
+
 # Do NOT ignore the topology JSON configuration file
 !segments.json

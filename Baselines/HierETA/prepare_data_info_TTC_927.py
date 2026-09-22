@@ -34,7 +34,7 @@ def generate_data_info(data_dir="./samples/",
     def get_gt_eta_stats(csv_path):
         data = pd.read_csv(csv_path).to_numpy().astype(np.float32)
 
-        start_segs = (data[:, 54] - 1).astype(int)
+        start_segs = (data[:, 55] - 1).astype(int)
         gt_eta_times = []
         for i in range(len(data)):
             s = start_segs[i]
