@@ -1,0 +1,39 @@
+{
+  "links": [
+    {
+      "link_id": 0,
+      "segments": [0, 1, 2]
+    },
+    {
+      "link_id": 1,
+      "segments": [3, 4]
+    },
+    {
+      "link_id": 2,
+      "segments": [5, 6, 7, 8]
+    },
+    {
+      "link_id": 3,
+      "segments": [9]
+    },
+    {
+      "link_id": 3,
+      "segments": [10, 11, 12]
+    }
+  ],
+  "segments": [
+    {"segment_id": 0, "length_km": 0.803, "length_m": 803.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 4},
+    {"segment_id": 1, "length_km": 0.901, "length_m": 901.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 4},
+    {"segment_id": 2, "length_km": 0.904, "length_m": 904.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 4},
+    {"segment_id": 3, "length_km": 0.713, "length_m": 713.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 4},
+    {"segment_id": 4, "length_km": 0.801, "length_m": 801.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 4},
+    {"segment_id": 5, "length_km": 0.800, "length_m": 800.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 3},
+    {"segment_id": 6, "length_km": 0.800, "length_m": 800.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 3},
+    {"segment_id": 7, "length_km": 0.800, "length_m": 800.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 3},
+    {"segment_id": 8, "length_km": 0.792, "length_m": 792.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 3},
+    {"segment_id": 9, "length_km": 0.801, "length_m": 801.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 2},
+    {"segment_id": 10, "length_km": 0.851, "length_m": 851.0, "width_lanes": 1, "max_speed_kmh": 40, "functional_level": 1, "road_level": 1},
+    {"segment_id": 11, "length_km": 0.801, "length_m": 801.0, "width_lanes": 2, "max_speed_kmh": 40, "functional_level": 1, "road_level": 1},
+    {"segment_id": 12, "length_km": 0.706, "length_m": 706.0, "width_lanes": 1, "max_speed_kmh": 40, "functional_level": 1, "road_level": 1}
+  ]
+}

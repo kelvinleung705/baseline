@@ -21,38 +21,37 @@
     "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
     "gps_range": [41.12, -8.71690, 41.22, -8.56924]
   },
-  "toronto_927_2025_Jan_Jun_MulT_TTE": {
-    "data_dir": "data/toronto_927_2025_Jan_Jun",
+  "WMATA_D60_2024_Jan_Jun_MulT_TTE": {
+    "data_dir": "data/WMATA_D60_2024_Jan_Jun",
     "batch_size": 256,
     "collate_fn": "MulT_TTE_collate_func",
-    "time_mean": 533.8585,
-    "time_std": 102.6436,
-    "edges": 9,
+    "time_mean": 1621.855,
+    "time_std": 318.9911,
+    "edges": 13,
     "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
     "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
-    "gps_range": [43.30, -79.90, 44.35, -78.50]
+    "gps_range": [38.78, -77.18, 39.12, -76.90]
   },
-  "toronto_927_2025_Jul_Dec_MulT_TTE": {
-    "data_dir": "data/toronto_927_2025_Jul_Dec",
+  "WMATA_D60_2024_Jun_Dec_MulT_TTE": {
+    "data_dir": "data/WMATA_D60_2024_Jun_Dec",
     "batch_size": 256,
     "collate_fn": "MulT_TTE_collate_func",
-    "time_mean": 504.9561,
-    "time_std": 106.4143,
-    "edges": 9,
+    "time_mean": 1666.597,
+    "time_std": 332.619,
+    "edges": 13,
     "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
     "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
-    "gps_range": [43.30, -79.90, 44.35, -78.50]
+    "gps_range": [38.78, -77.18, 39.12, -76.90]
   },
-  "toronto_927_2026_Jan_Jun_MulT_TTE": {
-    "data_dir": "data/toronto_927_2026_Jan_Jun",
+  "WMATA_D60_2025_Jan_Jun_MulT_TTE": {
+    "data_dir": "data/WMATA_D60_2025_Jan_Jun",
     "batch_size": 256,
     "collate_fn": "MulT_TTE_collate_func",
-    "time_mean": 537.9489,
-    "time_std": 113.969,
+    "time_mean": 1699.764,
+    "time_std": 315.3084,
     "edges": 9,
     "edges_dir": "data/porto/network-porto/porto_edges_new_simplify.pkl",
-    "nodes_dir": "data/porto/network-porto/porto_nodes_new.pkl",
-    "gps_range": [43.30, -79.90, 44.35, -78.50]
+    "nodes_dir": "dat a/porto/network-porto/porto_nodes_new.pkl",
+    "gps_range": [38.78, -77.18, 39.12, -76.90]
   }
 }
-

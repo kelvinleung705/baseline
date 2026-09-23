@@ -136,8 +136,8 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
 
 if __name__ == "__main__":
-    TRAIN_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_Jul_Dec.csv"
-    TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2026_Jan_Jun.csv"
-    JSON_PATH = "segments_toronto.json"
+    TRAIN_CSV = "D40_2023_5-12.csv"
+    TEST_CSV = "D40_2024_1-6.csv"
+    JSON_PATH = "segments_D40.json"
 
     process_two_csvs(TRAIN_CSV, TEST_CSV, JSON_PATH)
