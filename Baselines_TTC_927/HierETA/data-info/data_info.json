@@ -5,14 +5,14 @@
   "train_speed_lim_std": 24.8452,
   "train_wid_mean": 2.6667,
   "train_wid_std": 0.4714,
-  "train_gt_eta_time_mean": 533.8585,
-  "train_gt_eta_time_std": 102.6436,
+  "train_gt_eta_time_mean": 503.5359,
+  "train_gt_eta_time_std": 106.8891,
   "test_len_mean": 658.5556,
   "test_len_std": 180.66,
   "test_speed_lim_mean": 77.7778,
   "test_speed_lim_std": 24.8452,
   "test_wid_mean": 2.6667,
   "test_wid_std": 0.4714,
-  "test_gt_eta_time_mean": 510.0605,
-  "test_gt_eta_time_std": 121.2002
+  "test_gt_eta_time_mean": 537.9489,
+  "test_gt_eta_time_std": 113.969
 }

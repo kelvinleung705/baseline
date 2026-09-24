@@ -1,36 +1,54 @@
 import argparse
 import json
+import math
 import os
 import sys
-from random import shuffle
+
+# -------------------------------------------------------------------
+# FIX 1: Set GPU environment variable BEFORE importing PyTorch
+# -------------------------------------------------------------------
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 import torch
 import torch.optim as optim
 
-# -------------------------------------------------------------------
-# ADD THIS LINE TO FIX CUDNN_STATUS_BAD_PARAM:
+# FIX: Keep CUDNN disabled as required for your environment
 torch.backends.cudnn.enabled = False
-# -------------------------------------------------------------------
 
 import dataloading
 from log import logger_tb, message_logger
 from models import HierETA
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+# -------------------------------------------------------------------
+# Helper to correctly parse boolean command-line arguments
+# -------------------------------------------------------------------
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ("yes", "true", "t", "y", "1"):
+        return True
+    elif v.lower() in ("no", "false", "f", "n", "0"):
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Boolean value expected.")
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--epochs", type=int, default=100)
 parser.add_argument("--batch_size", type=int, default=32)
-parser.add_argument(
-    "--is_training", type=bool, default=True, help="training mode or not"
-)
 
+# FIX 2: Use str2bool instead of type=bool
+parser.add_argument(
+    "--is_training", type=str2bool, default=True, help="training mode or not"
+)
 parser.add_argument(
     "--segment_num", type=int, default=4, help="segment number per link"
 )
 parser.add_argument(
     "--link_num", type=int, default=3, help="link number per route"
 )
-
 parser.add_argument(
     "--win_size",
     type=int,
@@ -63,7 +81,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--test_file", type=str, default="test_trips.csv", help="test csv filename"
-)  # Added test file
+)
 
 parser.add_argument("--log_dir", type=str, default="logs")
 parser.add_argument(
@@ -74,12 +92,12 @@ parser.add_argument(
 )
 parser.add_argument(
     "--use_tb",
-    type=bool,
+    type=str2bool,
     default=False,
     help="Use tensorboard to log training info",
 )
 parser.add_argument(
-    "--code_backup", type=bool, default=True, help="code backup or not"
+    "--code_backup", type=str2bool, default=True, help="code backup or not"
 )
 parser.add_argument(
     "--description",
@@ -88,18 +106,27 @@ parser.add_argument(
     help="description of current running experiments.",
 )
 
+# FIX 3: Add checkpoint argument to avoid hardcoded paths during testing
+parser.add_argument(
+    "--checkpoint_path",
+    type=str,
+    default="",
+    help="Path to checkpoint folder or .pth file for testing",
+)
+
 FLAGS = parser.parse_args()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 FLAGS.device = device
 
-# Load or fallback data_info
+# FIX 4: Safely read file with a context manager
 data_info_path = "data-info/data_info.json"
 if os.path.exists(data_info_path):
-    data_info = json.load(open(data_info_path, "r"))
+    with open(data_info_path, "r") as f:
+        data_info = json.load(f)
 else:
-    data_info = {}  # Fallback if json is not present
+    data_info = {}
 
-# code backup and message logging
+# Code backup and message logging
 logger = logger_tb(
     FLAGS.log_dir, FLAGS.description, FLAGS.code_backup, FLAGS.use_tb
 )
@@ -143,14 +170,15 @@ def train(model, optimizer):
 
                 mape = utils.MAPE(pred, label)
                 rmse = utils.RMSE(pred, label)
+
                 if idx and (idx + 1) % 2 == 0:
                     print(
                         "--Progress: {:.4f} step:{} MAE_loss {:.4f} MAPE_loss {:.4f} RMSE_loss {:.4f}".format(
                             (idx + 1) * 100 / data_iter_len,
                             step,
-                            loss,
-                            mape,
-                            rmse,
+                            loss.item(),
+                            mape.item(),
+                            rmse.item(),
                         )
                     )
 
@@ -159,7 +187,6 @@ def train(model, optimizer):
                     with torch.no_grad():
                         val_mae, val_mape, val_rmse = evaluate(model, eval_set)
 
-                        # Save checkpoint only if validation MAE has improved
                         if val_mae < best_mae:
                             best_mae = val_mae
                             check_point = {
@@ -178,9 +205,7 @@ def train(model, optimizer):
 
                     model.train()
 
-    # =========================================================================
-    # After training finishes: Load best model and evaluate on test_trips.csv
-    # =========================================================================
+    # Final evaluation on the test set
     print(
         "\n" + "=" * 60 + "\n TRAINING FINISHED. RUNNING EVALUATION ON TEST SET\n"
     )
@@ -209,12 +234,12 @@ def evaluate(model, files):
     model.eval()
     MAE_loss = []
     MAPE_loss = []
-    RMSE_loss = []
+    MSE_loss = []  # FIX 5: Track MSE to compute proper RMSE
 
     for file_idx, input_file in enumerate(files):
-        MAE_loss_single_file = []
-        MAPE_loss_single_file = []
-        RMSE_loss_single_file = []
+        MAE_loss_single = []
+        MAPE_loss_single = []
+        MSE_loss_single = []
 
         data_iter = dataloading.get_loader(input_file, FLAGS)
         for idx, attr in enumerate(data_iter):
@@ -225,99 +250,106 @@ def evaluate(model, files):
             mape = utils.MAPE(pred, label)
             rmse = utils.RMSE(pred, label)
 
-            MAE_loss_single_file.append(mae.item())
-            RMSE_loss_single_file.append(rmse.item())
-            MAPE_loss_single_file.append(mape.item())
+            MAE_loss_single.append(mae.item())
+            MAPE_loss_single.append(mape.item())
+            # Convert batch RMSE back to MSE (RMSE^2) to aggregate mathematically correctly
+            MSE_loss_single.append(rmse.item() ** 2)
 
             if idx > 10 and idx % 100 == 0:
-                print(
-                    "Evaluate Progress: {:.5f}".format(
-                        (idx + 1) * 100 / len(data_iter)
-                    )
+                cur_mae = sum(MAE_loss_single) / len(MAE_loss_single)
+                cur_mape = sum(MAPE_loss_single) / len(MAPE_loss_single)
+                cur_rmse = math.sqrt(
+                    sum(MSE_loss_single) / len(MSE_loss_single)
                 )
                 print(
-                    "step: {}, MAE_loss {:.5f}".format(
+                    "Evaluate Progress: {:.2f}% | Step: {} | MAE: {:.5f} | MAPE: {:.5f} | RMSE: {:.5f}".format(
+                        (idx + 1) * 100 / len(data_iter),
                         idx,
-                        sum(MAE_loss_single_file) / len(MAE_loss_single_file),
+                        cur_mae,
+                        cur_mape,
+                        cur_rmse,
                     )
                 )
-                print(
-                    "step: {}, MAPE_loss {:.5f}".format(
-                        idx,
-                        sum(MAPE_loss_single_file) / len(MAPE_loss_single_file),
-                    )
-                )
-                print(
-                    "step: {}, RMSE_loss {:.5f}".format(
-                        idx,
-                        sum(RMSE_loss_single_file) / len(RMSE_loss_single_file),
-                    )
-                )
+
+        single_file_mae = (
+            sum(MAE_loss_single) / len(MAE_loss_single)
+            if MAE_loss_single
+            else 0.0
+        )
+        single_file_mape = (
+            sum(MAPE_loss_single) / len(MAPE_loss_single)
+            if MAPE_loss_single
+            else 0.0
+        )
+        single_file_rmse = (
+            math.sqrt(sum(MSE_loss_single) / len(MSE_loss_single))
+            if MSE_loss_single
+            else 0.0
+        )
 
         print("***********************")
-        print(
-            "Evaluate on file {}, MAE_loss {:.5f}".format(
-                input_file,
-                sum(MAE_loss_single_file) / len(MAE_loss_single_file),
-            )
-        )
-        print(
-            "Evaluate on file {}, MAPE_loss {:.5f}".format(
-                input_file,
-                sum(MAPE_loss_single_file) / len(MAPE_loss_single_file),
-            )
-        )
-        print(
-            "Evaluate on file {}, RMSE_loss {:.5f}".format(
-                input_file,
-                sum(RMSE_loss_single_file) / len(RMSE_loss_single_file),
-            )
-        )
-        print("***********************\n\n")
-        MAE_loss.extend(MAE_loss_single_file)
-        MAPE_loss.extend(MAPE_loss_single_file)
-        RMSE_loss.extend(RMSE_loss_single_file)
+        print(f"File: {input_file}")
+        print(f"MAE_loss : {single_file_mae:.5f}")
+        print(f"MAPE_loss: {single_file_mape:.5f}")
+        print(f"RMSE_loss: {single_file_rmse:.5f}")
+        print("***********************\n")
 
-    MAPE = sum(MAPE_loss) / len(MAPE_loss) if MAPE_loss else 0
-    MAE = sum(MAE_loss) / len(MAE_loss) if MAE_loss else float("inf")
-    RMSE = sum(RMSE_loss) / len(RMSE_loss) if RMSE_loss else 0
+        MAE_loss.extend(MAE_loss_single)
+        MAPE_loss.extend(MAPE_loss_single)
+        MSE_loss.extend(MSE_loss_single)
 
+    total_mae = sum(MAE_loss) / len(MAE_loss) if MAE_loss else float("inf")
+    total_mape = sum(MAPE_loss) / len(MAPE_loss) if MAPE_loss else 0.0
+    total_rmse = (
+        math.sqrt(sum(MSE_loss) / len(MSE_loss)) if MSE_loss else 0.0
+    )  # FIX 5: Proper RMSE calculation
+
+    print("\n-------- Final Evaluation --------")
     print(
-        "\n--------final----------- \nMAPE: {:.5f} \nMAE:{:.5f} \nRMSE:{:.5f}\n".format(
-            MAPE, MAE, RMSE
-        )
+        f"MAE : {total_mae:.5f}\nMAPE: {total_mape:.5f}\nRMSE: {total_rmse:.5f}\n"
     )
 
-    return MAE, MAPE, RMSE
+    return total_mae, total_mape, total_rmse
 
 
-def test(model_path=""):
-    model = HierETA.HierETA_Net(FLAGS, data_info)
-    file = os.path.join(model_path, "best_model.pth")
-    check_point = torch.load(file, map_location=device)
+# FIX 6: Accept the existing model rather than recreating it
+def test(model, checkpoint_path):
+    if os.path.isdir(checkpoint_path):
+        checkpoint_path = os.path.join(checkpoint_path, "best_model.pth")
+
+    if not os.path.exists(checkpoint_path):
+        raise FileNotFoundError(
+            f"Model checkpoint not found at: {checkpoint_path}"
+        )
+
+    check_point = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(check_point["model"])
-    print("Loaded test model: " + file)
-    model.to(device)
+    print(f"Loaded test model from: {checkpoint_path}")
 
-    # Evaluates directly on test_file
     with torch.no_grad():
         test_mae, test_mape, test_rmse = evaluate(model, [FLAGS.test_file])
 
     print("=" * 60)
     print("TEST RESULTS:")
-    print("MAE : {:.5f}".format(test_mae))
-    print("MAPE: {:.5f}".format(test_mape))
-    print("RMSE: {:.5f}".format(test_rmse))
+    print(f"MAE : {test_mae:.5f}")
+    print(f"MAPE: {test_mape:.5f}")
+    print(f"RMSE: {test_rmse:.5f}")
     print("=" * 60)
 
 
 if __name__ == "__main__":
+    # Initialize model once
     model = HierETA.HierETA_Net(FLAGS, data_info)
     model.to(device)
-    optimizer = optim.Adam(model.parameters(), lr=FLAGS.lr, weight_decay=1e-5)
 
     if FLAGS.is_training:
+        optimizer = optim.Adam(
+            model.parameters(), lr=FLAGS.lr, weight_decay=1e-5
+        )
         train(model, optimizer)
     else:
-        model_path = "logs/2021-12-25-10-35-07_JustForDemo"
-        test(model_path)
+        if not FLAGS.checkpoint_path:
+            raise ValueError(
+                "In test mode (`--is_training False`), you must provide a valid `--checkpoint_path <path>`."
+            )
+        test(model, FLAGS.checkpoint_path)

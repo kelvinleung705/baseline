@@ -3,12 +3,13 @@ import numpy as np
 import pandas as pd
 
 
-def process_and_split_dataset(file_path, save_to_csv=True):
-    # 1. Read CSV (row 0 becomes the header automatically)
+def process_and_split_dataset(
+    file_path, output_dir="samples", save_to_csv=True
+):
+    # 1. Read CSV (row 0 is the header)
     df = pd.read_csv(file_path)
 
     # 2. Extract column 4 (sin) and column 5 (cos)
-    # (Column 0 = Column A, Column 4 = Column E, Column 5 = Column F)
     month_sin = df.iloc[:, 4].values
     month_cos = df.iloc[:, 5].values
 
@@ -17,7 +18,7 @@ def process_and_split_dataset(file_path, save_to_csv=True):
     angles = np.where(angles < 0, angles + 2 * np.pi, angles)
     months = np.round(angles * 12 / (2 * np.pi)).astype(int) + 1
 
-    # 4. Detect H1 (Jan–Jun) or H2 (Jul–Dec) using median
+    # 4. Detect H1 (Jan–Jun) or H2 (Jul–Dec)
     if np.median(months) <= 6:
         print(">> Detected: Jan–Jun dataset")
 
@@ -26,7 +27,7 @@ def process_and_split_dataset(file_path, save_to_csv=True):
         if dropped_count > 0:
             print(f">> Dropped {dropped_count} overflow rows from July.")
 
-        # Split into Jan-May and June (retains original row index)
+        # Split: Jan to May and June
         df_main = df[months <= 5].copy()
         df_last = df[months == 6].copy()
 
@@ -36,33 +37,44 @@ def process_and_split_dataset(file_path, save_to_csv=True):
         # Drop January overflow (month < 7)
         dropped_count = np.sum(months < 7)
         if dropped_count > 0:
-            print(f">> Dropped {dropped_count} overflow rows from January.")
+            print(
+                f">> Dropped {dropped_count} overflow rows from January."
+            )
 
-        # Split into Jul-Nov and December (retains original row index)
+        # Split: Jul to Nov and Dec
         df_main = df[(months >= 7) & (months <= 11)].copy()
         df_last = df[months == 12].copy()
-        
-    name_main, name_last = "train_trips.csv", "validation_trips.csv"
-        
 
-    # 5. Save with index=True to keep original row index and headers
+    name_main, name_last = "train_trips.csv", "validation_trips.csv"
+
+    # 5. Save with index=False (PREVENTS EXTRA COLUMN!)
     if save_to_csv:
-        # index=True writes the original row index/numbers to the first column
-        # header=True (default) preserves the top row column names
-        output_dir = "samples"
+        os.makedirs(output_dir, exist_ok=True)
         path_main = os.path.join(output_dir, name_main)
         path_last = os.path.join(output_dir, name_last)
-        df_main.to_csv(path_main, index=True)
-        df_last.to_csv(path_last, index=True)
-        print(f"Saved: '{path_main}' and '{path_last}' with row index preserved.")
+
+        # -------------------------------------------------------------
+        # CHANGED: index=False ensures NO extra column is added!
+        # -------------------------------------------------------------
+        df_main.to_csv(path_main, index=False)
+        df_last.to_csv(path_last, index=False)
+
+        print(
+            f"Saved: '{path_main}' (Cols: {df_main.shape[1]}, Rows: {len(df_main)})"
+        )
+        print(
+            f"Saved: '{path_last}' (Cols: {df_last.shape[1]}, Rows: {len(df_last)})"
+        )
 
     return df_main, df_last
 
 
 # ==========================================
-# Example Usage:
+# Run the script:
 # ==========================================
 if __name__ == "__main__":
     df_train, df_test = process_and_split_dataset(
-        "trip_info_9_section_ver2_simplify_ultra_no_variance_2024_Jul_Dec.csv", save_to_csv=True
+        "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_Jul_Dec.csv",
+        output_dir="samples",
+        save_to_csv=True,
     )
