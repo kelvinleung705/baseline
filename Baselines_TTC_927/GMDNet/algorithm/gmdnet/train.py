@@ -144,7 +144,7 @@ def get_params():
     parser.add_argument('--edge_dim', type=int, default=4, help='Number of dynamic segment features')
     parser.add_argument('--max_seq_len', type=int, default=9, help='Max number of segments in a trip')
     parser.add_argument('--node_dim', type=int, default=3, help='Node feature dimension')
-    parser.add_argument('--route_fea_dim', type=int, default=8, help='Global temporal feature dimension')
+    parser.add_argument('--route_fea_dim', type=int, default=10, help='Global temporal feature dimension')
 
     args, _ = parser.parse_known_args()
     return args

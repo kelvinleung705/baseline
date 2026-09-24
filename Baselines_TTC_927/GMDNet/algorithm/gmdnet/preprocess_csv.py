@@ -16,7 +16,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
     max_seq_len = 9  # Maximum trip length in segments
 
     # 1. Extract columns
-    temporal_features = data_mat[:, 0:7]
+    temporal_features = data_mat[:, 0:9]
 
     sin_t, cos_t = data_mat[:, 0], data_mat[:, 1]
     angles = np.arctan2(sin_t, cos_t)
@@ -92,24 +92,40 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
     num_nodes = max([max(u, v) for u, v in segment_map.values()]) + 1
 
     # Parse both CSVs
-    print("Parsing Training CSV...")
-    train_data = parse_csv(train_csv_path, segment_map, num_nodes)
-
-    print("Parsing Validation CSV...")
-    val_data = parse_csv(train_csv_path, segment_map, num_nodes)
+    print("Parsing Training/Validation CSV...")
+    train_val_data = parse_csv(train_csv_path, segment_map, num_nodes)
 
     print("Parsing Test CSV...")
     test_data = parse_csv(test_csv_path, segment_map, num_nodes)
 
-    
-    # Save Train directly from train_data
-    train_size = len(train_data['label'])
-    train_data['f'][:, 0] = np.arange(train_size)
-        
-    # Save Validation directly from val_data
-    val_size = len(val_data['label'])
-    val_data['f'][:, 0] = np.arange(val_size)
-    
+    # Split Train/Val Data
+    num_train_val = len(train_val_data['label'])
+    indices = np.arange(num_train_val)
+    np.random.seed(1024)
+    np.random.shuffle(indices)
+
+    train_end = int(num_train_val * train_ratio)
+
+    splits = {
+        'train': indices[:train_end],
+        'val': indices[train_end:],
+    }
+
+    # Save Train and Val
+    for mode, split_idx in splits.items():
+        split_size = len(split_idx)
+
+        data_dict = {}
+        for key in train_val_data.keys():
+            data_dict[key] = train_val_data[key][split_idx].copy()
+
+        # Reset f[:, 0] to local batch index (0 to N-1) for GMDNet lookups
+        data_dict['f'][:, 0] = np.arange(split_size)
+
+        save_path = os.path.join(output_dir, f"{mode}.npy")
+        np.save(save_path, data_dict)
+        print(f"Saved {mode} set -> {save_path} | Samples: {split_size}")
+
     # Save Test directly from test_data
     test_size = len(test_data['label'])
     test_data['f'][:, 0] = np.arange(test_size)

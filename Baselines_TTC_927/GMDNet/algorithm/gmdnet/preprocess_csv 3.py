@@ -16,7 +16,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
     max_seq_len = 9  # Maximum trip length in segments
 
     # 1. Extract columns
-    temporal_features = data_mat[:, 0:7]
+    temporal_features = data_mat[:, 0:9]
 
     sin_t, cos_t = data_mat[:, 0], data_mat[:, 1]
     angles = np.arctan2(sin_t, cos_t)
@@ -35,7 +35,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
     routes = np.zeros((num_samples, max_seq_len, 2), dtype=np.int64)
     masks = np.zeros((num_samples, max_seq_len, max_seq_len), dtype=np.int64)
     labels = np.zeros((num_samples, 1), dtype=np.float32)
-    f_features = np.zeros((num_samples, 1 + 1 + 7), dtype=np.float32)
+    f_features = np.zeros((num_samples, 1 + 1 + 9), dtype=np.float32)
 
     edges = np.zeros((num_samples, num_nodes, num_nodes, 6), dtype=np.float32)
     nodes = np.zeros((num_samples, num_nodes, 4), dtype=np.float32)
