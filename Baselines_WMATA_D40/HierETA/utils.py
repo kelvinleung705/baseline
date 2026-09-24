@@ -2,7 +2,7 @@ import os
 import json
 import torch
 
-data_info = json.load(open('data-info/data_info_old.json', 'r'))
+data_info = json.load(open('data-info/data_info.json', 'r'))
 
 
 def normalize(x, key, is_training=True):
@@ -12,6 +12,11 @@ def normalize(x, key, is_training=True):
     else:
         mean = data_info["test_" + key + '_mean']
         std = data_info["test_" + key + '_std']
+    
+    # If std is 0 (constant feature like speed_lim = 40.0), return 0 to avoid NaN
+    if std == 0 or std < 1e-7:
+        return x - mean  # Since x == mean, this cleanly becomes 0 without NaN
+    
     return (x - mean) / std
 
 

@@ -25,7 +25,7 @@ parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
 
 parser.add_argument('--data_dir', type=str, default="./samples/", help="directory for route data storage")
 parser.add_argument('--train_file', type=str, default="train_trips.csv", help="training csv filename")
-parser.add_argument('--eval_file', type=str, default="test_trips.csv", help="evaluation csv filename")
+parser.add_argument('--eval_file', type=str, default="validation_trips.csv", help="evaluation csv filename")
 
 parser.add_argument('--log_dir', type=str, default="logs")
 parser.add_argument('--use_tb', type=bool, default=False, help='Use tensorboard to log training info')

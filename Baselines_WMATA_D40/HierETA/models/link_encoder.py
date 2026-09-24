@@ -62,6 +62,24 @@ class Link_Encoder(nn.Module):
         link_feat = self.vanila_att(seg_context_feat)
 
         link_lens = route["link_lens"]
+        
+         # ----------- DEBUG CODE TO FIND THE EXACT BAD SAMPLE -----------
+        bad_mask = (link_lens <= 0)
+        if bad_mask.any():
+            print("\n" + "="*50)
+            print("FOUND SAMPLES WITH link_lens <= 0!")
+            bad_indices = torch.where(bad_mask)[0].tolist()
+            print("Indices in current batch:", bad_indices)
+            print("link_lens in this batch:", link_lens.tolist())
+            if "trip_id" in route:
+                print("Bad trip IDs:", [route["trip_id"][i] for i in bad_indices])
+            for k, v in route.items():
+                if isinstance(v, torch.Tensor) and len(v) == len(link_lens):
+                    print(f"route['{k}'] for bad samples:", v[bad_mask])
+            print("="*50 + "\n")
+            raise RuntimeError("Stopping to inspect bad samples above.")
+        # ---------------------------------------------------------------
+        
         road_link_mask = torch.reshape(route["road_link_mask"], (self.batch_size, self.link_num)).bool().unsqueeze(1)
 
         link_lstm_enc = nn.utils.rnn.pack_padded_sequence(link_feat, link_lens.cpu(), batch_first=True,

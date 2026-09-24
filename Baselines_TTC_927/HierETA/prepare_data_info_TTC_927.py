@@ -7,7 +7,7 @@ import pandas as pd
 def generate_data_info(data_dir="./samples/",
                        train_file="train_trips.csv",
                        test_file="test_trips.csv",
-                       network_file="data-info/toronto_927_900_road_network.json",
+                       network_file="data-info/TTC_927_900_road_network.json",
                        output_file="data-info/data_info.json"):
     # -------------------------------------------------------------
     # 1. Read static features from data-info/road_network.json
@@ -29,7 +29,7 @@ def generate_data_info(data_dir="./samples/",
     wid_mean, wid_std = float(np.mean(wids)), float(np.std(wids))
 
     # -------------------------------------------------------------
-    # 2. Function to compute gt_eta_time stats from CSV using your loop
+    # 2. Function to compute gt_eta_time stats from CSV using your loopz
     # -------------------------------------------------------------
     def get_gt_eta_stats(csv_path):
         data = pd.read_csv(csv_path).to_numpy().astype(np.float32)

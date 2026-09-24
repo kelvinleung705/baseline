@@ -116,3 +116,4 @@ class Segment_Encoder(nn.Module):
         seg_lstm_outs = torch.stack(seg_lstm_outs, dim=1)
         seg_context_feat = self.seg_self_att(seg_lstm_outs, link_segment_mask.unsqueeze(2))
         return seg_context_feat
+        return seg_context_feat

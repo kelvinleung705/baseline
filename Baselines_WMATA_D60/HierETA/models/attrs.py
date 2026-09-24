@@ -53,9 +53,11 @@ class Attr(nn.Module):
                 attr_t = attrs[name].float()
                 if type == "seg":
                     if attr_t.dim() == 2:
-                        attr_t = attr_t.unsqueeze(-1)
+                        attr_t = attr_t.unsqueeze(-1)   # (Batch, 12) -> (Batch, 12, 1)
+                        #print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
                     elif attr_t.dim() == 3:
-                        attr_t = attr_t.view(self.batch_size, -1).unsqueeze(-1)
+                        #print("good")
+                        pass  # It is ALREADY (Batch, 12, 4)! Do NOT flatten it!
                 emb_list.append(attr_t)
 
         # SAFEGUARD FOR LINK: If no link features exist, return dummy zero tensor (Batch, 3, 1)
@@ -77,7 +79,8 @@ class Attr(nn.Module):
         if type == "ext":
             size += 7  # 7 global features
         elif type == "seg":
-            size += len(Conts)
+            #size += len(Conts)
+            size += len(Conts) + 3 
         elif type == "link":
             size = 1  # 1 dummy dimension for link
 

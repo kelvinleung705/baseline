@@ -26,6 +26,9 @@ def load_network_data(network_file_path):
         "roadLevel": np.array([s.get("road_level", 1) for s in segments_sorted], dtype=np.int64),
         "laneNum": np.array([s["width_lanes"] for s in segments_sorted], dtype=np.int64)
     }
+    
+    speed_ms = np.maximum(static_dict["speedLimit"], 1.0) / 3.6
+    static_dict["free_flow_time"] = (static_dict["len"] / speed_ms).astype(np.float32)
 
     return static_links, static_dict
 
@@ -40,7 +43,7 @@ class MySet(Dataset):
         network_file_path = getattr(
             FLAGS,
             'network_file',
-            os.path.join(base_dir, "data-info", "toronto_927_900_road_network.json")
+            os.path.join(base_dir, "data-info", "TTC_927_900_road_network.json")
         )
 
         self.static_links, self.static_meta = load_network_data(network_file_path)
@@ -62,13 +65,14 @@ class MySet(Dataset):
     def __getitem__(self, idx):
         row = self.data[idx]
 
-        global_features = row[0:7]
+        global_features = row[0:9]
 
-        start_seg = int(row[54]) - 1
+        start_seg = int(row[55]) - 1
         traversed_segments = list(range(start_seg, 9))
 
         all_seg_times = row[9:18]
-        live_seg_info = row[18:54].reshape(9, 4)
+        # Reshaped into (9 segments, 4 dynamic features)
+        live_seg_info = row[19:55].reshape(9, 4)
 
         gt_eta_time = np.sum(all_seg_times[start_seg:9])
 
@@ -81,7 +85,12 @@ class MySet(Dataset):
             if len(active_segs) > 0:
                 segment_list_hier.append(active_segs)
                 seg_times_hier.append(all_seg_times[active_segs])
-                seg_road_state_hier.append(live_seg_info[active_segs, 0].astype(np.int64))
+                
+                # =================== CHANGE 1 ===================
+                # Extract ALL 4 features by slicing `:` instead of just `0`
+                # Shape for each link: (num_active_segs, 4)
+                seg_road_state_hier.append(live_seg_info[active_segs, :])
+                # ================================================
 
         return {
             "global_features": global_features,
@@ -104,10 +113,9 @@ def collate_fn(data, FLAGS, static_links, static_meta):
     gt_eta_time = torch.FloatTensor([item["gt_eta_time"] for item in data]).unsqueeze(-1)
     global_features = torch.FloatTensor(np.array([item["global_features"] for item in data]))
 
-    # Flattened 2D matrices (Batch, 12) expected by original GitHub Attr class
+    # Flattened 2D matrices (Batch, 12)
     seg_id_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
     seg_func_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
-    road_state_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
     lane_num_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
     road_level_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
 
@@ -115,6 +123,12 @@ def collate_fn(data, FLAGS, static_links, static_meta):
     speed_lim_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
     time_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
     len_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
+
+    # =================== CHANGE 2 ===================
+    # Add a 3rd dimension of size 4 to hold all 4 dynamic values per segment
+    # Shape: (Batch, 12, 4)
+    road_state_padded = np.zeros((batch_size, total_segs, 4), dtype=np.float32)
+    # ================================================
 
     # Hierarchical 3D masks for HierETA model decoder
     seg_times_hier_padded = np.zeros((batch_size, link_num, segment_num), dtype=np.float32)
@@ -141,31 +155,29 @@ def collate_fn(data, FLAGS, static_links, static_meta):
             link_seg_lens[i, actual_link_idx] = num_segs
             link_mask[i, actual_link_idx] = 1.0
 
-            # Calculate 1D index offset inside the 12-slot flat sequence
             flat_start_idx = actual_link_idx * segment_num
 
-            # Populate 2D Flat matrices (Batch, 12) for Attr
             seg_id_padded[i, flat_start_idx: flat_start_idx + num_segs] = [s + 1 for s in segs]
-            seg_func_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["segment_functional_level"][
-                segs]
+            seg_func_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["segment_functional_level"][segs]
             lane_num_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["laneNum"][segs]
             road_level_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["roadLevel"][segs]
-            road_state_padded[i, flat_start_idx: flat_start_idx + num_segs] = (
-                hier_road_state[l_idx]
-            )
+
+            # =================== CHANGE 3 ===================
+            # Copy all 4 features into the 3rd dimension with `:, :]`
+            road_state_padded[i, flat_start_idx: flat_start_idx + num_segs, :] = hier_road_state[l_idx]
+            # ================================================
 
             wid_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["wid_norm"][segs]
             speed_lim_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["speedLimit_norm"][segs]
             len_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["len_norm"][segs]
-            time_padded[i, flat_start_idx: flat_start_idx + num_segs] = hier_times[l_idx]
+            time_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["free_flow_time"][segs]
 
-            # Populate 3D matrices (Batch, 3, 4) for HierETA decoder
             seg_times_hier_padded[i, actual_link_idx, :num_segs] = hier_times[l_idx]
             segment_mask[i, actual_link_idx, :num_segs] = 1.0
 
     week_id = global_features[:, 0].long()
     time_id = global_features[:, 1].long()
-    driver_id = torch.zeros(batch_size, dtype=torch.long)  # Dummy driverID
+    driver_id = torch.zeros(batch_size, dtype=torch.long)
 
     cross_id = torch.zeros((batch_size, link_num), dtype=torch.long)
     delay_time = torch.zeros((batch_size, link_num), dtype=torch.float32)
@@ -183,7 +195,10 @@ def collate_fn(data, FLAGS, static_links, static_meta):
         "speedLimit": torch.FloatTensor(speed_lim_padded),
         "time": torch.FloatTensor(time_padded),
         "len": torch.FloatTensor(len_padded),
-        "roadState": torch.FloatTensor(road_state_padded),  # <--- Now FloatTensor!
+        
+        # Now outputs shape (Batch, 12, 4) with all 4 features!
+        "roadState": torch.FloatTensor(road_state_padded),
+        
         # link_cates & link_conts
         "crossID": cross_id,
         "delayTime": delay_time,
@@ -191,22 +206,27 @@ def collate_fn(data, FLAGS, static_links, static_meta):
         "gt_eta_time": gt_eta_time,
         "seg_times": torch.FloatTensor(seg_times_hier_padded),
         "link_lens": torch.LongTensor(link_lens),
-        "link_seg_lens": torch.LongTensor(link_seg_lens),  # <--- FIXES KeyError: 'link_seg_lens'
+        "link_seg_lens": torch.LongTensor(link_seg_lens),
         "road_segment_mask": torch.FloatTensor(segment_mask),
         "road_link_mask": torch.FloatTensor(link_mask),
     }
     return attrs
 
 
-def get_loader(input_file, FLAGS):
+def get_loader(input_file, FLAGS, is_training=None):
+    if is_training is None:
+        is_training = "train" in input_file.lower()
+
     dataset = MySet(input_file=input_file, FLAGS=FLAGS)
     data_loader = DataLoader(
         dataset=dataset,
         batch_size=FLAGS.batch_size,
-        shuffle=FLAGS.is_training,
-        collate_fn=lambda x: collate_fn(x, FLAGS, dataset.static_links, dataset.static_meta),
+        shuffle=is_training,  # Shuffles train, does not shuffle val/test
+        collate_fn=lambda x: collate_fn(
+            x, FLAGS, dataset.static_links, dataset.static_meta
+        ),
         num_workers=0,
         pin_memory=True,
-        drop_last=FLAGS.is_training
+        drop_last=True,  # <--- Set to True to drop the last 29 leftover trips
     )
     return data_loader

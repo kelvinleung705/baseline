@@ -15,16 +15,13 @@ import utils
 import dataloading
 from models import HierETA
 from log import logger_tb, message_logger
-
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 parser = argparse.ArgumentParser()
 parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--is_training', type=bool, default=True, help="training mode or not")
-
 parser.add_argument('--segment_num', type=int, default=4, help="segment number per link")
 parser.add_argument('--link_num', type=int, default=3, help="link number per route")
-
 parser.add_argument('--win_size', type=int, default=3, help="window scale of neighboring segments")
 parser.add_argument('--Lambda', type=float, default=0.4, help="weighting parameter in decoder")
 parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
@@ -33,13 +30,11 @@ parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
 parser.add_argument('--data_dir', type=str, default="./samples/", help="directory for route data storage")
 parser.add_argument('--train_file', type=str, default="train_trips.csv", help="training csv filename")
 parser.add_argument('--eval_file', type=str, default="test_trips.csv", help="evaluation csv filename")
-
 parser.add_argument('--log_dir', type=str, default="logs")
 parser.add_argument('--step_per_eval', type=int, default=100, help="training steps per evaluation")
 parser.add_argument('--use_tb', type=bool, default=False, help='Use tensorboard to log training info')
 parser.add_argument('--code_backup', type=bool, default=True, help='code backup or not')
 parser.add_argument('--description', type=str, default="HierETA", help='description of current running experiments.')
-
 FLAGS = parser.parse_args()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 FLAGS.device = device

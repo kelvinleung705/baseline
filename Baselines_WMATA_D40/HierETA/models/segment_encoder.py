@@ -105,7 +105,7 @@ class Segment_Encoder(nn.Module):
                 (hidden_h_pre, hidden_c_pre) = hidden
                 real_seq_lens = (link_seg_lens[:, i] != 0).float().view(1, -1, 1)
                 hidden_h = real_seq_lens * hidden_h + (1.0 - real_seq_lens) * hidden_h_pre
-                hidden_c = real_seq_lens * hidden_h + (1.0 - real_seq_lens) * hidden_h_pre
+                hidden_c = real_seq_lens * hidden_c + (1.0 - real_seq_lens) * hidden_c_pre
 
             hidden = (hidden_h, hidden_c)
             enc_output, _ = nn.utils.rnn.pad_packed_sequence(enc_output, batch_first=True)

@@ -43,7 +43,12 @@ class Attr(nn.Module):
         for name, dim_in, dim_out in Cates:
             if name in attrs:
                 embed = getattr(self, "attr-" + name)
-                attr_t = attrs[name].view(self.batch_size, -1)
+                #fixed batch
+                #attr_t = attrs[name].view(self.batch_size, -1)
+                # Use the actual batch size of the current tensor dynamically
+                #Dynamic Batch Size: Get the actual batch size of the current tensor dynamically
+                current_bs = attrs[name].size(0)
+                attr_t = attrs[name].view(current_bs, -1)
                 attr_t = embed(attr_t)
                 emb_list.append(attr_t)
 
@@ -53,9 +58,11 @@ class Attr(nn.Module):
                 attr_t = attrs[name].float()
                 if type == "seg":
                     if attr_t.dim() == 2:
-                        attr_t = attr_t.unsqueeze(-1)
+                        attr_t = attr_t.unsqueeze(-1)   # (Batch, 12) -> (Batch, 12, 1)
+                        #print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
                     elif attr_t.dim() == 3:
-                        attr_t = attr_t.view(self.batch_size, -1).unsqueeze(-1)
+                        #print("good")
+                        pass  # It is ALREADY (Batch, 12, 4)! Do NOT flatten it!
                 emb_list.append(attr_t)
 
         # SAFEGUARD FOR LINK: If no link features exist, return dummy zero tensor (Batch, 3, 1)
@@ -75,9 +82,10 @@ class Attr(nn.Module):
             size += dim_out
 
         if type == "ext":
-            size += 7  # 7 global features
+            size += 9  # 9 global features
         elif type == "seg":
-            size += len(Conts)
+            #size += len(Conts)
+            size += len(Conts) + 3 
         elif type == "link":
             size = 1  # 1 dummy dimension for link
 

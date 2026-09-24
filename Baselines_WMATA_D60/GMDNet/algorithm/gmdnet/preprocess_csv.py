@@ -13,7 +13,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
     data_mat = df.to_numpy(dtype=np.float32)
 
     num_samples = len(data_mat)
-    max_seq_len = 9  # Maximum trip length in segments
+    max_seq_len = 10  # Maximum trip length in segments
 
     # 1. Extract columns
     temporal_features = data_mat[:, 0:7]
@@ -22,13 +22,13 @@ def parse_csv(csv_path, segment_map, num_nodes):
     angles = np.arctan2(sin_t, cos_t)
     hours = np.mod(np.round((angles % (2 * np.pi)) / (2 * np.pi) * 24.0), 24).astype(np.int64)
 
-    seg_travel_times = data_mat[:, 9:18]
-    seg_conditions = data_mat[:, 19:55].reshape(num_samples, 9, 4)
+    seg_travel_times = data_mat[:, 9:19]
+    seg_conditions = data_mat[:, 20:60].reshape(num_samples, 10, 4)
 
     # ==================== CHANGED HERE ====================
-    # Force every sample to be the whole 9-segment corridor trip:
+    # Force every sample to be the whole 10-segment corridor trip:
     start_segs = np.ones(num_samples, dtype=int)    # Segment 1
-    trip_lens  = np.full(num_samples, 9, dtype=int) # All 9 segments
+    trip_lens  = np.full(num_samples, 10, dtype=int) # All 10 segments
     # =======================================================
 
     # 2. Initialize arrays
@@ -44,7 +44,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
     # 3. Populate arrays
     for i in range(num_samples):
         start_seg_id = start_segs[i]
-        t_len = min(trip_lens[i], 9 - start_seg_id + 1)
+        t_len = min(trip_lens[i], 10 - start_seg_id + 1)
         s_idx = start_seg_id - 1
 
         # Sum of all 9 segments = Total Trip Time (~500s)
@@ -136,8 +136,8 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
 
 if __name__ == "__main__":
-    TRAIN_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_Jul_Dec.csv"
-    TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2026_Jan_Jun.csv"
-    JSON_PATH = "segments_toronto.json"
+    TRAIN_CSV = "D60_2024_7-12.csv"
+    TEST_CSV = "D60_2025_1-6.csv"
+    JSON_PATH = "segments.json"
 
     process_two_csvs(TRAIN_CSV, TEST_CSV, JSON_PATH)

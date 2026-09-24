@@ -7,7 +7,7 @@ import pandas as pd
 def generate_data_info(data_dir="./samples/",
                        train_file="train_trips.csv",
                        test_file="test_trips.csv",
-                       network_file="data-info/toronto_927_900_road_network.json",
+                       network_file="data-info/WMATA_D40_road_network.json",
                        output_file="data-info/data_info.json"):
     # -------------------------------------------------------------
     # 1. Read static features from data-info/road_network.json
@@ -34,11 +34,12 @@ def generate_data_info(data_dir="./samples/",
     def get_gt_eta_stats(csv_path):
         data = pd.read_csv(csv_path).to_numpy().astype(np.float32)
 
-        start_segs = (data[:, 55] - 1).astype(int)
+        start_segs = (data[:, 75] - 1).astype(int)
+        print(start_segs)
         gt_eta_times = []
         for i in range(len(data)):
             s = start_segs[i]
-            gt_eta_times.append(np.sum(data[i, 9:18][s:9]))
+            gt_eta_times.append(np.sum(data[i, 9:22][s:13]))
 
         return float(np.mean(gt_eta_times)), float(np.std(gt_eta_times))
 

@@ -2,7 +2,7 @@ import os
 import json
 import torch
 
-data_info = json.load(open('data-info/data_info_old.json', 'r'))
+data_info = json.load(open('data-info/data_info.json', 'r'))
 
 
 def normalize(x, key, is_training=True):

@@ -40,7 +40,7 @@ class MySet(Dataset):
         network_file_path = getattr(
             FLAGS,
             'network_file',
-            os.path.join(base_dir, "data-info", "toronto_927_900_road_network.json")
+            os.path.join(base_dir, "data-info", "WMATA_D40_road_network.json")
         )
 
         self.static_links, self.static_meta = load_network_data(network_file_path)
@@ -64,13 +64,19 @@ class MySet(Dataset):
 
         global_features = row[0:7]
 
-        start_seg = int(row[54]) - 1
-        traversed_segments = list(range(start_seg, 9))
+        # In WMATA, start_seg is at column 75 (1-based -> subtract 1):
+        start_seg = int(row[75]) - 1
+        
+        # WMATA has 13 segments (0 to 12), so the end is 13:
+        traversed_segments = list(range(start_seg, 13))
 
-        all_seg_times = row[9:18]
-        live_seg_info = row[18:54].reshape(9, 4)
+        # Travel times for 13 segments:
+        all_seg_times = row[9:22]
+        
+        # Live features for 13 segments (13 * 4 = 52 features):
+        live_seg_info = row[22:74].reshape(13, 4)
 
-        gt_eta_time = np.sum(all_seg_times[start_seg:9])
+        gt_eta_time = np.sum(all_seg_times[start_seg:13])
 
         segment_list_hier = []
         seg_times_hier = []
@@ -81,7 +87,7 @@ class MySet(Dataset):
             if len(active_segs) > 0:
                 segment_list_hier.append(active_segs)
                 seg_times_hier.append(all_seg_times[active_segs])
-                seg_road_state_hier.append(live_seg_info[active_segs, 0].astype(np.int64))
+                seg_road_state_hier.append(live_seg_info[active_segs, :])
 
         return {
             "global_features": global_features,
@@ -107,7 +113,7 @@ def collate_fn(data, FLAGS, static_links, static_meta):
     # Flattened 2D matrices (Batch, 12) expected by original GitHub Attr class
     seg_id_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
     seg_func_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
-    road_state_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
+    #road_state_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
     lane_num_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
     road_level_padded = np.zeros((batch_size, total_segs), dtype=np.int64)
 
@@ -115,6 +121,8 @@ def collate_fn(data, FLAGS, static_links, static_meta):
     speed_lim_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
     time_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
     len_padded = np.zeros((batch_size, total_segs), dtype=np.float32)
+    
+    road_state_padded = np.zeros((batch_size, total_segs, 4), dtype=np.float32)
 
     # Hierarchical 3D masks for HierETA model decoder
     seg_times_hier_padded = np.zeros((batch_size, link_num, segment_num), dtype=np.float32)
@@ -150,9 +158,9 @@ def collate_fn(data, FLAGS, static_links, static_meta):
                 segs]
             lane_num_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["laneNum"][segs]
             road_level_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["roadLevel"][segs]
-            road_state_padded[i, flat_start_idx: flat_start_idx + num_segs] = (
-                hier_road_state[l_idx]
-            )
+            #road_state_padded[i, flat_start_idx: flat_start_idx + num_segs] = (hier_road_state[l_idx])
+            
+            road_state_padded[i, flat_start_idx: flat_start_idx + num_segs, :] = hier_road_state[l_idx]
 
             wid_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["wid_norm"][segs]
             speed_lim_padded[i, flat_start_idx: flat_start_idx + num_segs] = static_meta["speedLimit_norm"][segs]
