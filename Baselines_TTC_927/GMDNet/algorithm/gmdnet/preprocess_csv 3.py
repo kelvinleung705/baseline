@@ -78,7 +78,7 @@ def parse_csv(csv_path, segment_map, num_nodes):
     }
 
 
-def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./data", train_ratio=0.85):
+def process_two_csvs(train_csv_path, val_csv_path, test_csv_path, json_path, output_dir="./data", train_ratio=0.85):
     """
     Splits train_csv into Train/Val, and saves test_csv entirely as Test.
     """
@@ -91,24 +91,31 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
     num_nodes = max([max(u, v) for u, v in segment_map.values()]) + 1
 
-    # Parse both CSVs
+    # Parse CSVs
     print("Parsing Training CSV...")
     train_data = parse_csv(train_csv_path, segment_map, num_nodes)
-
+    
     print("Parsing Validation CSV...")
-    val_data = parse_csv(train_csv_path, segment_map, num_nodes)
+    val_data = parse_csv(val_csv_path, segment_map, num_nodes)
 
     print("Parsing Test CSV...")
     test_data = parse_csv(test_csv_path, segment_map, num_nodes)
 
-    
     # Save Train directly from train_data
     train_size = len(train_data['label'])
     train_data['f'][:, 0] = np.arange(train_size)
-        
-    # Save Validation directly from val_data
+    
+    train_save_path = os.path.join(output_dir, "train.npy")
+    np.save(train_save_path, train_data)
+    print(f"Saved train set -> {train_save_path} | Samples: {train_size}")
+
+    # Save Val directly from val_data
     val_size = len(val_data['label'])
     val_data['f'][:, 0] = np.arange(val_size)
+    
+    val_save_path = os.path.join(output_dir, "val.npy")
+    np.save(val_save_path, val_data)
+    print(f"Saved val set -> {val_save_path} | Samples: {val_size}")
     
     # Save Test directly from test_data
     test_size = len(test_data['label'])
@@ -121,7 +128,8 @@ def process_two_csvs(train_csv_path, test_csv_path, json_path, output_dir="./dat
 
 if __name__ == "__main__":
     TRAIN_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_Jul_Dec.csv"
+    VAL_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2025_Jul_Dec.csv"
     TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2026_Jan_Jun.csv"
     JSON_PATH = "segments_toronto.json"
 
-    process_two_csvs(TRAIN_CSV, TEST_CSV, JSON_PATH)
+    process_two_csvs(TRAIN_CSV, VAL_CSV, TEST_CSV, JSON_PATH)
