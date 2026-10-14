@@ -125,7 +125,7 @@ def test_model(model, test_dataloader, device, edge, node, A):
         print(f'negative-log-likelihood: {log_likelihood.mean():.4f}')
         print(f'CRPS: {CRPS.mean():.4f}')
 
-        return val_mae, val_mape, log_likelihood.mean(), CRPS.mean()
+        return val_mae, val_mape, val_rmse, log_likelihood.mean(), CRPS.mean()
 
 def get_params():
     from my_utils.utils import get_common_params

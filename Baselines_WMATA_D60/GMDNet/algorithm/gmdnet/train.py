@@ -70,62 +70,78 @@ def process_batch(batch, model, device, edge, node, A):
 def test_model(model, test_dataloader, device, edge, node, A):
     predicts_list = []
     label_list = []
-    log_likelihood_list = []
+    nll_list = []
     crps_list = []
     model.eval()
     edge = torch.FloatTensor(edge).to(device)
     node = torch.FloatTensor(node).to(device)
     A = torch.LongTensor(A).to(device)
+
     with torch.no_grad():
         for batch in tqdm(test_dataloader):
             route, mask, f, label = zip(*batch)
             route = torch.LongTensor(route).to(device)
             mask = torch.LongTensor(mask).to(device)
             f = torch.FloatTensor(f).to(device)
-            label = torch.FloatTensor(label).to(device)
+            # Ensure label is (B, 1) on device in seconds
+            label_sec = torch.FloatTensor(label).to(device).view(-1, 1)
 
-            pi, mu, sigma = model.forward(route, mask, f, edge, node, A, label, 'test')
-            m = torch.distributions.Normal(loc=mu, scale=sigma)
-            pred = torch.sum(m.mean * pi, dim=1).unsqueeze(1)
+            # Model was trained on minutes, so feed label in minutes
+            pi, mu, sigma = model.forward(route, mask, f, edge, node, A, label_sec / 60.0, 'test')
 
-            log_likelihood = torch.mean(torch.mul(m.log_prob(label.float()), pi))
-            log_likelihood_list += [log_likelihood.cpu().item()]
-            predicts_list += pred.detach().cpu().tolist()
-            label_list += label.detach().cpu().tolist()
-            crps_metric = CRPSMetric(label, mu, sigma)
+            # Convert distribution parameters to seconds
+            mu_sec = mu * 60.0
+            sigma_sec = sigma * 60.0
+
+            # 1. Prediction (expected value in seconds)
+            pred = torch.sum(mu_sec * pi, dim=1)  # shape: (B,)
+
+            # 2. Correct GMM Negative Log-Likelihood in seconds
+            m = torch.distributions.Normal(loc=mu_sec, scale=sigma_sec)
+            log_component_prob = m.log_prob(label_sec)  # shape: (B, K)
+            log_pi = torch.log(torch.clamp(pi, min=1e-8))
+            # log(sum_k pi_k * N_k)
+            log_likelihood = torch.logsumexp(log_pi + log_component_prob, dim=-1)  # shape: (B,)
+            batch_nll = -torch.mean(log_likelihood)
+            nll_list.append(batch_nll.item())  # Store scalar float
+
+            # 3. CRPS calculation (in seconds)
+            crps_metric = CRPSMetric(label_sec, mu_sec, sigma_sec)
             get_crps = crps_metric.gaussian_crps()
             crps = torch.sum(torch.mul(get_crps, pi), dim=1)
-            crps_list.append(crps.detach().cpu().numpy().mean())
+            crps_list.append(crps.mean().item())  # Store scalar float
 
-        log_likelihood = np.array(log_likelihood_list)
-        # Convert back from minutes to seconds for final metrics:
-        predicts = np.array(predicts_list).flatten() * 60.0
-        labels = np.array(label_list).flatten()
-        CRPS = np.array(crps_list)
+            # Collect predictions and labels
+            predicts_list.extend(pred.view(-1).cpu().tolist())
+            label_list.extend(label_sec.view(-1).cpu().tolist())
+
+        predicts = np.array(predicts_list)
+        labels = np.array(label_list)
+        val_nll = np.mean(nll_list)
+        val_crps = np.mean(crps_list)
 
         from sklearn.metrics import mean_absolute_error as mae
 
         # 1. MAE
         val_mae = mae(labels, predicts)
+        print("Labels[:10]:", labels[:10])
+        print("Preds[:10]: ", predicts[:10])
 
         # 2. RMSE
         val_rmse = np.sqrt(np.mean((labels - predicts) ** 2))
 
-        # 3. Safe MAPE (skips 0-second labels to prevent division by zero)
+        # 3. Safe MAPE
         valid_mask = labels > 1e-2
-        if np.sum(valid_mask) > 0:
-            val_mape = np.mean(np.abs((labels[valid_mask] - predicts[valid_mask]) / labels[valid_mask]))
-        else:
-            val_mape = 0.0
+        val_mape = np.mean(np.abs((labels[valid_mask] - predicts[valid_mask]) / labels[valid_mask])) if np.sum(valid_mask) > 0 else 0.0
 
-        # Print outputs cleanly
+        # Print outputs
         print(f'mae: {val_mae:.4f}')
         print(f'rmse: {val_rmse:.4f}')
         print(f'mape: {val_mape:.4f} ({val_mape * 100:.2f}%)')
-        print(f'negative-log-likelihood: {log_likelihood.mean():.4f}')
-        print(f'CRPS: {CRPS.mean():.4f}')
+        print(f'negative-log-likelihood: {val_nll:.4f}')
+        print(f'CRPS: {val_crps:.4f}')
 
-        return val_mae, val_mape, log_likelihood.mean(), CRPS.mean()
+        return val_mae, val_mape, val_nll, val_crps
 
 def get_params():
     from my_utils.utils import get_common_params

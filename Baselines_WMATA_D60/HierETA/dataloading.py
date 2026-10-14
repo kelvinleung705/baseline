@@ -40,7 +40,7 @@ class MySet(Dataset):
         network_file_path = getattr(
             FLAGS,
             'network_file',
-            os.path.join(base_dir, "data-info", "toronto_927_900_road_network.json")
+            os.path.join(base_dir, "data-info", "WMATA_D60_road_network.json")
         )
 
         self.static_links, self.static_meta = load_network_data(network_file_path)

@@ -39,6 +39,8 @@ def test_model(model, data_loader, args):
         inds = np.concatenate(inds)
     else:
         inds = None
+        
+    # Calculate metrics
     metric = calculate_metrics(pre2, tar2, args, plot=True, inds=inds)
     print(metric)
     with open(f'{args.absPath}/data/result_{args.model}.txt', 'a') as f:
@@ -49,6 +51,8 @@ def test_model(model, data_loader, args):
         f.write(f"{metric}\n\n")
 
     np.save(os.path.join(args.model_folder, "result.npy"), np.asarray([pre2, inds]))
+    
+    return metric
 
 
 def train_main(args):
@@ -102,5 +106,15 @@ def train_main(args):
     print(args.data_config)
     print(model_folder)
     model.load_state_dict(torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], strict=False)
-    test_model(model, data_loaders['test'], args)
+    metrics = test_model(model, data_loaders['test'], args)
+    
+    model.load_state_dict(
+        torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], 
+        strict=False
+    )
+    metrics = test_model(model, data_loaders['test'], args)
+    
+    # ADD THIS PRINT TO VERIFY:
+    print(f"DEBUG IN training_main.py: metrics is {metrics}")
+    return metrics 
 

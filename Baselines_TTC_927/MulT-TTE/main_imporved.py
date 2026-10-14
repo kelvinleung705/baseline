@@ -2,7 +2,7 @@ import sys
 import os
 import argparse
 from train.training_main import train_main
-
+print(">>> LOADED FROM:", train_main.__code__.co_filename)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -28,5 +28,14 @@ if __name__ == '__main__':
     args.absPath = os.path.dirname(os.path.abspath(__file__))
     print(args.model)
     print(args.dataset)
-    train_main(args)
+    metrics = train_main(args)
+    print("Final Returned Metrics:", metrics)
+    # If `metrics` is a dictionary with keys like 'MAE', 'MAPE', 'RMSE':
+    if metrics is not None and isinstance(metrics, dict):
+        mae = metrics.get('MAE')
+        mape = metrics.get('MAPE')
+        rmse = metrics.get('RMSE')
+        print(f"MAE: {mae}, MAPE: {mape}, RMSE: {rmse}")
+    else:
+        print("Error: train_main did not return a dictionary!")
     sys.exit(0)

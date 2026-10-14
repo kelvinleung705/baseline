@@ -164,7 +164,7 @@ def save2file(params):
         # training set
         'batch_size', 'time',
         # metric result
-        'mae', 'mape', 'log-likelihood', 'crps'
+        'mae', 'mape', 'rmse', 'log-likelihood', 'crps'
     ]
     save2file_meta(params, file_name, head)
 
@@ -202,7 +202,7 @@ def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS
                 loss.backward()
                 optimizer.step()
 
-        val_mae, val_mape, val_log, val_crps = TEST_MODEL(model, val_loader, device, val_edge, val_node, val_A)
+        val_mae, val_mape, val_rmse, val_log, val_crps = TEST_MODEL(model, val_loader, device, val_edge, val_node, val_A)
         is_best_change = early_stop.append(val_mae)
 
         if is_best_change:
@@ -217,10 +217,11 @@ def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS
         print('best model loaded !!!')
     except:
         print('load best model failed')
-    test_mae, test_mape, test_log, test_crps = TEST_MODEL(model, test_loader, device, test_edge, test_node, test_A)
+    test_mae, test_rmse, test_mape, test_log, test_crps = TEST_MODEL(model, test_loader, device, test_edge, test_node, test_A)
     params['model'] = model_name
     params['mae'] = test_mae
     params['mape'] = test_mape
+    params['rmse'] = test_rmse
     params['log-likelihood'] = test_log
     params['crps'] = test_crps
     save2file(params)
@@ -267,7 +268,7 @@ def run(params, DATASET, PROCESS_BATCH, TEST_MODEL, collate_fn=None):
     model = model(params)
     print(model)
     if params['model'] in net_models:
-        result_dict = train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS_BATCH, TEST_MODEL,
+        result_dict =  train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS_BATCH, TEST_MODEL,
                                      params, train_edge, train_node, train_A, val_edge, val_node, val_A, test_edge,
                                      test_node, test_A)
     else:

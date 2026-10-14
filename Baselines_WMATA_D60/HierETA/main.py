@@ -22,8 +22,8 @@ parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--is_training', type=bool, default=True, help="training mode or not")
 
-parser.add_argument('--segment_num', type=int, default=4, help="segment number per link")
-parser.add_argument('--link_num', type=int, default=3, help="link number per route")
+parser.add_argument('--segment_num', type=int, default=3, help="segment number per link")
+parser.add_argument('--link_num', type=int, default=4, help="link number per route")
 
 parser.add_argument('--win_size', type=int, default=3, help="window scale of neighboring segments")
 parser.add_argument('--Lambda', type=float, default=0.4, help="weighting parameter in decoder")

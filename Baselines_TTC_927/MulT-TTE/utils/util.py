@@ -1,9 +1,9 @@
 import os
 import torch
-from torch.autograd import Variable
 
 
 class StandardScaler2:
+
     def __init__(self, mean, std):
         self.mean = mean
         self.std = std
@@ -14,23 +14,26 @@ class StandardScaler2:
     def inverse_transform(self, data):
         return (data * self.std) + self.mean
 
+
 def save_model(path: str, **save_dict):
     os.makedirs(os.path.split(path)[0], exist_ok=True)
     torch.save(save_dict, path)
 
-def to_var(var, device=0):
+
+def to_var(var, device="cpu"):
     if torch.is_tensor(var):
-        var = Variable(var)
-        if torch.cuda.is_available():
-            var = var.to(device)
-        return var
-    if isinstance(var, int) or isinstance(var, float):
-        return var
-    if isinstance(var, dict):
-        for key in var:
-            var[key] = to_var(var[key], device)
-        return var
-    if isinstance(var, list):
-        var = map(lambda x: to_var(x, device), var)
+        return var.to(device)
+
+    if isinstance(var, (int, float, str)):
         return var
 
+    if isinstance(var, dict):
+        return {k: to_var(v, device) for k, v in var.items()}
+
+    if isinstance(var, list):
+        return [to_var(x, device) for x in var]
+
+    if isinstance(var, tuple):
+        return tuple(to_var(x, device) for x in var)
+
+    return var
