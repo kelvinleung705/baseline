@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 import time
-from gnn_layers import ResidualGatedGCNLayer
+from .gnn_layers import ResidualGatedGCNLayer
 
 class SelfAttention(nn.Module):
     def __init__(self, att_hidden_size, num_of_attention_heads):

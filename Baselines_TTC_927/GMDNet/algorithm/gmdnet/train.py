@@ -152,7 +152,8 @@ def get_params():
 from my_utils.utils import run
 
 def main(params):
-    run(params, GMDNet_Dataset, process_batch, test_model, collate_fn)
+    _, result_dict = run(params, GMDNet_Dataset, process_batch, test_model, collate_fn)
+    return result_dict
 
 if __name__ == '__main__':
     import time, nni, torch

@@ -78,9 +78,8 @@ def parse_csv(csv_path, segment_map, num_nodes):
     }
 
 
-def process_two_csvs(train_csv_path, val_csv_path, test_csv_path, json_path, output_dir="./data", train_ratio=0.85):
+def process_three_csvs(train_csv_path, val_csv_path, test_csv_path, json_path, output_dir="./data", train_ratio=0.85):
     """
-    Splits train_csv into Train/Val, and saves test_csv entirely as Test.
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -132,4 +131,4 @@ if __name__ == "__main__":
     TEST_CSV = "trip_info_9_section_ver2_simplify_ultra_no_variance_2026_Jan_Jun.csv"
     JSON_PATH = "segments_toronto.json"
 
-    process_two_csvs(TRAIN_CSV, VAL_CSV, TEST_CSV, JSON_PATH)
+    process_three_csvs(TRAIN_CSV, VAL_CSV, TEST_CSV, JSON_PATH)

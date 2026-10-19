@@ -1,15 +1,49 @@
-# Ignore bytecode and python cache
+# Python cache
 __pycache__/
 *.py[cod]
+.DS_Store
 
-# Ignore generated datasets files
-# Ignore GMDNet data and output folders
-
-# Ignore large datasets, weights, and logs
-*.csv
+# Weights, models & binary checkpoints
 *.pth
+*.pt
+*.bin
+*.pkl
+*.ckpt
+**/params/
+params/
+
+# Tabular, Array & Dataset formats
+*.csv
+*.tsv
+*.npy
+*.npz
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.xlsx
+*.xls
+
+# GIS / Spatial vector data
+*.shp
+*.shx
+*.prj
+*.cpg
+*.dbf
+*.geojson
+
+# Logs, archives & text/json results
 *.zip
+*.tar
+*.gz
+*.log
 logs/
 
-# Do NOT ignore the topology JSON configuration file
+# Exception: keep your topology configuration
 !segments.json
+
+# Images / Plots
+*.png
+*.jpg
+*.jpeg
+*.svg

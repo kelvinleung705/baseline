@@ -34,11 +34,11 @@ def generate_data_info(data_dir="./samples/",
     def get_gt_eta_stats(csv_path):
         data = pd.read_csv(csv_path).to_numpy().astype(np.float32)
 
-        start_segs = (data[:, 55] - 1).astype(int)
+        start_segs = (data[:, 60] - 1).astype(int)
         gt_eta_times = []
         for i in range(len(data)):
             s = start_segs[i]
-            gt_eta_times.append(np.sum(data[i, 9:18][s:9]))
+            gt_eta_times.append(np.sum(data[i, 9:19][s:10]))
 
         return float(np.mean(gt_eta_times)), float(np.std(gt_eta_times))
 

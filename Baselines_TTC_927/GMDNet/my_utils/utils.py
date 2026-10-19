@@ -121,9 +121,10 @@ class EarlyStop():
 def get_common_params():
     # Training settings
     parser = argparse.ArgumentParser(description='Entry Point of the code')
-    parser.add_argument('--dataset', type=str, default='logistics')
+    parser.add_argument('--dataset', type=str, default='')
+    #parser.add_argument('--file_name', type=str, default='data')
     ## common settings for deep models
-    parser.add_argument('--batch_size', type=int, default=32, help='input batch size for training (default:32)')
+    parser.add_argument('--batch_size', type=int, default=512, help='input batch size for training (default:32)')
     parser.add_argument('--num_epoch', type=int, default=200, help='number of epochs to train (default: 200)')
     parser.add_argument('--lr', type=float, default=0.001, metavar='LR', help='learning rate (default: 1e-3)')
     parser.add_argument('--wd', type=float, default=1e-5, help='weight decay (default: 1e-5)')
@@ -135,9 +136,9 @@ def get_common_params():
 
 def get_dataset_path(params):
 
-    train_path = ws + '/data/train.npy'
-    val_path =  ws + '/data/val.npy'
-    test_path =  ws + '/data/test.npy'
+    train_path = ws + f'/data/{params["dataset"]}/train.npy'
+    val_path =  ws + f'/data/{params["dataset"]}/val.npy'
+    test_path =  ws + f'/data/{params["dataset"]}/test.npy'
 
     return train_path, val_path, test_path
 
@@ -217,7 +218,7 @@ def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS
         print('best model loaded !!!')
     except:
         print('load best model failed')
-    test_mae, test_rmse, test_mape, test_log, test_crps = TEST_MODEL(model, test_loader, device, test_edge, test_node, test_A)
+    test_mae, test_mape, test_rmse, test_log, test_crps = TEST_MODEL(model, test_loader, device, test_edge, test_node, test_A)
     params['model'] = model_name
     params['mae'] = test_mae
     params['mape'] = test_mape
@@ -243,7 +244,7 @@ def run(params, DATASET, PROCESS_BATCH, TEST_MODEL, collate_fn=None):
     pprint(params)  # print the parameters
 
     train_dataset = DATASET(mode='train', params=params)
-    train_loader = DataLoader(train_dataset, batch_size=params['batch_size'], shuffle=True, collate_fn=collate_fn)
+    train_loader = DataLoader(train_dataset, batch_size=params['batch_size'], shuffle=True, collate_fn=collate_fn, drop_last=True)
     train_edge = train_dataset.data['edge']
     train_node = train_dataset.data['node']
     train_A = train_dataset.data['A']
@@ -267,14 +268,19 @@ def run(params, DATASET, PROCESS_BATCH, TEST_MODEL, collate_fn=None):
     model = get_model_function(params['model'])
     model = model(params)
     print(model)
+    """
     if params['model'] in net_models:
         result_dict =  train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS_BATCH, TEST_MODEL,
                                      params, train_edge, train_node, train_A, val_edge, val_node, val_A, test_edge,
                                      test_node, test_A)
     else:
         pass
+    """
+    result_dict =  train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS_BATCH, TEST_MODEL,
+                                         params, train_edge, train_node, train_A, val_edge, val_node, val_A, test_edge,
+                                         test_node, test_A)
 
-    return params
+    return params, result_dict
 
 
 if __name__ == '__main__':
