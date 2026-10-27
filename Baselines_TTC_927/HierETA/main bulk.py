@@ -34,86 +34,25 @@ def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument(
-        "--is_training",
-        type=str2bool,
-        default=True,
-        help="training mode or not",
-    )
-    parser.add_argument(
-        "--segment_num", type=int, default=4, help="segment number per link"
-    )
-    parser.add_argument(
-        "--link_num", type=int, default=3, help="link number per route"
-    )
-    parser.add_argument(
-        "--win_size",
-        type=int,
-        default=3,
-        help="window scale of neighboring segments",
-    )
-    parser.add_argument(
-        "--Lambda",
-        type=float,
-        default=0.4,
-        help="weighting parameter in decoder",
-    )
+    parser.add_argument("--is_training", type=str2bool, default=True, help="training mode or not",)
+    parser.add_argument("--segment_num", type=int, default=4, help="segment number per link")
+    parser.add_argument("--link_num", type=int, default=3, help="link number per route")
+    parser.add_argument("--win_size", type=int, default=3, help="window scale of neighboring segments",)
+    parser.add_argument("--Lambda", type=float, default=0.4, help="weighting parameter in decoder",)
     parser.add_argument("--lr", type=float, default=1e-4, help="learning rate")
 
     # Dataset directory and CSV file names
-    parser.add_argument(
-        "--data_dir",
-        type=str,
-        default="./samples/",
-        help="directory for route data storage",
-    )
-    parser.add_argument(
-        "--train_file",
-        type=str,
-        default="train_trips.csv",
-        help="training csv filename",
-    )
-    parser.add_argument(
-        "--eval_file",
-        type=str,
-        default="validation_trips.csv",
-        help="evaluation csv filename",
-    )
-    parser.add_argument(
-        "--test_file",
-        type=str,
-        default="test_trips.csv",
-        help="test csv filename",
-    )
+    parser.add_argument("--data_dir", type=str, default="./samples/", help="directory for route data storage")
+    parser.add_argument("--train_file", type=str, default="train_trips.csv", help="training csv filename")
+    parser.add_argument("--eval_file", type=str, default="validation_trips.csv", help="evaluation csv filename")
+    parser.add_argument("--test_file", type=str, default="test_trips.csv", help="test csv filename")
 
     parser.add_argument("--log_dir", type=str, default="logs")
-    parser.add_argument(
-        "--step_per_eval",
-        type=int,
-        default=100,
-        help="training steps per evaluation",
-    )
-    parser.add_argument(
-        "--use_tb",
-        type=str2bool,
-        default=False,
-        help="Use tensorboard to log training info",
-    )
-    parser.add_argument(
-        "--code_backup", type=str2bool, default=True, help="code backup or not"
-    )
-    parser.add_argument(
-        "--description",
-        type=str,
-        default="HierETA",
-        help="description of current running experiments.",
-    )
-    parser.add_argument(
-        "--checkpoint_path",
-        type=str,
-        default="",
-        help="Path to checkpoint folder or .pth file for testing",
-    )
+    parser.add_argument("--step_per_eval", type=int, default=100, help="training steps per evaluation")
+    parser.add_argument("--use_tb", type=str2bool, default=False, help="Use tensorboard to log training info",)
+    parser.add_argument("--code_backup", type=str2bool, default=True, help="code backup or not")
+    parser.add_argument("--description", type=str, default="HierETA", help="description of current running experiments.")
+    parser.add_argument("--checkpoint_path", type=str, default="", help="Path to checkpoint folder or .pth file for testing",)
     return parser
 
 
@@ -172,13 +111,14 @@ def evaluate(model, files, flags, device):
             if MSE_loss_single
             else 0.0
         )
-
+        """
         print("***********************")
         print(f"File: {input_file}")
         print(f"MAE_loss : {single_file_mae:.5f}")
         print(f"MAPE_loss: {single_file_mape:.5f}")
         print(f"RMSE_loss: {single_file_rmse:.5f}")
         print("***********************\n")
+        """
 
         MAE_loss.extend(MAE_loss_single)
         MAPE_loss.extend(MAPE_loss_single)
@@ -188,12 +128,16 @@ def evaluate(model, files, flags, device):
     total_mape = sum(MAPE_loss) / len(MAPE_loss) if MAPE_loss else 0.0
     total_rmse = math.sqrt(sum(MSE_loss) / len(MSE_loss)) if MSE_loss else 0.0
 
+    """
     print("\n-------- Final Evaluation --------")
     print(
         f"MAE : {total_mae:.5f}\nMAPE: {total_mape:.5f}\nRMSE: {total_rmse:.5f}\n"
     )
-
+    """
     return total_mae, total_mape, total_rmse
+
+
+
 
 
 def train(model, optimizer, flags, device, logger):
@@ -207,6 +151,9 @@ def train(model, optimizer, flags, device, logger):
 
     step = 0
     best_mae = float("inf")
+    best_mape = float("inf")
+    best_rmse = float("inf")
+    best_epoch = -1
     best_model_path = os.path.join(logger.log_dir, "best_model.pth")
 
     for epoch in range(flags.epochs):
@@ -251,9 +198,11 @@ def train(model, optimizer, flags, device, logger):
                         val_mae, val_mape, val_rmse = evaluate(
                             model, eval_set, flags, device
                         )
-
                         if val_mae < best_mae:
                             best_mae = val_mae
+                            best_mape = val_mape
+                            best_rmse = val_rmse
+                            best_epoch = epoch
                             check_point = {
                                 "model": model.state_dict(),
                                 "optimizer": optimizer.state_dict(),
@@ -261,6 +210,10 @@ def train(model, optimizer, flags, device, logger):
                                 "step": step,
                                 "best_mae": best_mae,
                             }
+                            print("FINAL TEST RESULTS-New best found:")
+                            print(f"Validation MAE : {best_mae:.5f}")
+                            print(f"Validation MAPE: {best_mape:.5f}")
+                            print(f"Validation RMSE: {best_rmse:.5f}")
                             torch.save(check_point, best_model_path)
                             print(
                                 ">>> Best model saved to {} with Val MAE: {:.5f} <<<\n".format(
@@ -285,7 +238,7 @@ def train(model, optimizer, flags, device, logger):
         test_mae, test_mape, test_rmse = evaluate(
             model, test_set, flags, device
         )
-
+    """
     print("=" * 60)
     print("FINAL TEST RESULTS:")
     print(f"Test MAE : {test_mae:.5f}")
@@ -299,6 +252,34 @@ def train(model, optimizer, flags, device, logger):
         "rmse": test_rmse,
         "best_model_path": best_model_path,
     }
+    """
+    print("=" * 60)
+    print("Selected Epoch: {best_epoch},")
+    print("=" * 60)
+    print("FINAL Validation RESULTS:")
+    print(f"Validation MAE : {best_mae:.5f}")
+    print(f"Validation MAPE: {best_mape:.5f}")
+    print(f"Validation RMSE: {best_rmse:.5f}")
+    print("=" * 60 + "\n")
+    
+    print("=" * 60)
+    print("FINAL Test RESULTS:")
+    print(f"Test MAE : {test_mae:.5f}")
+    print(f"Test MAPE: {test_mape:.5f}")
+    print(f"Test RMSE: {test_rmse:.5f}")
+    print("=" * 60 + "\n")
+    return {
+        "val_mae": best_mae,
+        "val_mape": best_mape,
+        "val_rmse": best_rmse,
+        "test_mae": test_mae,
+        "test_mape": test_mape,
+        "test_rmse": test_rmse,
+        "best_epoch": best_epoch,
+        "best_model_path": best_model_path,
+    }
+
+
 
 
 def test(model, checkpoint_path, flags, device):
@@ -315,6 +296,18 @@ def test(model, checkpoint_path, flags, device):
     print(f"Loaded test model from: {checkpoint_path}")
 
     with torch.no_grad():
+            val_mae, val_mape, val_rmse = evaluate(
+                model, [flags.val_file], flags, device
+            )
+    
+    print("=" * 60)
+    print("VALIDATION RESULTS:")
+    print(f"MAE : {val_mae:.5f}")
+    print(f"MAPE: {val_mape:.5f}")
+    print(f"RMSE: {val_rmse:.5f}")
+    print("=" * 60)
+
+    with torch.no_grad():
         test_mae, test_mape, test_rmse = evaluate(
             model, [flags.test_file], flags, device
         )
@@ -326,7 +319,7 @@ def test(model, checkpoint_path, flags, device):
     print(f"RMSE: {test_rmse:.5f}")
     print("=" * 60)
 
-    return {"mae": test_mae, "mape": test_mape, "rmse": test_rmse}
+    return {"test_mae": test_mae, "test_mape": test_mape, "test_rmse": test_rmse, "val_mae": val_mae, "val_mape": val_mape, "val_rmse": val_rmse}
 
 
 def run_experiment(args_list=None, **kwargs):
@@ -382,7 +375,26 @@ def run_experiment(args_list=None, **kwargs):
                 raise ValueError(
                     "In test mode (`--is_training False`), you must provide a valid `checkpoint_path`."
                 )
+            """
+            val_mae, val_mape, val_rmse = evaluate(model, eval_set, flags, device)
+            print("Best Validation RESULTS:")
+            print(f"MAE : {val_mae:.5f}")
+            print(f"MAPE: {val_mape:.5f}")
+            print(f"RMSE: {val_rmse:.5f}")
+            """
+            """
+            val_results = {"mae": val_mae, "mape": val_mape, "rmse": val_rmse,}
+            """
+            
             results = test(model, flags.checkpoint_path, flags, device)
+            
+            
+            """
+            print("Test RESULTS:")
+            print(f"MAE : {test_results['mae']:.5f}")
+            print(f"MAPE: {test_results['mape']:.5f}")
+            print(f"RMSE: {test_results['rmse']:.5f}")
+            """
     finally:
         # Restore sys.stdout so subsequent function calls don't conflict
         sys.stdout = original_stdout
@@ -393,4 +405,4 @@ def run_experiment(args_list=None, **kwargs):
 if __name__ == "__main__":
     # Allows running directly from terminal: python hier_eta_runner.py --epochs 20
     results = run_experiment(sys.argv[1:])
-    print("Execution Finished! Returned Results:", results)
+    print("Execution Finished! Returned Results:")

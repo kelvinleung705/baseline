@@ -40,79 +40,27 @@ parser.add_argument("--epochs", type=int, default=100)
 parser.add_argument("--batch_size", type=int, default=32)
 
 # FIX 2: Use str2bool instead of type=bool
-parser.add_argument(
-    "--is_training", type=str2bool, default=True, help="training mode or not"
-)
-parser.add_argument(
-    "--segment_num", type=int, default=4, help="segment number per link"
-)
-parser.add_argument(
-    "--link_num", type=int, default=3, help="link number per route"
-)
-parser.add_argument(
-    "--win_size",
-    type=int,
-    default=3,
-    help="window scale of neighboring segments",
-)
-parser.add_argument(
-    "--Lambda", type=float, default=0.4, help="weighting parameter in decoder"
-)
+parser.add_argument("--is_training", type=str2bool, default=True, help="training mode or not")
+parser.add_argument("--segment_num", type=int, default=4, help="segment number per link")
+parser.add_argument("--link_num", type=int, default=3, help="link number per route")
+parser.add_argument("--win_size", type=int, default=3, help="window scale of neighboring segments")
+parser.add_argument("--Lambda", type=float, default=0.4, help="weighting parameter in decoder")
 parser.add_argument("--lr", type=float, default=1e-4, help="learning rate")
 
 # Dataset directory and CSV file names
-parser.add_argument(
-    "--data_dir",
-    type=str,
-    default="./samples/",
-    help="directory for route data storage",
-)
-parser.add_argument(
-    "--train_file",
-    type=str,
-    default="train_trips.csv",
-    help="training csv filename",
-)
-parser.add_argument(
-    "--eval_file",
-    type=str,
-    default="validation_trips.csv",
-    help="evaluation csv filename",
-)
-parser.add_argument(
-    "--test_file", type=str, default="test_trips.csv", help="test csv filename"
-)
+parser.add_argument("--data_dir", type=str, default="./samples/", help="directory for route data storage")
+parser.add_argument("--train_file", type=str, default="train_trips.csv", help="training csv filename")
+parser.add_argument("--eval_file", type=str, default="validation_trips.csv", help="evaluation csv filename")
+parser.add_argument("--test_file", type=str, default="test_trips.csv", help="test csv filename")
 
 parser.add_argument("--log_dir", type=str, default="logs")
-parser.add_argument(
-    "--step_per_eval",
-    type=int,
-    default=100,
-    help="training steps per evaluation",
-)
-parser.add_argument(
-    "--use_tb",
-    type=str2bool,
-    default=False,
-    help="Use tensorboard to log training info",
-)
-parser.add_argument(
-    "--code_backup", type=str2bool, default=True, help="code backup or not"
-)
-parser.add_argument(
-    "--description",
-    type=str,
-    default="HierETA",
-    help="description of current running experiments.",
-)
+parser.add_argument("--step_per_eval", type=int, default=100, help="training steps per evaluation")
+parser.add_argument("--use_tb", type=str2bool, default=False, help="Use tensorboard to log training info")
+parser.add_argument("--code_backup", type=str2bool, default=True, help="code backup or not")
+parser.add_argument("--description", type=str, default="HierETA", help="description of current running experiments.")
 
 # FIX 3: Add checkpoint argument to avoid hardcoded paths during testing
-parser.add_argument(
-    "--checkpoint_path",
-    type=str,
-    default="",
-    help="Path to checkpoint folder or .pth file for testing",
-)
+parser.add_argument("--checkpoint_path", type=str, default="", help="Path to checkpoint folder or .pth file for testing")
 
 FLAGS = parser.parse_args()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -132,6 +80,86 @@ logger = logger_tb(
 )
 sys.stdout = message_logger(logger.log_dir)
 
+def evaluate(model, files):
+    model.eval()
+    MAE_loss = []
+    MAPE_loss = []
+    MSE_loss = []  # FIX 5: Track MSE to compute proper RMSE
+
+    for file_idx, input_file in enumerate(files):
+        MAE_loss_single = []
+        MAPE_loss_single = []
+        MSE_loss_single = []
+
+        data_iter = dataloading.get_loader(input_file, FLAGS)
+        for idx, attr in enumerate(data_iter):
+            attr = utils.to_var(attr, device)
+            pred, label = model(attr)
+
+            mae = utils.MAE(pred, label)
+            mape = utils.MAPE(pred, label)
+            rmse = utils.RMSE(pred, label)
+
+            MAE_loss_single.append(mae.item())
+            MAPE_loss_single.append(mape.item())
+            # Convert batch RMSE back to MSE (RMSE^2) to aggregate mathematically correctly
+            MSE_loss_single.append(rmse.item() ** 2)
+
+            if idx > 10 and idx % 100 == 0:
+                cur_mae = sum(MAE_loss_single) / len(MAE_loss_single)
+                cur_mape = sum(MAPE_loss_single) / len(MAPE_loss_single)
+                cur_rmse = math.sqrt(
+                    sum(MSE_loss_single) / len(MSE_loss_single)
+                )
+                print(
+                    "Evaluate Progress: {:.2f}% | Step: {} | MAE: {:.5f} | MAPE: {:.5f} | RMSE: {:.5f}".format(
+                        (idx + 1) * 100 / len(data_iter),
+                        idx,
+                        cur_mae,
+                        cur_mape,
+                        cur_rmse,
+                    )
+                )
+
+        single_file_mae = (
+            sum(MAE_loss_single) / len(MAE_loss_single)
+            if MAE_loss_single
+            else 0.0
+        )
+        single_file_mape = (
+            sum(MAPE_loss_single) / len(MAPE_loss_single)
+            if MAPE_loss_single
+            else 0.0
+        )
+        single_file_rmse = (
+            math.sqrt(sum(MSE_loss_single) / len(MSE_loss_single))
+            if MSE_loss_single
+            else 0.0
+        )
+
+        print("***********************")
+        print(f"File: {input_file}")
+        print(f"MAE_loss : {single_file_mae:.5f}")
+        print(f"MAPE_loss: {single_file_mape:.5f}")
+        print(f"RMSE_loss: {single_file_rmse:.5f}")
+        print("***********************\n")
+
+        MAE_loss.extend(MAE_loss_single)
+        MAPE_loss.extend(MAPE_loss_single)
+        MSE_loss.extend(MSE_loss_single)
+
+    total_mae = sum(MAE_loss) / len(MAE_loss) if MAE_loss else float("inf")
+    total_mape = sum(MAPE_loss) / len(MAPE_loss) if MAPE_loss else 0.0
+    total_rmse = (
+        math.sqrt(sum(MSE_loss) / len(MSE_loss)) if MSE_loss else 0.0
+    )  # FIX 5: Proper RMSE calculation
+
+    print("\n-------- Final Evaluation --------")
+    print(
+        f"MAE : {total_mae:.5f}\nMAPE: {total_mape:.5f}\nRMSE: {total_rmse:.5f}\n"
+    )
+
+    return total_mae, total_mape, total_rmse
 
 def train(model, optimizer):
     train_set = [FLAGS.train_file]
@@ -229,87 +257,6 @@ def train(model, optimizer):
     print("Test RMSE: {:.5f}".format(test_rmse))
     print("=" * 60 + "\n")
 
-
-def evaluate(model, files):
-    model.eval()
-    MAE_loss = []
-    MAPE_loss = []
-    MSE_loss = []  # FIX 5: Track MSE to compute proper RMSE
-
-    for file_idx, input_file in enumerate(files):
-        MAE_loss_single = []
-        MAPE_loss_single = []
-        MSE_loss_single = []
-
-        data_iter = dataloading.get_loader(input_file, FLAGS)
-        for idx, attr in enumerate(data_iter):
-            attr = utils.to_var(attr, device)
-            pred, label = model(attr)
-
-            mae = utils.MAE(pred, label)
-            mape = utils.MAPE(pred, label)
-            rmse = utils.RMSE(pred, label)
-
-            MAE_loss_single.append(mae.item())
-            MAPE_loss_single.append(mape.item())
-            # Convert batch RMSE back to MSE (RMSE^2) to aggregate mathematically correctly
-            MSE_loss_single.append(rmse.item() ** 2)
-
-            if idx > 10 and idx % 100 == 0:
-                cur_mae = sum(MAE_loss_single) / len(MAE_loss_single)
-                cur_mape = sum(MAPE_loss_single) / len(MAPE_loss_single)
-                cur_rmse = math.sqrt(
-                    sum(MSE_loss_single) / len(MSE_loss_single)
-                )
-                print(
-                    "Evaluate Progress: {:.2f}% | Step: {} | MAE: {:.5f} | MAPE: {:.5f} | RMSE: {:.5f}".format(
-                        (idx + 1) * 100 / len(data_iter),
-                        idx,
-                        cur_mae,
-                        cur_mape,
-                        cur_rmse,
-                    )
-                )
-
-        single_file_mae = (
-            sum(MAE_loss_single) / len(MAE_loss_single)
-            if MAE_loss_single
-            else 0.0
-        )
-        single_file_mape = (
-            sum(MAPE_loss_single) / len(MAPE_loss_single)
-            if MAPE_loss_single
-            else 0.0
-        )
-        single_file_rmse = (
-            math.sqrt(sum(MSE_loss_single) / len(MSE_loss_single))
-            if MSE_loss_single
-            else 0.0
-        )
-
-        print("***********************")
-        print(f"File: {input_file}")
-        print(f"MAE_loss : {single_file_mae:.5f}")
-        print(f"MAPE_loss: {single_file_mape:.5f}")
-        print(f"RMSE_loss: {single_file_rmse:.5f}")
-        print("***********************\n")
-
-        MAE_loss.extend(MAE_loss_single)
-        MAPE_loss.extend(MAPE_loss_single)
-        MSE_loss.extend(MSE_loss_single)
-
-    total_mae = sum(MAE_loss) / len(MAE_loss) if MAE_loss else float("inf")
-    total_mape = sum(MAPE_loss) / len(MAPE_loss) if MAPE_loss else 0.0
-    total_rmse = (
-        math.sqrt(sum(MSE_loss) / len(MSE_loss)) if MSE_loss else 0.0
-    )  # FIX 5: Proper RMSE calculation
-
-    print("\n-------- Final Evaluation --------")
-    print(
-        f"MAE : {total_mae:.5f}\nMAPE: {total_mape:.5f}\nRMSE: {total_rmse:.5f}\n"
-    )
-
-    return total_mae, total_mape, total_rmse
 
 
 # FIX 6: Accept the existing model rather than recreating it

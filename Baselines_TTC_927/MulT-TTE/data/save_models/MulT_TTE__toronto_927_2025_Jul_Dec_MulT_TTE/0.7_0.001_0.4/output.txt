@@ -1,0 +1,489 @@
+MulT_TTE(
+  (seg_embedding_learning): BertForMaskedLM(
+    (bert): BertModel(
+      (embeddings): BertEmbeddings(
+        (word_embeddings): Embedding(27300, 64, padding_idx=10)
+        (position_embeddings): Embedding(512, 64)
+        (token_type_embeddings): Embedding(2, 64)
+        (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True, bias=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+      (encoder): BertEncoder(
+        (layer): ModuleList(
+          (0-3): 4 x BertLayer(
+            (attention): BertAttention(
+              (self): BertSelfAttention(
+                (query): Linear(in_features=64, out_features=64, bias=True)
+                (key): Linear(in_features=64, out_features=64, bias=True)
+                (value): Linear(in_features=64, out_features=64, bias=True)
+                (dropout): Dropout(p=0.1, inplace=False)
+              )
+              (output): BertSelfOutput(
+                (dense): Linear(in_features=64, out_features=64, bias=True)
+                (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True, bias=True)
+                (dropout): Dropout(p=0.1, inplace=False)
+              )
+            )
+            (intermediate): BertIntermediate(
+              (dense): Linear(in_features=64, out_features=3072, bias=True)
+              (intermediate_act_fn): GELUActivation()
+            )
+            (output): BertOutput(
+              (dense): Linear(in_features=3072, out_features=64, bias=True)
+              (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+        )
+      )
+    )
+    (cls): BertOnlyMLMHead(
+      (predictions): BertLMPredictionHead(
+        (transform): BertPredictionHeadTransform(
+          (dense): Linear(in_features=64, out_features=64, bias=True)
+          (transform_act_fn): GELUActivation()
+          (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True, bias=True)
+        )
+        (decoder): Linear(in_features=64, out_features=27300, bias=True)
+      )
+    )
+  )
+  (highwayembed): Embedding(15, 5, padding_idx=0)
+  (gpsrep): Linear(in_features=4, out_features=16, bias=True)
+  (context_mlp): Sequential(
+    (0): Linear(in_features=9, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  )
+  (timene): Sequential(
+    (0): Linear(in_features=96, out_features=96, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=96, out_features=96, bias=True)
+  )
+  (represent): Sequential(
+    (0): Linear(in_features=123, out_features=120, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=120, out_features=120, bias=True)
+  )
+  (sequence): LayerNormGRU(
+    (hidden0): ModuleList(
+      (0): LayerNormGRUCell(
+        (ln_i2h): LayerNorm((256,), eps=1e-05, elementwise_affine=False, bias=False)
+        (ln_h2h): LayerNorm((256,), eps=1e-05, elementwise_affine=False, bias=False)
+        (ln_cell_1): LayerNorm((128,), eps=1e-05, elementwise_affine=False, bias=False)
+        (ln_cell_2): LayerNorm((128,), eps=1e-05, elementwise_affine=False, bias=False)
+        (i2h): Linear(in_features=120, out_features=256, bias=True)
+        (h2h): Linear(in_features=128, out_features=256, bias=True)
+        (h_hat_W): Linear(in_features=120, out_features=128, bias=True)
+        (h_hat_U): Linear(in_features=128, out_features=128, bias=True)
+      )
+      (1): LayerNormGRUCell(
+        (ln_i2h): LayerNorm((256,), eps=1e-05, elementwise_affine=False, bias=False)
+        (ln_h2h): LayerNorm((256,), eps=1e-05, elementwise_affine=False, bias=False)
+        (ln_cell_1): LayerNorm((128,), eps=1e-05, elementwise_affine=False, bias=False)
+        (ln_cell_2): LayerNorm((128,), eps=1e-05, elementwise_affine=False, bias=False)
+        (i2h): Linear(in_features=128, out_features=256, bias=True)
+        (h2h): Linear(in_features=128, out_features=256, bias=True)
+        (h_hat_W): Linear(in_features=128, out_features=128, bias=True)
+        (h_hat_U): Linear(in_features=128, out_features=128, bias=True)
+      )
+    )
+  )
+  (input2hid): Linear(in_features=160, out_features=128, bias=True)
+  (decoder): Decoder(
+    (layers): ModuleList(
+      (0-2): 3 x DecoderLayer(
+        (norm_1): Norm()
+        (norm_2): Norm()
+        (norm_3): Norm()
+        (dropout_1): Dropout(p=0.1, inplace=False)
+        (dropout_2): Dropout(p=0.1, inplace=False)
+        (dropout_3): Dropout(p=0.1, inplace=False)
+        (attn_1): MultiHeadAttention(
+          (q_linear): Linear(in_features=128, out_features=128, bias=True)
+          (v_linear): Linear(in_features=128, out_features=128, bias=True)
+          (k_linear): Linear(in_features=128, out_features=128, bias=True)
+          (attn_1): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)
+          )
+        )
+        (attn_2): MultiHeadAttention(
+          (q_linear): Linear(in_features=128, out_features=128, bias=True)
+          (v_linear): Linear(in_features=128, out_features=128, bias=True)
+          (k_linear): Linear(in_features=128, out_features=128, bias=True)
+          (attn_1): MultiheadAttention(
+            (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)
+          )
+        )
+        (ff): FeedForward(
+          (linear_1): Linear(in_features=128, out_features=1024, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (linear_2): Linear(in_features=1024, out_features=128, bias=True)
+        )
+      )
+    )
+    (norm): Norm()
+  )
+  (hid2out): Linear(in_features=128, out_features=1, bias=True)
+)
+
+train epoch: 0, train loss: 59.23959677406748
+{'MAE': np.float32(132.76566), 'MAPE': np.float32(0.26706293), 'RMSE': np.float32(221.41313), 'PEARR': np.float32(-0.006138857), 'PEARP': np.float32(0.6186006)}
+1793068513.271604
+
+val epoch: 0, val loss: 12.171341442670979
+{'MAE': np.float32(65.51175), 'MAPE': np.float32(0.1352288), 'RMSE': np.float32(86.44716), 'PEARR': np.float32(0.19914004), 'PEARP': np.float32(5.5372755e-08)}
+1793068514.11058
+
+test epoch: 0, test loss: nan
+{'MAE': np.float32(79.70386), 'MAPE': np.float32(0.1428836), 'RMSE': np.float32(114.70489), 'PEARR': np.float32(0.22583914), 'PEARP': np.float32(0.0)}
+1793068521.7140157
+
+train epoch: 1, train loss: 15.793692021153223
+{'MAE': np.float32(74.15442), 'MAPE': np.float32(0.14852175), 'RMSE': np.float32(117.51178), 'PEARR': np.float32(0.018328011), 'PEARP': np.float32(0.13716239)}
+1793068530.13688
+
+val epoch: 1, val loss: 11.912236260586097
+{'MAE': np.float32(61.4285), 'MAPE': np.float32(0.117422886), 'RMSE': np.float32(85.84232), 'PEARR': np.float32(0.32221314), 'PEARP': np.float32(3.8109922e-19)}
+1793068531.002068
+
+test epoch: 1, test loss: nan
+{'MAE': np.float32(84.03004), 'MAPE': np.float32(0.14134873), 'RMSE': np.float32(124.26041), 'PEARR': np.float32(0.28617775), 'PEARP': np.float32(0.0)}
+1793068538.3812199
+
+train epoch: 2, train loss: 12.728147224916805
+{'MAE': np.float32(64.2529), 'MAPE': np.float32(0.1267396), 'RMSE': np.float32(109.608246), 'PEARR': np.float32(0.07468734), 'PEARP': np.float32(1.3171547e-09)}
+1793068546.9546034
+
+val epoch: 2, val loss: 10.64827121672083
+{'MAE': np.float32(58.81931), 'MAPE': np.float32(0.115897164), 'RMSE': np.float32(81.10114), 'PEARR': np.float32(0.39672223), 'PEARP': np.float32(5.278579e-29)}
+1793068547.8572233
+
+test epoch: 2, test loss: nan
+{'MAE': np.float32(78.00551), 'MAPE': np.float32(0.13457555), 'RMSE': np.float32(115.850525), 'PEARR': np.float32(0.3518032), 'PEARP': np.float32(0.0)}
+1793068555.161848
+
+train epoch: 3, train loss: 11.284789900773202
+{'MAE': np.float32(60.08056), 'MAPE': np.float32(0.11833649), 'RMSE': np.float32(105.3526), 'PEARR': np.float32(0.24102557), 'PEARP': np.float32(0.0)}
+1793068563.4374838
+
+val epoch: 3, val loss: 9.57407106597567
+{'MAE': np.float32(57.12608), 'MAPE': np.float32(0.114968084), 'RMSE': np.float32(76.83565), 'PEARR': np.float32(0.44581634), 'PEARP': np.float32(4.937686e-37)}
+1793068564.3141468
+
+test epoch: 3, test loss: nan
+{'MAE': np.float32(73.693436), 'MAPE': np.float32(0.13040704), 'RMSE': np.float32(108.271385), 'PEARR': np.float32(0.39076662), 'PEARP': np.float32(0.0)}
+1793068571.5977604
+
+train epoch: 4, train loss: 10.39309140399771
+{'MAE': np.float32(57.737137), 'MAPE': np.float32(0.11200334), 'RMSE': np.float32(103.791046), 'PEARR': np.float32(0.30012888), 'PEARP': np.float32(0.0)}
+1793068580.1954873
+
+val epoch: 4, val loss: 9.947715154762477
+{'MAE': np.float32(62.65629), 'MAPE': np.float32(0.13018005), 'RMSE': np.float32(80.39691), 'PEARR': np.float32(0.46343073), 'PEARP': np.float32(2.99401e-40)}
+1793068581.0447388
+
+test epoch: 4, test loss: nan
+{'MAE': np.float32(74.035645), 'MAPE': np.float32(0.13449557), 'RMSE': np.float32(106.07814), 'PEARR': np.float32(0.4006712), 'PEARP': np.float32(0.0)}
+1793068588.4811988
+
+train epoch: 5, train loss: 9.360602241135744
+{'MAE': np.float32(58.65542), 'MAPE': np.float32(0.115411766), 'RMSE': np.float32(103.36926), 'PEARR': np.float32(0.3114572), 'PEARP': np.float32(0.0)}
+1793068597.0368338
+
+val epoch: 5, val loss: 7.461589586539347
+{'MAE': np.float32(56.412777), 'MAPE': np.float32(0.113866694), 'RMSE': np.float32(75.7303), 'PEARR': np.float32(0.46751368), 'PEARP': np.float32(5.0503e-41)}
+1793068597.9191084
+
+test epoch: 5, test loss: nan
+{'MAE': np.float32(72.37332), 'MAPE': np.float32(0.12610576), 'RMSE': np.float32(108.10276), 'PEARR': np.float32(0.4054968), 'PEARP': np.float32(0.0)}
+1793068605.4944234
+
+train epoch: 6, train loss: 7.873686370524905
+{'MAE': np.float32(56.836617), 'MAPE': np.float32(0.11042975), 'RMSE': np.float32(102.4983), 'PEARR': np.float32(0.33193582), 'PEARP': np.float32(0.0)}
+1793068613.9711165
+
+val epoch: 6, val loss: 7.032379212926646
+{'MAE': np.float32(55.01446), 'MAPE': np.float32(0.10525614), 'RMSE': np.float32(76.96384), 'PEARR': np.float32(0.47297212), 'PEARP': np.float32(4.504e-42)}
+1793068614.832972
+
+test epoch: 6, test loss: nan
+{'MAE': np.float32(78.41343), 'MAPE': np.float32(0.13037501), 'RMSE': np.float32(118.09078), 'PEARR': np.float32(0.40584335), 'PEARP': np.float32(0.0)}
+1793068622.2382925
+
+train epoch: 7, train loss: 7.463675292688112
+{'MAE': np.float32(57.09809), 'MAPE': np.float32(0.111660585), 'RMSE': np.float32(102.39071), 'PEARR': np.float32(0.33400714), 'PEARP': np.float32(0.0)}
+1793068630.5217764
+
+val epoch: 7, val loss: 6.442785539262282
+{'MAE': np.float32(54.05308), 'MAPE': np.float32(0.10524794), 'RMSE': np.float32(74.365845), 'PEARR': np.float32(0.49392787), 'PEARP': np.float32(0.0)}
+1793068631.4505293
+
+test epoch: 7, test loss: nan
+{'MAE': np.float32(76.09889), 'MAPE': np.float32(0.1274578), 'RMSE': np.float32(114.89743), 'PEARR': np.float32(0.41962007), 'PEARP': np.float32(0.0)}
+1793068638.937988
+
+train epoch: 8, train loss: 7.260028513609629
+{'MAE': np.float32(56.365334), 'MAPE': np.float32(0.10993316), 'RMSE': np.float32(102.01331), 'PEARR': np.float32(0.34340474), 'PEARP': np.float32(0.0)}
+1793068647.275733
+
+val epoch: 8, val loss: 6.705706961167966
+{'MAE': np.float32(54.519146), 'MAPE': np.float32(0.10468452), 'RMSE': np.float32(76.225174), 'PEARR': np.float32(0.48244342), 'PEARP': np.float32(6.2e-44)}
+1793068648.2003598
+
+test epoch: 8, test loss: nan
+{'MAE': np.float32(76.938614), 'MAPE': np.float32(0.12844555), 'RMSE': np.float32(116.207375), 'PEARR': np.float32(0.41551504), 'PEARP': np.float32(0.0)}
+1793068655.5270429
+
+train epoch: 9, train loss: 7.3800340805540765
+{'MAE': np.float32(57.87197), 'MAPE': np.float32(0.11369978), 'RMSE': np.float32(102.41536), 'PEARR': np.float32(0.3398546), 'PEARP': np.float32(0.0)}
+1793068663.7290287
+
+val epoch: 9, val loss: 9.17747819097967
+{'MAE': np.float32(66.94081), 'MAPE': np.float32(0.12380479), 'RMSE': np.float32(89.34277), 'PEARR': np.float32(0.525334), 'PEARP': np.float32(0.0)}
+1793068664.662438
+
+test epoch: 9, test loss: nan
+{'MAE': np.float32(96.28277), 'MAPE': np.float32(0.1584777), 'RMSE': np.float32(135.89151), 'PEARR': np.float32(0.43324015), 'PEARP': np.float32(0.0)}
+1793068672.3304327
+
+train epoch: 10, train loss: 7.8271803843574626
+{'MAE': np.float32(60.33361), 'MAPE': np.float32(0.11845695), 'RMSE': np.float32(103.81301), 'PEARR': np.float32(0.31838632), 'PEARP': np.float32(0.0)}
+1793068680.7321448
+
+val epoch: 10, val loss: 5.932965111862766
+{'MAE': np.float32(52.636562), 'MAPE': np.float32(0.104588136), 'RMSE': np.float32(71.77864), 'PEARR': np.float32(0.5381956), 'PEARP': np.float32(0.0)}
+1793068681.6217778
+
+test epoch: 10, test loss: nan
+{'MAE': np.float32(73.06272), 'MAPE': np.float32(0.12466081), 'RMSE': np.float32(110.254234), 'PEARR': np.float32(0.42980367), 'PEARP': np.float32(0.0)}
+1793068689.399221
+
+train epoch: 11, train loss: 6.8699232756792545
+{'MAE': np.float32(55.80577), 'MAPE': np.float32(0.10959694), 'RMSE': np.float32(99.88765), 'PEARR': np.float32(0.39294583), 'PEARP': np.float32(0.0)}
+1793068697.58775
+
+val epoch: 11, val loss: 6.126288171674385
+{'MAE': np.float32(54.255405), 'MAPE': np.float32(0.10989944), 'RMSE': np.float32(72.9975), 'PEARR': np.float32(0.535266), 'PEARP': np.float32(0.0)}
+1793068698.444809
+
+test epoch: 11, test loss: nan
+{'MAE': np.float32(71.34922), 'MAPE': np.float32(0.124662705), 'RMSE': np.float32(106.01351), 'PEARR': np.float32(0.4791637), 'PEARP': np.float32(0.0)}
+1793068706.0860045
+
+train epoch: 12, train loss: 6.662003802426917
+{'MAE': np.float32(54.61096), 'MAPE': np.float32(0.10698381), 'RMSE': np.float32(99.52377), 'PEARR': np.float32(0.39947495), 'PEARP': np.float32(0.0)}
+1793068714.2436805
+
+val epoch: 12, val loss: 5.960406553549845
+{'MAE': np.float32(53.754726), 'MAPE': np.float32(0.10637231), 'RMSE': np.float32(72.23388), 'PEARR': np.float32(0.5315094), 'PEARP': np.float32(0.0)}
+1793068715.182942
+
+test epoch: 12, test loss: nan
+{'MAE': np.float32(71.07683), 'MAPE': np.float32(0.122277744), 'RMSE': np.float32(105.84413), 'PEARR': np.float32(0.4678729), 'PEARP': np.float32(0.0)}
+1793068722.8985372
+
+train epoch: 13, train loss: 7.011469306110847
+{'MAE': np.float32(55.781094), 'MAPE': np.float32(0.10860262), 'RMSE': np.float32(101.213936), 'PEARR': np.float32(0.36246938), 'PEARP': np.float32(0.0)}
+1793068731.0324833
+
+val epoch: 13, val loss: 7.902940898645119
+{'MAE': np.float32(60.44717), 'MAPE': np.float32(0.11282788), 'RMSE': np.float32(83.20392), 'PEARR': np.float32(0.48925906), 'PEARP': np.float32(3e-45)}
+1793068731.8767555
+
+test epoch: 13, test loss: nan
+{'MAE': np.float32(85.82152), 'MAPE': np.float32(0.14128828), 'RMSE': np.float32(125.841545), 'PEARR': np.float32(0.42355397), 'PEARP': np.float32(0.0)}
+1793068739.6721368
+
+train epoch: 14, train loss: 6.996651886480342
+{'MAE': np.float32(55.685818), 'MAPE': np.float32(0.107971236), 'RMSE': np.float32(101.12297), 'PEARR': np.float32(0.36735448), 'PEARP': np.float32(0.0)}
+1793068747.9437835
+
+val epoch: 14, val loss: 5.996230706491105
+{'MAE': np.float32(53.571156), 'MAPE': np.float32(0.106679395), 'RMSE': np.float32(72.35424), 'PEARR': np.float32(0.5220628), 'PEARP': np.float32(0.0)}
+1793068748.750027
+
+test epoch: 14, test loss: nan
+{'MAE': np.float32(72.05976), 'MAPE': np.float32(0.1234286), 'RMSE': np.float32(108.44484), 'PEARR': np.float32(0.4467495), 'PEARP': np.float32(0.0)}
+1793068756.6654596
+
+train epoch: 15, train loss: 6.3846796608058165
+{'MAE': np.float32(53.694054), 'MAPE': np.float32(0.10531955), 'RMSE': np.float32(97.68416), 'PEARR': np.float32(0.43625867), 'PEARP': np.float32(0.0)}
+1793068764.9012983
+
+val epoch: 15, val loss: 5.706782288890067
+{'MAE': np.float32(52.27159), 'MAPE': np.float32(0.10328739), 'RMSE': np.float32(70.69645), 'PEARR': np.float32(0.55526596), 'PEARP': np.float32(0.0)}
+1793068765.8281503
+
+test epoch: 15, test loss: nan
+{'MAE': np.float32(72.22718), 'MAPE': np.float32(0.12283986), 'RMSE': np.float32(108.01169), 'PEARR': np.float32(0.48864284), 'PEARP': np.float32(0.0)}
+1793068773.8928277
+
+train epoch: 16, train loss: 6.23643786864796
+{'MAE': np.float32(53.09202), 'MAPE': np.float32(0.10397811), 'RMSE': np.float32(97.32584), 'PEARR': np.float32(0.44320515), 'PEARP': np.float32(0.0)}
+1793068782.1214452
+
+val epoch: 16, val loss: 5.583692363051117
+{'MAE': np.float32(52.058712), 'MAPE': np.float32(0.10395301), 'RMSE': np.float32(69.97363), 'PEARR': np.float32(0.5667422), 'PEARP': np.float32(0.0)}
+1793068782.9400008
+
+test epoch: 16, test loss: nan
+{'MAE': np.float32(70.00324), 'MAPE': np.float32(0.12069451), 'RMSE': np.float32(103.82511), 'PEARR': np.float32(0.50408417), 'PEARP': np.float32(0.0)}
+1793068790.955858
+
+train epoch: 17, train loss: 6.176742971840374
+{'MAE': np.float32(52.934948), 'MAPE': np.float32(0.103853606), 'RMSE': np.float32(96.71479), 'PEARR': np.float32(0.45459366), 'PEARP': np.float32(0.0)}
+1793068799.09002
+
+val epoch: 17, val loss: 5.726678019664327
+{'MAE': np.float32(52.81044), 'MAPE': np.float32(0.10702969), 'RMSE': np.float32(70.798584), 'PEARR': np.float32(0.5609011), 'PEARP': np.float32(0.0)}
+1793068799.9203448
+
+test epoch: 17, test loss: nan
+{'MAE': np.float32(69.92031), 'MAPE': np.float32(0.121955335), 'RMSE': np.float32(103.34492), 'PEARR': np.float32(0.51043063), 'PEARP': np.float32(0.0)}
+1793068807.805396
+
+train epoch: 18, train loss: 6.1277141102107935
+{'MAE': np.float32(52.801044), 'MAPE': np.float32(0.103845626), 'RMSE': np.float32(96.74773), 'PEARR': np.float32(0.45387313), 'PEARP': np.float32(0.0)}
+1793068816.1131341
+
+val epoch: 18, val loss: 5.608738380703119
+{'MAE': np.float32(52.177883), 'MAPE': np.float32(0.10455592), 'RMSE': np.float32(70.15692), 'PEARR': np.float32(0.5652417), 'PEARP': np.float32(0.0)}
+1793068816.9372618
+
+test epoch: 18, test loss: nan
+{'MAE': np.float32(69.83028), 'MAPE': np.float32(0.12079115), 'RMSE': np.float32(103.47383), 'PEARR': np.float32(0.5006451), 'PEARP': np.float32(0.0)}
+1793068824.8669925
+
+train epoch: 19, train loss: 6.123502108514046
+{'MAE': np.float32(52.838852), 'MAPE': np.float32(0.10367833), 'RMSE': np.float32(96.208145), 'PEARR': np.float32(0.46352145), 'PEARP': np.float32(0.0)}
+1793068833.197664
+
+val epoch: 19, val loss: 5.671284977855578
+{'MAE': np.float32(51.970993), 'MAPE': np.float32(0.10285685), 'RMSE': np.float32(70.56407), 'PEARR': np.float32(0.55869484), 'PEARP': np.float32(0.0)}
+1793068834.0305405
+
+test epoch: 19, test loss: nan
+{'MAE': np.float32(71.46542), 'MAPE': np.float32(0.12201719), 'RMSE': np.float32(106.53245), 'PEARR': np.float32(0.51497513), 'PEARP': np.float32(0.0)}
+1793068842.0944376
+
+train epoch: 20, train loss: 6.091883697414094
+{'MAE': np.float32(52.669033), 'MAPE': np.float32(0.10363434), 'RMSE': np.float32(96.74767), 'PEARR': np.float32(0.45589396), 'PEARP': np.float32(0.0)}
+1793068850.2606487
+
+val epoch: 20, val loss: 5.607260506009795
+{'MAE': np.float32(52.194393), 'MAPE': np.float32(0.10444667), 'RMSE': np.float32(70.16412), 'PEARR': np.float32(0.5637529), 'PEARP': np.float32(0.0)}
+1793068851.0860293
+
+test epoch: 20, test loss: nan
+{'MAE': np.float32(69.92298), 'MAPE': np.float32(0.12076922), 'RMSE': np.float32(103.702286), 'PEARR': np.float32(0.50277567), 'PEARP': np.float32(0.0)}
+1793068858.9333894
+
+train epoch: 21, train loss: 6.0434253385752275
+{'MAE': np.float32(52.432285), 'MAPE': np.float32(0.10296613), 'RMSE': np.float32(96.056656), 'PEARR': np.float32(0.46655247), 'PEARP': np.float32(0.0)}
+1793068867.2766564
+
+val epoch: 21, val loss: 5.609497651376359
+{'MAE': np.float32(52.174), 'MAPE': np.float32(0.104555435), 'RMSE': np.float32(70.16822), 'PEARR': np.float32(0.56272066), 'PEARP': np.float32(0.0)}
+1793068868.1110272
+
+test epoch: 21, test loss: nan
+{'MAE': np.float32(69.94271), 'MAPE': np.float32(0.12090097), 'RMSE': np.float32(103.717606), 'PEARR': np.float32(0.5057887), 'PEARP': np.float32(0.0)}
+1793068875.9502954
+
+train epoch: 22, train loss: 6.031529670682861
+{'MAE': np.float32(52.421474), 'MAPE': np.float32(0.103116944), 'RMSE': np.float32(96.023865), 'PEARR': np.float32(0.467047), 'PEARP': np.float32(0.0)}
+1793068884.2659109
+
+val epoch: 22, val loss: 5.6175152304394
+{'MAE': np.float32(52.14688), 'MAPE': np.float32(0.104188025), 'RMSE': np.float32(70.23356), 'PEARR': np.float32(0.56205595), 'PEARP': np.float32(0.0)}
+1793068885.126518
+
+test epoch: 22, test loss: nan
+{'MAE': np.float32(70.189), 'MAPE': np.float32(0.12104996), 'RMSE': np.float32(104.05617), 'PEARR': np.float32(0.50203276), 'PEARP': np.float32(0.0)}
+1793068892.9620414
+
+train epoch: 23, train loss: 6.030275067400291
+{'MAE': np.float32(52.333477), 'MAPE': np.float32(0.10270106), 'RMSE': np.float32(96.04173), 'PEARR': np.float32(0.46684697), 'PEARP': np.float32(0.0)}
+1793068901.2457576
+
+val epoch: 23, val loss: 5.611112477349454
+{'MAE': np.float32(52.10499), 'MAPE': np.float32(0.10410418), 'RMSE': np.float32(70.19238), 'PEARR': np.float32(0.5619587), 'PEARP': np.float32(0.0)}
+1793068902.1201334
+
+test epoch: 23, test loss: nan
+{'MAE': np.float32(70.18227), 'MAPE': np.float32(0.121012665), 'RMSE': np.float32(104.091255), 'PEARR': np.float32(0.50478554), 'PEARP': np.float32(0.0)}
+1793068909.8868268
+
+train epoch: 24, train loss: 6.027432385757894
+{'MAE': np.float32(52.53889), 'MAPE': np.float32(0.10359141), 'RMSE': np.float32(95.906136), 'PEARR': np.float32(0.46903375), 'PEARP': np.float32(0.0)}
+1793068918.2923605
+
+val epoch: 24, val loss: 5.609475617851716
+{'MAE': np.float32(52.02625), 'MAPE': np.float32(0.10370354), 'RMSE': np.float32(70.19089), 'PEARR': np.float32(0.5616466), 'PEARP': np.float32(0.0)}
+1793068919.2215223
+
+test epoch: 24, test loss: nan
+{'MAE': np.float32(70.412926), 'MAPE': np.float32(0.12114432), 'RMSE': np.float32(104.48714), 'PEARR': np.float32(0.5051565), 'PEARP': np.float32(0.0)}
+1793068926.9613793
+
+train epoch: 25, train loss: 6.029631324625428
+{'MAE': np.float32(52.45813), 'MAPE': np.float32(0.10322261), 'RMSE': np.float32(95.95362), 'PEARR': np.float32(0.46807885), 'PEARP': np.float32(0.0)}
+1793068935.3964536
+
+val epoch: 25, val loss: 5.611312689025546
+{'MAE': np.float32(52.02919), 'MAPE': np.float32(0.10361287), 'RMSE': np.float32(70.20616), 'PEARR': np.float32(0.5615781), 'PEARP': np.float32(0.0)}
+1793068936.3295453
+
+test epoch: 25, test loss: nan
+{'MAE': np.float32(70.4875), 'MAPE': np.float32(0.12118657), 'RMSE': np.float32(104.597466), 'PEARR': np.float32(0.5047493), 'PEARP': np.float32(0.0)}
+1793068943.9581711
+
+train epoch: 26, train loss: 6.013351285325338
+{'MAE': np.float32(52.297974), 'MAPE': np.float32(0.102634355), 'RMSE': np.float32(95.89434), 'PEARR': np.float32(0.4696878), 'PEARP': np.float32(0.0)}
+1793068952.1247869
+
+val epoch: 26, val loss: 5.611316680908203
+{'MAE': np.float32(52.015465), 'MAPE': np.float32(0.10355898), 'RMSE': np.float32(70.20665), 'PEARR': np.float32(0.56147283), 'PEARP': np.float32(0.0)}
+1793068953.0707164
+
+test epoch: 26, test loss: nan
+{'MAE': np.float32(70.51916), 'MAPE': np.float32(0.12120608), 'RMSE': np.float32(104.65622), 'PEARR': np.float32(0.5051517), 'PEARP': np.float32(0.0)}
+1793068960.752982
+
+train epoch: 27, train loss: 6.013236532169266
+{'MAE': np.float32(52.33472), 'MAPE': np.float32(0.10286531), 'RMSE': np.float32(95.92549), 'PEARR': np.float32(0.46889946), 'PEARP': np.float32(0.0)}
+1793068968.9645867
+
+val epoch: 27, val loss: 5.611238385810227
+{'MAE': np.float32(52.031357), 'MAPE': np.float32(0.10368558), 'RMSE': np.float32(70.20301), 'PEARR': np.float32(0.56151), 'PEARP': np.float32(0.0)}
+1793068969.9052238
+
+test epoch: 27, test loss: nan
+{'MAE': np.float32(70.43177), 'MAPE': np.float32(0.12115154), 'RMSE': np.float32(104.51349), 'PEARR': np.float32(0.5051654), 'PEARP': np.float32(0.0)}
+1793068977.475542
+
+train epoch: 28, train loss: 6.011466379422224
+{'MAE': np.float32(52.345493), 'MAPE': np.float32(0.10287954), 'RMSE': np.float32(95.91959), 'PEARR': np.float32(0.46904522), 'PEARP': np.float32(0.0)}
+1793068985.7850363
+
+val epoch: 28, val loss: 5.612061182657878
+{'MAE': np.float32(52.038578), 'MAPE': np.float32(0.10371349), 'RMSE': np.float32(70.207596), 'PEARR': np.float32(0.5614643), 'PEARP': np.float32(0.0)}
+1793068986.7337255
+
+test epoch: 28, test loss: nan
+{'MAE': np.float32(70.41815), 'MAPE': np.float32(0.121144235), 'RMSE': np.float32(104.488716), 'PEARR': np.float32(0.5050735), 'PEARP': np.float32(0.0)}
+1793068994.1050284
+
+train epoch: 29, train loss: 6.044126209833644
+{'MAE': np.float32(52.325504), 'MAPE': np.float32(0.10289642), 'RMSE': np.float32(95.89664), 'PEARR': np.float32(0.46932286), 'PEARP': np.float32(0.0)}
+1793069002.1938815
+
+val epoch: 29, val loss: 5.612149483519174
+{'MAE': np.float32(52.045795), 'MAPE': np.float32(0.103761725), 'RMSE': np.float32(70.207535), 'PEARR': np.float32(0.56147015), 'PEARP': np.float32(0.0)}
+1793069003.1365736
+
+test epoch: 29, test loss: nan
+{'MAE': np.float32(70.385956), 'MAPE': np.float32(0.12112447), 'RMSE': np.float32(104.43537), 'PEARR': np.float32(0.5051031), 'PEARP': np.float32(0.0)}
+1793069009.1179879
+

@@ -1,0 +1,27 @@
+{
+  "links": [
+    {
+      "link_id": 0,
+      "segments": [0, 1, 2, 3]
+    },
+    {
+      "link_id": 1,
+      "segments": [4]
+    },
+    {
+      "link_id": 2,
+      "segments": [5, 6, 7, 8]
+    }
+  ],
+  "segments": [
+    {"segment_id": 0, "length_km": 0.835, "length_m": 835.0, "width_lanes": 2, "max_speed_kmh": 100, "functional_level": 1, "road_level": 1},
+    {"segment_id": 1, "length_km": 0.830, "length_m": 830.0, "width_lanes": 2, "max_speed_kmh": 100, "functional_level": 1, "road_level": 1},
+    {"segment_id": 2, "length_km": 0.838, "length_m": 838.0, "width_lanes": 3, "max_speed_kmh": 100, "functional_level": 1, "road_level": 1},
+    {"segment_id": 3, "length_km": 0.835, "length_m": 835.0, "width_lanes": 3, "max_speed_kmh": 100, "functional_level": 1, "road_level": 1},
+    {"segment_id": 4, "length_km": 0.755, "length_m": 755.0, "width_lanes": 2, "max_speed_kmh": 100, "functional_level": 2, "road_level": 2},
+    {"segment_id": 5, "length_km": 0.470, "length_m": 470.0, "width_lanes": 3, "max_speed_kmh": 50, "functional_level": 3, "road_level": 3},
+    {"segment_id": 6, "length_km": 0.468, "length_m": 468.0, "width_lanes": 3, "max_speed_kmh": 50, "functional_level": 3, "road_level": 3},
+    {"segment_id": 7, "length_km": 0.443, "length_m": 443.0, "width_lanes": 3, "max_speed_kmh": 50, "functional_level": 3, "road_level": 3},
+    {"segment_id": 8, "length_km": 0.453, "length_m": 453.0, "width_lanes": 3, "max_speed_kmh": 50, "functional_level": 3, "road_level": 3}
+  ]
+}

@@ -110,3 +110,59 @@ loss:smoothL1
 {'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
 {'MAE': np.float32(58.835796), 'MAPE': np.float32(0.11052844), 'RMSE': np.float32(103.72607), 'PEARR': np.float32(0.32303306), 'PEARP': np.float32(0.0)}
 
+10/26 22:24:09epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(58.260246), 'MAPE': np.float32(0.11511446), 'RMSE': np.float32(101.492676), 'PEARR': np.float32(0.3119182), 'PEARP': np.float32(0.0)}
+
+10/26 22:24:11epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(58.260246), 'MAPE': np.float32(0.11511446), 'RMSE': np.float32(101.492676), 'PEARR': np.float32(0.3119182), 'PEARP': np.float32(0.0)}
+
+10/26 22:43:18epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(68.59059), 'MAPE': np.float32(0.14061388), 'RMSE': np.float32(111.50496), 'PEARR': np.float32(0.1637019), 'PEARP': np.float32(6e-45)}
+
+10/26 22:43:26epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(68.59059), 'MAPE': np.float32(0.14061388), 'RMSE': np.float32(111.50496), 'PEARR': np.float32(0.1637019), 'PEARP': np.float32(6e-45)}
+
+10/26 22:43:34epoch:50 lr:0.001
+dataset:toronto_927_2025_Jul_Dec_MulT_TTE identify:job_gpu1_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jul_Dec', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 504.9561, 'time_std': 106.4143, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(71.46542), 'MAPE': np.float32(0.12201719), 'RMSE': np.float32(106.53245), 'PEARR': np.float32(0.51497513), 'PEARP': np.float32(0.0)}
+
+10/26 22:43:39epoch:50 lr:0.001
+dataset:toronto_927_2025_Jul_Dec_MulT_TTE identify:job_gpu1_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jul_Dec', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 504.9561, 'time_std': 106.4143, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(71.46542), 'MAPE': np.float32(0.12201719), 'RMSE': np.float32(106.53245), 'PEARR': np.float32(0.51497513), 'PEARP': np.float32(0.0)}
+
+10/26 22:44:04epoch:50 lr:0.001
+dataset:toronto_927_2026_Jan_Jun_MulT_TTE identify:job_gpu2_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(63.14932), 'MAPE': np.float32(0.11477913), 'RMSE': np.float32(90.738976), 'PEARR': np.float32(0.60582024), 'PEARP': np.float32(0.0)}
+
+10/26 22:44:06epoch:50 lr:0.001
+dataset:toronto_927_2026_Jan_Jun_MulT_TTE identify:job_gpu2_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(63.14932), 'MAPE': np.float32(0.11477913), 'RMSE': np.float32(90.738976), 'PEARR': np.float32(0.60582024), 'PEARP': np.float32(0.0)}
+

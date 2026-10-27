@@ -43,7 +43,7 @@ def generate_data_info(data_dir="./samples/",
         return float(np.mean(gt_eta_times)), float(np.std(gt_eta_times))
 
     train_gt_mean, train_gt_std = get_gt_eta_stats(os.path.join(data_dir, train_file))
-    test_gt_mean, test_gt_std = get_gt_eta_stats(os.path.join(data_dir, test_file))
+    test_gt_mean, test_gt_std = get_gt_eta_stats(os.path.join(data_dir, train_file))
 
     # -------------------------------------------------------------
     # 3. Assemble output JSON

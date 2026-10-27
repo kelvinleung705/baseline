@@ -67,7 +67,7 @@ def train_main(args):
     model = create_model(args)
     loss_func = create_loss(args)
 
-    model_folder = f'{args.absPath}/data/save_models/{args.model}_{args.identify}_{args.dataset}'
+    model_folder = f'{args.absPath}/data/save_models/{args.model}__{args.dataset}/{args.beta}_{args.lr}_{args.mask_rate}'
     args.model_folder = model_folder
     model = model.to(args.device)
     print(f'loss function: {args.loss}')
