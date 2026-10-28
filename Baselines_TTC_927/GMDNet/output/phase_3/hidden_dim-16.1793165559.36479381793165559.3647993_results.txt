@@ -1,0 +1,3 @@
+Epoch: 31
+Validation -> MAE: 62.6164, MAPE: 0.1139, RMSE: 88.4813
+Test       -> MAE: 64.1584, MAPE: 0.1239, RMSE: 84.4401

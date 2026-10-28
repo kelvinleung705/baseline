@@ -128,7 +128,7 @@ def get_common_params():
     parser.add_argument('--num_epoch', type=int, default=200, help='number of epochs to train (default: 200)')
     parser.add_argument('--lr', type=float, default=0.001, metavar='LR', help='learning rate (default: 1e-3)')
     parser.add_argument('--wd', type=float, default=1e-5, help='weight decay (default: 1e-5)')
-    parser.add_argument('--early_stop', type=int, default=10, help='early stop at')
+    parser.add_argument('--early_stop', type=int, default=200, help='early stop at')
     parser.add_argument('--is_test', type=bool, default=False)
 
     return parser
@@ -157,6 +157,13 @@ def get_model_function(model):
 # import nni
 def save2file(params):
     file_name = ws + f'/output/{params["model"]}.csv'
+    output_dir = os.path.join(ws, "output")
+    model_dir = os.path.join(output_dir, str(params["dataset"]))
+    
+    # 2. Create the directories if they do not exist
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
+    
     head = [
         # data setting
         'dataset',
@@ -164,10 +171,28 @@ def save2file(params):
         'model', 'early_stop', 'hidden_dim', 'num_layers', 'att_hidden_size', 'n_gaussians', 'num_of_attention_heads', 'dirichlet_alpha',
         # training set
         'batch_size', 'time',
-        # metric result
-        'mae', 'mape', 'rmse', 'log-likelihood', 'crps'
+        # validation metric result
+        'val_mae', 'val_mape', 'val_rmse', 'val_log-likelihood', 'val_crps',
+        # test metric result
+        'test_mae', 'test_mape', 'test_rmse', 'test_log-likelihood', 'test_crps',
+        'best_epoch'
     ]
+    #file_name = os.path.join(output_dir, f"{params['model']}.csv")
+    file_name = os.path.join(model_dir, f"{params['model']}.csv")
     save2file_meta(params, file_name, head)
+    result_path = os.path.join(model_dir, f"{params['model']}_results.txt")
+    
+    with open(result_path, "a") as f:
+        # Line 1: Epoch
+        f.write(f"Epoch: {params['best_epoch']}\n")
+            
+        # Line 2: Validation metrics
+        f.write(f"Validation -> MAE: {params['val_mae']:.4f}, MAPE: {params['val_mape']:.4f}, RMSE: {params['val_rmse']:.4f}\n")
+            
+        # Line 3: Test metrics
+        f.write(f"Test       -> MAE: {params['test_mae']:.4f}, MAPE: {params['test_mape']:.4f}, RMSE: {params['test_rmse']:.4f}\n")
+    
+    
 
 
 def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS_BATCH, TEST_MODEL, params,
@@ -181,6 +206,12 @@ def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS
     model_path = ws + f'/params/{model_name}'
     dir_check(model_path)
 
+    best_epoch = -1
+    best_mae = float('inf')
+    best_mape = float('inf')
+    best_rmse = float('inf')
+    best_log = float('inf')
+    best_crps = float('inf')
     for epoch in range(params['num_epoch']):
         if early_stop.stop_flag: break
         postfix = {"epoch": epoch, "loss": 0.0, "current_loss": 0.0}
@@ -206,7 +237,13 @@ def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS
         val_mae, val_mape, val_rmse, val_log, val_crps = TEST_MODEL(model, val_loader, device, val_edge, val_node, val_A)
         is_best_change = early_stop.append(val_mae)
 
-        if is_best_change:
+        if is_best_change or val_mae < best_mae:
+            best_mae = val_mae
+            best_mape = val_mape
+            best_rmse = val_rmse
+            best_log = val_log
+            best_crps = val_crps
+            best_epoch = epoch
             print('current mae:', val_mae, 'current mae:', early_stop.best_metric(), 'current log:', val_log, 'current crps:', val_crps)
             torch.save(model.state_dict(), model_path)
             print('best model saved')
@@ -220,11 +257,17 @@ def train_val_test(train_loader, val_loader, test_loader, model, device, PROCESS
         print('load best model failed')
     test_mae, test_mape, test_rmse, test_log, test_crps = TEST_MODEL(model, test_loader, device, test_edge, test_node, test_A)
     params['model'] = model_name
-    params['mae'] = test_mae
-    params['mape'] = test_mape
-    params['rmse'] = test_rmse
-    params['log-likelihood'] = test_log
-    params['crps'] = test_crps
+    params['val_mae'] = best_mae
+    params['val_mape'] = best_mape
+    params['val_rmse'] = best_rmse
+    params['val_log-likelihood'] = best_log
+    params['val_crps'] = best_crps
+    params['test_mae'] = test_mae
+    params['test_mape'] = test_mape
+    params['test_rmse'] = test_rmse
+    params['test_log-likelihood'] = test_log
+    params['test_crps'] = test_crps
+    params['best_epoch'] = best_epoch
     save2file(params)
 
     print('\n-------------------------------------------------------------')

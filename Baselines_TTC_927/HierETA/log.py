@@ -69,3 +69,20 @@ class message_logger(object):
 
     def flush(self):
         pass
+    
+    
+class result_logger(object):
+    def __init__(self, path):
+        self.terminal = sys.stdout
+        self.result = open(os.path.join(path, "result.txt"), 'a')
+
+    def write_validation_test(self, datas):
+        message = f"Best Validation Epoch {datas['best_epoch']}: Validation MAE: {datas['val_mae']:.5f}, Validation MAPE: {datas['val_mape']:.5f}, Validation RMSE: {datas['val_rmse']:.5f}\n"
+        self.result.write(message)
+        message = f"Test Results: Test MAE: {datas['test_mae']:.5f}, Test MAPE: {datas['test_mape']:.5f}, Test RMSE: {datas['test_rmse']:.5f}\n"
+        self.result.write(message)
+        self.result.flush()
+
+    def flush(self):
+        pass
+

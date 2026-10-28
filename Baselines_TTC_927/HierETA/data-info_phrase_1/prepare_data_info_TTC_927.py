@@ -2,13 +2,14 @@ import os
 import json
 import numpy as np
 import pandas as pd
-
+from pathlib import Path
+CURRENT_DIR = Path(__file__).resolve().parent
 
 def generate_data_info(data_dir="",
-                       train_file="train_trips.csv",
-                       test_file="test_trips.csv",
-                       network_file="TTC_927_900_road_network.json",
-                       output_file="data_info.json"):
+                       train_file="data-info_phrase_1/train_trips.csv",
+                       test_file="data-info_phrase_1/test_trips.csv",
+                       network_file="data-info_phrase_1/TTC_927_900_road_network.json",
+                       output_file="data-info_phrase_1/data_info.json"):
     # -------------------------------------------------------------
     # 1. Read static features from data-info/road_network.json
     # -------------------------------------------------------------

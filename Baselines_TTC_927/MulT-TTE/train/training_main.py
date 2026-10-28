@@ -105,16 +105,51 @@ def train_main(args):
     print(args.model_config)
     print(args.data_config)
     print(model_folder)
-    model.load_state_dict(torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], strict=False)
-    metrics = test_model(model, data_loaders['test'], args)
     
+    final_metrics = {}
+    best_checkpoint = torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)
+    best_epoch = best_checkpoint['epoch']
+    model.load_state_dict(best_checkpoint['model_state_dict'], strict=False)
+    #model.load_state_dict(torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], strict=False)
+    metrics_val = test_model(model, data_loaders['val'], args)
+    final_metrics['VAL_MAE'] = metrics_val.get('MAE')
+    final_metrics['VAL_MAPE'] = metrics_val.get('MAPE')
+    final_metrics['VAL_RMSE'] = metrics_val.get('RMSE')
+    final_metrics['VAL_PEARR'] = metrics_val.get('PEARR')
+    final_metrics['VAL_PEARP'] = metrics_val.get('PEARP')
+        
     model.load_state_dict(
         torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], 
         strict=False
     )
-    metrics = test_model(model, data_loaders['test'], args)
+    metrics_test = test_model(model, data_loaders['test'], args)
+    final_metrics['TEST_MAE'] = metrics_test.get('MAE')
+    final_metrics['TEST_MAPE'] = metrics_test.get('MAPE')
+    final_metrics['TEST_RMSE'] = metrics_test.get('RMSE')
+    final_metrics['TEST_PEARR'] = metrics_test.get('PEARR')
+    final_metrics['TEST_PEARP'] = metrics_test.get('PEARP')
+    
+    result_path = os.path.join(args.model_folder, "test_val_results.txt")
+    
+    with open(result_path, "a") as f:
+        # Line 1: Epoch
+        f.write(f"Epoch: {best_epoch}\n")
+        
+        # Line 2: Validation metrics
+        f.write(f"Validation -> MAE: {final_metrics['VAL_MAE']:.4f}, MAPE: {final_metrics['VAL_MAPE']:.4f}, RMSE: {final_metrics['VAL_RMSE']:.4f}\n")
+        
+        # Line 3: Test metrics
+        f.write(f"Test       -> MAE: {final_metrics['TEST_MAE']:.4f}, MAPE: {final_metrics['TEST_MAPE']:.4f}, RMSE: {final_metrics['TEST_RMSE']:.4f}\n")
+    
+    
+    
+    
+    
+    
+    
+    #return {'MAE': mae, 'MAPE': mape, 'RMSE': rmse, 'PEARR':pearsonrs[0], 'PEARP': pearsonrs[1]}
     
     # ADD THIS PRINT TO VERIFY:
-    print(f"DEBUG IN training_main.py: metrics is {metrics}")
-    return metrics 
+    print(f"DEBUG IN training_main.py: metrics is {final_metrics}")
+    return final_metrics
 

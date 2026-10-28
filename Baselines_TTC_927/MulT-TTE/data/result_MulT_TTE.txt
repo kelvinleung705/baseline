@@ -166,3 +166,87 @@ loss:smoothL1
 {'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
 {'MAE': np.float32(63.14932), 'MAPE': np.float32(0.11477913), 'RMSE': np.float32(90.738976), 'PEARR': np.float32(0.60582024), 'PEARP': np.float32(0.0)}
 
+10/27 20:52:25epoch:50 lr:0.001
+dataset:toronto_927_2026_Jan_Jun_MulT_TTE identify:job_gpu2_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(67.857735), 'MAPE': np.float32(0.12165858), 'RMSE': np.float32(99.4377), 'PEARR': np.float32(0.49366498), 'PEARP': np.float32(0.0)}
+
+10/27 20:52:33epoch:50 lr:0.001
+dataset:toronto_927_2026_Jan_Jun_MulT_TTE identify:job_gpu2_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(67.857735), 'MAPE': np.float32(0.12165858), 'RMSE': np.float32(99.4377), 'PEARR': np.float32(0.49366498), 'PEARP': np.float32(0.0)}
+
+10/27 20:54:14epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(61.56331), 'MAPE': np.float32(0.1265404), 'RMSE': np.float32(102.07091), 'PEARR': np.float32(0.3712673), 'PEARP': np.float32(0.0)}
+
+10/27 20:54:15epoch:50 lr:0.001
+dataset:toronto_927_2025_Jul_Dec_MulT_TTE identify:job_gpu1_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jul_Dec', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 504.9561, 'time_std': 106.4143, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(69.20154), 'MAPE': np.float32(0.12015726), 'RMSE': np.float32(101.431274), 'PEARR': np.float32(0.5294102), 'PEARP': np.float32(0.0)}
+
+10/27 20:54:19epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(61.56331), 'MAPE': np.float32(0.1265404), 'RMSE': np.float32(102.07091), 'PEARR': np.float32(0.3712673), 'PEARP': np.float32(0.0)}
+
+10/27 20:54:19epoch:50 lr:0.001
+dataset:toronto_927_2025_Jul_Dec_MulT_TTE identify:job_gpu1_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jul_Dec', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 504.9561, 'time_std': 106.4143, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(69.20154), 'MAPE': np.float32(0.12015726), 'RMSE': np.float32(101.431274), 'PEARR': np.float32(0.5294102), 'PEARP': np.float32(0.0)}
+
+10/27 21:50:36epoch:50 lr:0.001
+dataset:toronto_927_2026_Jan_Jun_MulT_TTE identify:job_gpu2_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(67.103714), 'MAPE': np.float32(0.11937541), 'RMSE': np.float32(97.378914), 'PEARR': np.float32(0.4575746), 'PEARP': np.float32(0.0)}
+
+10/27 21:50:42epoch:50 lr:0.001
+dataset:toronto_927_2026_Jan_Jun_MulT_TTE identify:job_gpu2_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2026_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 537.9489, 'time_std': 113.969, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(69.16304), 'MAPE': np.float32(0.12888163), 'RMSE': np.float32(95.13782), 'PEARR': np.float32(0.36787927), 'PEARP': np.float32(0.0)}
+
+10/27 21:51:47epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(55.79203), 'MAPE': np.float32(0.10485392), 'RMSE': np.float32(86.119675), 'PEARR': np.float32(0.4082746), 'PEARP': np.float32(0.0)}
+
+10/27 21:51:51epoch:50 lr:0.001
+dataset:toronto_927_2025_Jan_Jun_MulT_TTE identify:job_gpu0_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jan_Jun', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 533.8585, 'time_std': 102.6436, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(71.53145), 'MAPE': np.float32(0.13163629), 'RMSE': np.float32(122.08295), 'PEARR': np.float32(0.19441418), 'PEARP': np.float32(0.0)}
+
+10/27 21:52:04epoch:50 lr:0.001
+dataset:toronto_927_2025_Jul_Dec_MulT_TTE identify:job_gpu1_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jul_Dec', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 504.9561, 'time_std': 106.4143, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(53.101856), 'MAPE': np.float32(0.1045023), 'RMSE': np.float32(70.7601), 'PEARR': np.float32(0.4646571), 'PEARP': np.float32(0.0)}
+
+10/27 21:52:06epoch:50 lr:0.001
+dataset:toronto_927_2025_Jul_Dec_MulT_TTE identify:job_gpu1_lr0005
+loss:smoothL1
+{'input_dim': 120, 'seq_input_dim': 120, 'seq_hidden_dim': 128, 'seq_layer': 2, 'bert_hiden_size': 64, 'decoder_layer': 3, 'decode_head': 1, 'bert_hidden_layers': 4, 'bert_attention_heads': 8, 'pad_token_id': 10}
+{'data_dir': 'data/toronto_927_2025_Jul_Dec', 'batch_size': 256, 'collate_fn': 'MulT_TTE_collate_func', 'time_mean': 504.9561, 'time_std': 106.4143, 'edges': 9, 'edges_dir': 'data/porto/network-porto/porto_edges_new_simplify.pkl', 'nodes_dir': 'data/porto/network-porto/porto_nodes_new.pkl', 'gps_range': [43.3, -79.9, 44.35, -78.5]}
+{'MAE': np.float32(76.240295), 'MAPE': np.float32(0.12751383), 'RMSE': np.float32(115.027824), 'PEARR': np.float32(0.43057442), 'PEARP': np.float32(0.0)}
+

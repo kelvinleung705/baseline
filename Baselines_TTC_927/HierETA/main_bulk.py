@@ -6,7 +6,6 @@ import os
 import sys
 
 # Set GPU environment variable BEFORE importing PyTorch
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 import torch
 import torch.optim as optim
@@ -42,12 +41,12 @@ def get_parser():
     parser.add_argument("--lr", type=float, default=1e-4, help="learning rate")
 
     # Dataset directory and CSV file names
-    parser.add_argument("--data_dir", type=str, default="./samples/", help="directory for route data storage")
+    parser.add_argument("--data_dir", type=str, default="./data-info_phrase_1/", help="directory for route data storage")
     parser.add_argument("--train_file", type=str, default="train_trips.csv", help="training csv filename")
     parser.add_argument("--eval_file", type=str, default="validation_trips.csv", help="evaluation csv filename")
     parser.add_argument("--test_file", type=str, default="test_trips.csv", help="test csv filename")
 
-    parser.add_argument("--log_dir", type=str, default="logs")
+    parser.add_argument("--log_dir", type=str, default="data-info_phrase_1/logs", help="directory for logging")
     parser.add_argument("--step_per_eval", type=int, default=100, help="training steps per evaluation")
     parser.add_argument("--use_tb", type=str2bool, default=False, help="Use tensorboard to log training info",)
     parser.add_argument("--code_backup", type=str2bool, default=True, help="code backup or not")
@@ -254,7 +253,7 @@ def train(model, optimizer, flags, device, logger):
     }
     """
     print("=" * 60)
-    print("Selected Epoch: {best_epoch},")
+    print(f"Selected Epoch: {best_epoch},")
     print("=" * 60)
     print("FINAL Validation RESULTS:")
     print(f"Validation MAE : {best_mae:.5f}")
@@ -268,6 +267,19 @@ def train(model, optimizer, flags, device, logger):
     print(f"Test MAPE: {test_mape:.5f}")
     print(f"Test RMSE: {test_rmse:.5f}")
     print("=" * 60 + "\n")
+    
+    
+    result_path = os.path.join(flags.log_dir, "test_results.txt")
+    with open(result_path, "a") as f:
+        # Line 1: Epoch
+        f.write(f"Epoch: {best_epoch}\n")
+            
+        # Line 2: Validation metrics
+        f.write(f"Validation -> MAE: {val_mae:.4f}, MAPE: {val_mape:.4f}, RMSE: {val_rmse:.4f}\n")
+            
+        # Line 3: Test metrics
+        f.write(f"Test       -> MAE: {test_mae:.4f}, MAPE: {test_mape:.4f}, RMSE: {test_rmse:.4f}\n")
+    
     return {
         "val_mae": best_mae,
         "val_mape": best_mape,
@@ -293,6 +305,7 @@ def test(model, checkpoint_path, flags, device):
 
     check_point = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(check_point["model"])
+    best_epoch = check_point.get("epoch", -1)
     print(f"Loaded test model from: {checkpoint_path}")
 
     with torch.no_grad():
@@ -302,6 +315,7 @@ def test(model, checkpoint_path, flags, device):
     
     print("=" * 60)
     print("VALIDATION RESULTS:")
+    print(f"best_epoch: {best_epoch}")
     print(f"MAE : {val_mae:.5f}")
     print(f"MAPE: {val_mape:.5f}")
     print(f"RMSE: {val_rmse:.5f}")
@@ -318,6 +332,19 @@ def test(model, checkpoint_path, flags, device):
     print(f"MAPE: {test_mape:.5f}")
     print(f"RMSE: {test_rmse:.5f}")
     print("=" * 60)
+    
+    
+    result_path = os.path.join(flags.log_dir, "test_results.txt")
+    with open(result_path, "a") as f:
+        # Line 1: Epoch
+        f.write(f"Epoch: {best_epoch}\n")
+        
+        # Line 2: Validation metrics
+        f.write(f"Validation -> MAE: {val_mae:.4f}, MAPE: {val_mape:.4f}, RMSE: {val_rmse:.4f}\n")
+        
+        # Line 3: Test metrics
+        f.write(f"Test       -> MAE: {test_mae:.4f}, MAPE: {test_mape:.4f}, RMSE: {test_rmse:.4f}\n")
+
 
     return {"test_mae": test_mae, "test_mape": test_mape, "test_rmse": test_rmse, "val_mae": val_mae, "val_mape": val_mape, "val_rmse": val_rmse}
 
@@ -333,7 +360,15 @@ def run_experiment(args_list=None, **kwargs):
         dict: Test metrics {'mae': ..., 'mape': ..., 'rmse': ...}
     """
     parser = get_parser()
-    flags = parser.parse_args(args_list if args_list is not None else [])
+    if isinstance(args_list, argparse.Namespace):
+        flags = args_list
+    elif isinstance(args_list, list):
+        flags = parser.parse_args(args_list)
+    elif args_list is None:
+        flags = parser.parse_args([])
+    else:
+        raise TypeError(f"unsipported error: {type(args_list)}")
+
 
     # Override flags with any passed keyword arguments
     for key, value in kwargs.items():
@@ -342,8 +377,11 @@ def run_experiment(args_list=None, **kwargs):
         else:
             raise AttributeError(f"Unknown argument: {key}")
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    flags.device = device
+    if hasattr(flags, 'device') and flags.device:
+        device = torch.device(flags.device)
+    else:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        flags.device = device
 
     # Read data info safely
     data_info_path = "data-info/data_info.json"

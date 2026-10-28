@@ -121,9 +121,9 @@ if __name__ == '__main__':
         print(f"\nResults for Job '{res['identify']}' on {res['device']}:")
         
         if metrics is not None and isinstance(metrics, dict):
-            print(f"  MAE:  {metrics.get('MAE')}")
-            print(f"  MAPE: {metrics.get('MAPE')}")
-            print(f"  RMSE: {metrics.get('RMSE')}")
+            print(f"  MAE:  {metrics.get('TEST_MAE')}")
+            print(f"  MAPE: {metrics.get('TEST_MAPE')}")
+            print(f"  RMSE: {metrics.get('TEST_RMSE')}")
         else:
             print("  Error: train_main did not return a dictionary!")
 
