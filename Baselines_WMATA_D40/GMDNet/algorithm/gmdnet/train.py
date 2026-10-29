@@ -82,25 +82,37 @@ def test_model(model, test_dataloader, device, edge, node, A):
             route = torch.LongTensor(route).to(device)
             mask = torch.LongTensor(mask).to(device)
             f = torch.FloatTensor(f).to(device)
-            label = torch.FloatTensor(label).to(device)
+            label_seconds = torch.FloatTensor(label).to(device) #what it appear in file
+            label_minutes = label_seconds / 60.0 # what teh model can read
 
-            pi, mu, sigma = model.forward(route, mask, f, edge, node, A, label, 'test')
-            m = torch.distributions.Normal(loc=mu, scale=sigma)
-            pred = torch.sum(m.mean * pi, dim=1).unsqueeze(1)
-
-            log_likelihood = torch.mean(torch.mul(m.log_prob(label.float()), pi))
-            log_likelihood_list += [log_likelihood.cpu().item()]
-            predicts_list += pred.detach().cpu().tolist()
-            label_list += label.detach().cpu().tolist()
-            crps_metric = CRPSMetric(label, mu, sigma)
+            pi, mu, sigma = model.forward(route, mask, f, edge, node, A, label_minutes, 'test') #input and output of teh model in minutes
+            mu_seconds = mu * 60.0  #convert output back to seconds for evaluation
+            sigma_seconds = sigma * 60.0
+            
+            m = torch.distributions.Normal(loc=mu_seconds, scale=sigma_seconds) #construct a normal distribution with mean and std in seconds
+            
+            pred_seconds = torch.sum(m.mean * pi, dim=1).unsqueeze(1)
+            
+            predicts_list += pred_seconds.detach().cpu().tolist()
+            label_list += label_seconds.detach().cpu().tolist()
+            
+            # log p(y) = log(sum(exp(log(pi) + log_prob)))
+            log_pi = torch.log(pi.clamp(min=1e-8))          
+            log_prob_components = m.log_prob(label_seconds)  # log p(y|mu, sigma)
+            
+            sample_log_likelihood = torch.logsumexp(log_pi + log_prob_components, dim=1) 
+            log_likelihood_list.append(sample_log_likelihood.mean().cpu().item())
+            
+            crps_metric = CRPSMetric(label_seconds, mu_seconds, sigma_seconds)
             get_crps = crps_metric.gaussian_crps()
             crps = torch.sum(torch.mul(get_crps, pi), dim=1)
             crps_list.append(crps.detach().cpu().numpy().mean())
 
         log_likelihood = np.array(log_likelihood_list)
         # Convert back from minutes to seconds for final metrics:
-        predicts = np.array(predicts_list).flatten() * 60.0
+        predicts = np.array(predicts_list).flatten()
         labels = np.array(label_list).flatten()
+        log_likelihood = np.array(log_likelihood_list)
         CRPS = np.array(crps_list)
 
         from sklearn.metrics import mean_absolute_error as mae
@@ -119,13 +131,13 @@ def test_model(model, test_dataloader, device, edge, node, A):
             val_mape = 0.0
 
         # Print outputs cleanly
-        print(f'mae: {val_mae:.4f}')
-        print(f'rmse: {val_rmse:.4f}')
+        print(f'mae: {val_mae:.4f} seconds')
+        print(f'rmse: {val_rmse:.4f} seconds')
         print(f'mape: {val_mape:.4f} ({val_mape * 100:.2f}%)')
         print(f'negative-log-likelihood: {log_likelihood.mean():.4f}')
-        print(f'CRPS: {CRPS.mean():.4f}')
+        print(f'CRPS: {CRPS.mean():.4f} seconds')
 
-        return val_mae, val_mape, log_likelihood.mean(), CRPS.mean()
+        return val_mae, val_mape, val_rmse, log_likelihood.mean(), CRPS.mean()
 
 def get_params():
     from my_utils.utils import get_common_params
@@ -152,7 +164,8 @@ def get_params():
 from my_utils.utils import run
 
 def main(params):
-    run(params, GMDNet_Dataset, process_batch, test_model, collate_fn)
+    _, result_dict = run(params, GMDNet_Dataset, process_batch, test_model, collate_fn)
+    return result_dict
 
 if __name__ == '__main__':
     import time, nni, torch

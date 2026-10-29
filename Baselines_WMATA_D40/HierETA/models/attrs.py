@@ -37,13 +37,21 @@ class Attr(nn.Module):
 
     def emb_helper(self, attrs, type):
         Cates, Conts = Attr.type_helper(type)
-        emb_list = []
+        emb_list = []    
 
         # 1. Categorical Embeddings
         for name, dim_in, dim_out in Cates:
             if name in attrs:
                 embed = getattr(self, "attr-" + name)
                 attr_t = attrs[name].view(self.batch_size, -1)
+                attr_t = embed(attr_t)
+                emb_list.append(attr_t)
+                #fixed batch
+                #attr_t = attrs[name].view(self.batch_size, -1)
+                # Use the actual batch size of the current tensor dynamically
+                #Dynamic Batch Size: Get the actual batch size of the current tensor dynamically
+                current_bs = attrs[name].size(0)
+                attr_t = attrs[name].view(current_bs, -1)
                 attr_t = embed(attr_t)
                 emb_list.append(attr_t)
 

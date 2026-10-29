@@ -8,8 +8,8 @@ from torch import optim
 import numpy as np
 
 from train.train_model import train_model
-from utils.prepare import create_model, create_loss
-from utils.prepare import load_datadict, load_datadoct_pre
+from utils.prepare_D40 import create_model, create_loss
+from utils.prepare_D40 import load_datadict, load_datadoct_pre
 from utils.metric import calculate_metrics
 from utils.util import to_var
 import time
@@ -63,7 +63,7 @@ def train_main(args):
     model = create_model(args)
     loss_func = create_loss(args)
 
-    model_folder = f'{args.absPath}/data/save_models/{args.model}_{args.identify}_{args.dataset}'
+    model_folder = f'{args.absPath}/data/save_models/{args.model}__{args.dataset}/{args.beta}_{args.lr}_{args.mask_rate}'
     args.model_folder = model_folder
     model = model.to(args.device)
     print(f'loss function: {args.loss}')
@@ -101,6 +101,42 @@ def train_main(args):
     print(args.model_config)
     print(args.data_config)
     print(model_folder)
-    model.load_state_dict(torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], strict=False)
-    test_model(model, data_loaders['test'], args)
+    
+    final_metrics = {}
+    best_checkpoint = torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)
+    best_epoch = best_checkpoint['epoch']
+    model.load_state_dict(best_checkpoint['model_state_dict'], strict=False)
+    #model.load_state_dict(torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], strict=False)
+    metrics_val = test_model(model, data_loaders['val'], args)
+    final_metrics['VAL_MAE'] = metrics_val.get('MAE')
+    final_metrics['VAL_MAPE'] = metrics_val.get('MAPE')
+    final_metrics['VAL_RMSE'] = metrics_val.get('RMSE')
+    final_metrics['VAL_PEARR'] = metrics_val.get('PEARR')
+    final_metrics['VAL_PEARP'] = metrics_val.get('PEARP')
+        
+    model.load_state_dict(
+        torch.load(os.path.join(model_folder, 'best_model.pkl'), map_location=args.device)['model_state_dict'], 
+        strict=False
+    )
+    metrics_test = test_model(model, data_loaders['test'], args)
+    final_metrics['TEST_MAE'] = metrics_test.get('MAE')
+    final_metrics['TEST_MAPE'] = metrics_test.get('MAPE')
+    final_metrics['TEST_RMSE'] = metrics_test.get('RMSE')
+    final_metrics['TEST_PEARR'] = metrics_test.get('PEARR')
+    final_metrics['TEST_PEARP'] = metrics_test.get('PEARP')
+    
+    result_path = os.path.join(args.model_folder, "test_val_results.txt")
+    
+    with open(result_path, "a") as f:
+        # Line 1: Epoch
+        f.write(f"Epoch: {best_epoch}\n")
+        
+        # Line 2: Validation metrics
+        f.write(f"Validation -> MAE: {final_metrics['VAL_MAE']:.4f}, MAPE: {final_metrics['VAL_MAPE']:.4f}, RMSE: {final_metrics['VAL_RMSE']:.4f}\n")
+        
+        # Line 3: Test metrics
+        f.write(f"Test       -> MAE: {final_metrics['TEST_MAE']:.4f}, MAPE: {final_metrics['TEST_MAPE']:.4f}, RMSE: {final_metrics['TEST_RMSE']:.4f}\n")
+    
+    
+    
 

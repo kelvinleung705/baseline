@@ -18,6 +18,9 @@ def save_model(path: str, **save_dict):
     os.makedirs(os.path.split(path)[0], exist_ok=True)
     torch.save(save_dict, path)
 
+# outdated and replaced
+"""
+
 def to_var(var, device=0):
     if torch.is_tensor(var):
         var = Variable(var)
@@ -34,3 +37,21 @@ def to_var(var, device=0):
         var = map(lambda x: to_var(x, device), var)
         return var
 
+"""
+def to_var(var, device="cpu"):
+    if torch.is_tensor(var):
+        return var.to(device)
+
+    if isinstance(var, (int, float, str)):
+        return var
+
+    if isinstance(var, dict):
+        return {k: to_var(v, device) for k, v in var.items()}
+
+    if isinstance(var, list):
+        return [to_var(x, device) for x in var]
+
+    if isinstance(var, tuple):
+        return tuple(to_var(x, device) for x in var)
+
+    return var

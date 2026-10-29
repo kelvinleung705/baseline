@@ -102,7 +102,6 @@ if __name__ == '__main__':
     JSON_PATH = "segments_toronto.json"
 
     # Define your 3 experiments/workers
-    """
     tasks = [
             {
                 "run_id": "Phase_1_2025_1-6",
@@ -112,7 +111,7 @@ if __name__ == '__main__':
                 "json_path": JSON_PATH,
                 "dataset": "phase_1",       # Preprocessing destination
                 "batch_size": 32,
-                "num_epoch": 200,
+                "num_epoch": 100,
                 "lr": 0.001,
                 "device": "cuda:0",
             },
@@ -124,7 +123,7 @@ if __name__ == '__main__':
                 "json_path": JSON_PATH,
                 "dataset": "phase_2",       # Preprocessing destination
                 "batch_size": 32,
-                "num_epoch": 200,
+                "num_epoch": 100,
                 "lr": 0.001,
                 "device": "cuda:0",                # Change to cuda:1 if multiple GPUs available
             },
@@ -136,29 +135,13 @@ if __name__ == '__main__':
                 "json_path": JSON_PATH,
                 "dataset": "phase_3",       # Preprocessing destination
                 "batch_size": 32,
-                "num_epoch": 200,
+                "num_epoch": 100,
                 "lr": 0.001,
                 "device": "cuda:0",
             },
         ]
-        """
-    tasks = [
-                {
-                    "run_id": "Phase_3_2026_1-6",
-                    "train_csv": "data/phase_3/TTC_927_Period_3_train.csv",
-                    "val_csv":   "data/phase_3/TTC_927_Period_3_validation.csv",
-                    "test_csv":  "data/phase_3/TTC_927_Period_3_test.csv",
-                    "json_path": JSON_PATH,
-                    "dataset": "phase_3",       # Preprocessing destination
-                    "batch_size": 32,
-                    "num_epoch": 200,
-                    "lr": 0.001,
-                    "device": "cuda:0",
-                },
-            ]
 
-    #max_workers = min(len(tasks), 3)
-    max_workers = min(len(tasks), 1)
+    max_workers = min(len(tasks), 3)
     print(f"Spawning {len(tasks)} parallel runs across {max_workers} processes...")
 
     with mp.Pool(processes=max_workers) as pool:

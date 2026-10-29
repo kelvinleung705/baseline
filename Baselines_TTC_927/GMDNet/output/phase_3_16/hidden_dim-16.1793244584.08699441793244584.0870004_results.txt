@@ -1,0 +1,3 @@
+Epoch: 39
+Validation -> MAE: 63.5732, MAPE: 0.1144, RMSE: 90.7042, Log-Likelihood: -5.9234, CRPS: 48.1259
+Test       -> MAE: 63.6070, MAPE: 0.1216, RMSE: 84.1368, Log-Likelihood: -5.8757, CRPS: 46.5901

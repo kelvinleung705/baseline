@@ -158,8 +158,7 @@ def get_model_function(model):
 def save2file(params):
     file_name = ws + f'/output/{params["model"]}.csv'
     output_dir = os.path.join(ws, "output")
-    model_dir = os.path.join(output_dir, str(params["dataset"]))
-    
+    model_dir = os.path.join(output_dir, f"{params['dataset']}_{params['hidden_dim']}")    
     # 2. Create the directories if they do not exist
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(model_dir, exist_ok=True)
@@ -187,10 +186,10 @@ def save2file(params):
         f.write(f"Epoch: {params['best_epoch']}\n")
             
         # Line 2: Validation metrics
-        f.write(f"Validation -> MAE: {params['val_mae']:.4f}, MAPE: {params['val_mape']:.4f}, RMSE: {params['val_rmse']:.4f}\n")
+        f.write(f"Validation -> MAE: {params['val_mae']:.4f}, MAPE: {params['val_mape']:.4f}, RMSE: {params['val_rmse']:.4f}, Log-Likelihood: {params['val_log-likelihood']:.4f}, CRPS: {params['val_crps']:.4f}\n")
             
         # Line 3: Test metrics
-        f.write(f"Test       -> MAE: {params['test_mae']:.4f}, MAPE: {params['test_mape']:.4f}, RMSE: {params['test_rmse']:.4f}\n")
+        f.write(f"Test       -> MAE: {params['test_mae']:.4f}, MAPE: {params['test_mape']:.4f}, RMSE: {params['test_rmse']:.4f}, Log-Likelihood: {params['test_log-likelihood']:.4f}, CRPS: {params['test_crps']:.4f}\n")
     
     
 
